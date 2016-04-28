@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="80dp"
+    android:layout_height="100dp"
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="10dp"
+    android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/contactUs"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/right"/>
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+             android:src="@drawable/cancel"/>
+ </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="9dp"
+            android:background="@drawable/cart_add_border"
+android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/edNumber"
+                android:text="@string/quantity"
+                android:layout_width="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:id="@+id/tvQuantity"
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="5dp"
+                  android:text="2"/>
+
+            <ImageView
+            android:id="@+id/imgEdit"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/edit"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cart_add_border"
+            android:layout_marginTop="14dp"
+
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+             android:orientation="horizontal">
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/date"/>
+            <TextView
+                android:layout_width="88dp"
+                android:layout_height="28dp"
+                android:layout_margin="3dp"
+                android:layout_marginTop="6dp"
+
+                android:text="12/25/2016"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_marginRight="10dp"
+        android:layout_marginBottom="3dp"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="3dp"
+            android:src="@drawable/add"/>
+    </LinearLayout>
+</RelativeLayout>

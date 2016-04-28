@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="12dp"
+    android:paddingBottom="3dp"
+    android:paddingLeft="12dp"
+    android:paddingTop="10dp"
+    android:background="#EBEBEC">
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:background="#BFBEC4">
+
+        <View
+            android:layout_width="3.5dp"
+            android:layout_height="match_parent"
+            android:background="#DB4129"/>
+
+        <ImageView
+    android:layout_width="25dp"
+    android:layout_height="25dp"
+    android:layout_marginRight="5dp"
+    android:src="@drawable/search_icon"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/proName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/proCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/proCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/proBrand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imgPro"
+                android:layout_width="90dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="30dp"
+                android:src="@drawable/login_border"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <GridView
+        android:id="@+id/grid"
+        android:numColumns="2"
+        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="3dp"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="10dp"
+        android:cacheColorHint="#00000000"/>
+</LinearLayout>
