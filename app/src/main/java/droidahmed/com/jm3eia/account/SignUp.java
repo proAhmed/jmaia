@@ -180,8 +180,16 @@ try {
 //                                                                android.R.id.tabcontent,
 //                                                                fragment)
 //                                                        .commit();
-                            Intent intent = new Intent(SignUp.this, MainActivity.class);
-                            startActivity(intent);
+                            if(getIntent().getExtras()!=null){
+
+                                Intent intent = new Intent(SignUp.this, MainActivity.class);
+                                intent.putExtra("CartAuth","CartAuth");
+                                startActivity(intent);
+                            }else {
+                                Intent intent = new Intent(SignUp.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+
                         }
                     });
     AlertDialog alertDialog = alertDialogBuilder.create();

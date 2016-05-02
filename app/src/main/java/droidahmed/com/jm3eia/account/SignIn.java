@@ -30,21 +30,29 @@ public class SignIn extends AppCompatActivity {
     Button btn;
     private OnProcessCompleteListener signListener;
     private UserLoginResponse registerUser;
-
+Intent intent ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         edUserName = (EditText) findViewById(R.id.edUserName);
         edPass = (EditText) findViewById(R.id.edPass);
-
+intent = new Intent();
         tvRegister = (TextView) findViewById(R.id.tvRegister);
         tvForgetPass = (TextView) findViewById(R.id.tvForget);
         tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentRegister = new Intent(SignIn.this,SignUp.class);
-                startActivity(intentRegister);
+                if(intent.getExtras()!=null){
+
+                    Intent intent = new Intent(SignIn.this, SignUp.class);
+                    intent.putExtra("CartAuth","CartAuth");
+                    startActivity(intent);
+                }else{
+                    Intent intentRegister = new Intent(SignIn.this,SignUp.class);
+                    startActivity(intentRegister);
+                }
+
             }
         });
 
@@ -151,7 +159,7 @@ try {
             SignIn.this);
 
     alertDialogBuilder
-            .setMessage(((UserResponse) result).getError().toString())
+            .setMessage(((UserLoginResponse) result).getError().toString())
             .setCancelable(false)
             .setPositiveButton("OK",
                     new DialogInterface.OnClickListener() {
@@ -169,8 +177,16 @@ try {
 //                                                                android.R.id.tabcontent,
 //                                                                fragment)
 //                                                        .commit();
-                            Intent intent = new Intent(SignIn.this, MainActivity.class);
-                            startActivity(intent);
+                            if(intent.getExtras()!=null){
+
+                                Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                intent.putExtra("CartAuth","CartAuth");
+                                startActivity(intent);
+                            }else{
+                                Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+
                         }
                     });
       AlertDialog alertDialog = alertDialogBuilder.create();

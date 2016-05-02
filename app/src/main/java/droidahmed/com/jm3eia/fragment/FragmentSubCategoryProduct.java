@@ -17,12 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.adapter.CuListAdapter;
-import droidahmed.com.jm3eia.adapter.CuReListAdapter;
-import droidahmed.com.jm3eia.adapter.ProGridAdapter;
-import droidahmed.com.jm3eia.api.AddCartItem;
-import droidahmed.com.jm3eia.api.GetHome;
-import droidahmed.com.jm3eia.api.GetProductByCategory;
+  import droidahmed.com.jm3eia.adapter.ProGridAdapter;
+ import droidahmed.com.jm3eia.api.GetProductByCategory;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.controller.OnItemListener;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
@@ -48,6 +44,7 @@ public class FragmentSubCategoryProduct extends Fragment  implements OnItemListe
     CartItemResponse cartItemResponse;
     ArrayList<AllProducts> arrayList;
     ArrayList<ProductCart>productCart;
+    static  double pricesss;
 
     int id;
     @Nullable
@@ -139,12 +136,16 @@ arrayList = new ArrayList<AllProducts>(Arrays.asList(pro));
 
     @Override
     public void onAddCart(int position, int num,boolean watch,double price) {
+        pricesss +=price;
+
         productCart.add(new ProductCart(arrayList.get(position), num));
         Log.d("uuu", productCart.toString());
         if(watch==true){
             FragmentProductCart  fragment =   new FragmentProductCart();
             Bundle bundle = new Bundle();
             bundle.putSerializable("cart",productCart);
+            bundle.putDouble("price",pricesss);
+
             fragment.setArguments(bundle);
             getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
                     .replace(R.id.mainFragment, fragment).commit();

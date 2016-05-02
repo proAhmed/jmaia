@@ -61,12 +61,10 @@ public class CuCartListAdapter extends BaseAdapter {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TextView textViewName;
-        ImageView imageViewIcon,cancel_order;
-        TextView tvName,tvPrice;
+         ImageView cancel_order;
+        final TextView tvName,tvPrice,item_change;
         ImageView imgProduct;
-        RelativeLayout gridClickable;
-        ImageView imgAdd,imgDelete;
+         ImageView imgAdd,imgDelete;
         final LinearLayout imgCart;
         final EditText edNumber;
         if (convertView == null) {
@@ -82,6 +80,7 @@ public class CuCartListAdapter extends BaseAdapter {
         imgProduct = (ImageView) convertView.findViewById(R.id.imgProduct);
         tvName = (TextView) convertView.findViewById(R.id.tvName);
         tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
+        item_change  = (TextView) convertView.findViewById(R.id.item_change);
         tvName.setText(_choices.get(position).getName());
         tvPrice.setText(_choices.get(position).getPrice()+"");
         imgAdd = (ImageView) convertView.findViewById(R.id.imgAdd);
@@ -96,8 +95,7 @@ public class CuCartListAdapter extends BaseAdapter {
                 edNumber.getText();
                 if (cartWatch[0] == false) {
                     onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), false,price[0]);
-                    imgCart.setBackgroundColor(Color.parseColor("#000000"));
-
+                     item_change.setText(context.getResources().getString(R.string.see_cart));
                     cartWatch[0] = true;
                 } else {
                     cartWatch[0] = false;

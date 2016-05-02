@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="65dp"
+    android:layout_height="45dp"
     android:gravity="right"
     android:background="#5C5B60"
     android:orientation="horizontal">
@@ -12,18 +12,16 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="#fff"
+         android:textColor="#fff"
         android:textSize="18sp"
         android:text=""
-         android:gravity="center"
-        android:layout_marginTop="2dp"
+         android:layout_marginTop="8dp"
          android:layout_marginRight="15dp"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/image"
-        android:layout_toStartOf="@+id/image" />
+       />
 <ImageView
     android:id="@+id/item_image"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_width="30dp"
+    android:layout_marginTop="4dp"
+
+    android:layout_height="30dp" />
 </LinearLayout>

@@ -93,7 +93,8 @@ android:id="@+id/cancel_order"
                 android:layout_marginRight="2dp"
                 android:textSize="10sp"
                 android:layout_gravity="center_vertical"
-                android:text="@string/add_cart"/>
+                android:text="@string/add_cart"
+                android:id="@+id/item_change" />
         </LinearLayout>
 
 

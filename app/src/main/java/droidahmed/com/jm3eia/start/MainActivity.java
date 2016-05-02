@@ -34,6 +34,7 @@ import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.fragment.FragmentProduct;
+import droidahmed.com.jm3eia.fragment.FragmentProductCart;
 import droidahmed.com.jm3eia.fragment.MenuFragment;
 import droidahmed.com.jm3eia.fragment.MenuFragmentRight;
 import droidahmed.com.jm3eia.model.AllProducts;
@@ -95,16 +96,24 @@ public class MainActivity extends SlidingFragmentActivity {
                     bundle.putSerializable("array", new ArrayList<>(Arrays.asList(pro)));
 
 
+if(getIntent().getExtras()!=null){
+    if(getIntent().getExtras().getString("CartAuth").equals("CartAuth")){
+         getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFragment, new FragmentProductCart())
+                .commitAllowingStateLoss();
+    }
+}else {
+    Fragment fragmentProduct = new FragmentProduct();
+    FragmentManager fm = getSupportFragmentManager();
+    FragmentTransaction ft = fm.beginTransaction();
+    ft.replace(R.id.mainFragment, fragmentProduct);
+    ft.commit();
 
-                            Fragment fragmentProduct = new FragmentProduct();
-                    FragmentManager fm = getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                     ft.replace(R.id.mainFragment, fragmentProduct);
-                    ft.commit();
-                            fragmentProduct.setArguments(bundle);
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.mainFragment, fragmentProduct)
-                                    .commitAllowingStateLoss();
+    fragmentProduct.setArguments(bundle);
+    getSupportFragmentManager().beginTransaction()
+            .replace(R.id.mainFragment, fragmentProduct)
+            .commitAllowingStateLoss();
+}
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.menu_slide, MenuFragmentRight.newInstance( pro))
                                     .commitAllowingStateLoss();

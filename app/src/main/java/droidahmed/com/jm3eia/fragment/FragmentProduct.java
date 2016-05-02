@@ -27,12 +27,8 @@ import java.util.Arrays;
 import java.util.Date;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.adapter.CuListAdapter;
-import droidahmed.com.jm3eia.adapter.CustomAdapter;
-import droidahmed.com.jm3eia.adapter.ProGridAdapter;
-import droidahmed.com.jm3eia.api.AddCartItem;
-import droidahmed.com.jm3eia.api.CategoriesByParent;
-import droidahmed.com.jm3eia.api.GetHome;
+  import droidahmed.com.jm3eia.adapter.ProGridAdapter;
+ import droidahmed.com.jm3eia.api.GetHome;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.controller.OnItemListener;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
@@ -60,7 +56,7 @@ public class FragmentProduct extends Fragment implements OnItemListener,OnCartLi
     ArrayList<CartItem> cartItems;
     CartItemResponse cartItemResponse;
     ArrayList<ProductCart>productCart;
-
+static  double prices;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -215,13 +211,17 @@ public class FragmentProduct extends Fragment implements OnItemListener,OnCartLi
 
     @Override
     public void onAddCart(int position, int num, boolean watch,double price) {
+         prices +=price;
+Log.d("ttt",""+prices);
         arrayList.get(position);
         productCart.add(new ProductCart(arrayList.get(position), num));
         Log.d("uuu",productCart.toString());
         if(watch==true){
             FragmentProductCart  fragment =   new FragmentProductCart();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("cart",productCart);
+            bundle.putSerializable("cart", productCart);
+            bundle.putDouble("price", prices);
+
             fragment.setArguments(bundle);
             getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
                     .replace(R.id.mainFragment, fragment).commit();

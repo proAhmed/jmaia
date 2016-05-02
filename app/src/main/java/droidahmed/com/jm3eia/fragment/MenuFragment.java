@@ -23,11 +23,8 @@ import java.util.ArrayList;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.account.SignIn;
-import droidahmed.com.jm3eia.account.SignUp;
-import droidahmed.com.jm3eia.adapter.MultiAdapter;
-import droidahmed.com.jm3eia.controller.Utility;
-import droidahmed.com.jm3eia.model.AllProducts;
-import droidahmed.com.jm3eia.model.SlidingMenuItem;
+  import droidahmed.com.jm3eia.controller.Utility;
+ import droidahmed.com.jm3eia.model.SlidingMenuItem;
 import droidahmed.com.jm3eia.start.MainActivity;
 
 

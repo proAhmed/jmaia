@@ -27,7 +27,7 @@ import droidahmed.com.jm3eia.model.UserLoginResponse;
 import droidahmed.com.jm3eia.model.UserResponse;
 
 
-public class SignInApi extends AsyncTask<String, Void, Object> {
+public class SignInApi extends AsyncTask<String, Void, UserLoginResponse> {
 
 	private final static String URL = Keys.BASE_URL + "/profile/signin";
 	private ProgressDialog dialog;
@@ -49,7 +49,7 @@ public class SignInApi extends AsyncTask<String, Void, Object> {
 	}
 
 	@Override
-	protected Object doInBackground(String... params) {
+	protected UserLoginResponse doInBackground(String... params) {
 		String responseJSON = null;
 		UserLoginResponse obj = null;
 
@@ -78,13 +78,13 @@ public class SignInApi extends AsyncTask<String, Void, Object> {
 	}
 
 	@Override
-	protected void onPostExecute(Object result) {
+	protected void onPostExecute(UserLoginResponse result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
-		if (result != null&&((UserResponse)result).isSuccess()) {
+		if (result != null&&((UserLoginResponse)result).isSuccess()) {
 			callback.onSuccess(result);
-		} else if(result != null&&!((UserResponse)result).isSuccess()) {
+		} else if(result != null&&!((UserLoginResponse)result).isSuccess()) {
 			callback.onSuccess(  result );
 		}else{
 			callback.onFailure();

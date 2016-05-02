@@ -74,8 +74,12 @@ boolean bb;
 
 //        switch (item.head) {
 //            case HEADER:
+
                 final ListHeaderViewHolder itemController = (ListHeaderViewHolder) holder;
                 itemController.refferalItem = item;
+//        if(item.getParentID()!=0&&!item.isParent()){
+//            itemController.header_title.setBackgroundColor(context.getResources().getColor(R.color.black_background));
+//        }
         itemController.header_title.setText(item.getAlias());
         Picasso.with(context).load("http://jm3eia.com/" +item.getPicture()).placeholder(R.drawable.place_holder_list).into(itemController.image);
                 itemController.header_title.setOnClickListener(new View.OnClickListener() {

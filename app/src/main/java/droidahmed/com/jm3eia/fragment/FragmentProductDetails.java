@@ -46,12 +46,8 @@ import droidahmed.com.jm3eia.start.MainActivity;
  * Created by ahmed on 3/15/2016.
  */
 public class FragmentProductDetails extends Fragment implements OnCartListener {
-     EditText edSearch;
-    ExpandableListAdapter listAdapter;
-    GridView gridView;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
-    ImageView imgProduct;
+      GridView gridView;
+      ImageView imgProduct;
     TextView tvName,tvCode,tvBrand,tvCategory;
     ArrayList<AllProducts>related;
     AllProducts[] pro;
@@ -60,6 +56,7 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
     ArrayList<CartItem> cartItems;
     CartItemResponse cartItemResponse;
     ArrayList<ProductCart>productCart;
+    static  double pricess;
 
     @Nullable
     @Override
@@ -132,6 +129,7 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
 
     @Override
     public void onAddCart(int position, int num,boolean watch,double price) {
+        pricess +=price;
 
         related.get(position);
         productCart.add(new ProductCart(related.get(position), num));
@@ -140,6 +138,8 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
             FragmentProductCart  fragment =   new FragmentProductCart();
             Bundle bundle = new Bundle();
             bundle.putSerializable("cart",productCart);
+            bundle.putDouble("price",pricess);
+
             fragment.setArguments(bundle);
             getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
                     .replace(R.id.mainFragment, fragment).commit();

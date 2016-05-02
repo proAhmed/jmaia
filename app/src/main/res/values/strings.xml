@@ -186,6 +186,15 @@
     <string name="re_new_pass"> تأكيد الرقم السرى</string>
     <string name="send_new_pass"> تغيير الرقم السرى</string>
     <string name="add_cart_laoding"> ضافة المنتج الى السلة</string>
+    <string name="cart_auth_request"> تسجيل الدخول</string>
+    <string name="cart_without_auth_request">إكمال الطلب بدون تسجيل</string>
+    <string name="request_done"> تنفيذ الطلب</string>
+    <string name="title_activity_cart_not_auth">CartNotAuth</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="gada"> الجادة </string>
+    <string name="price_total"> يجب ان يزيد ثمن المشتريات عن 10 دنانير </string>
+    <string name="see_cart">  شاهد السلة </string>
 
 
 </resources>
