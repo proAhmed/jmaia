@@ -1,11 +1,11 @@
 package droidahmed.com.jm3eia.api;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -14,26 +14,25 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 
 
-public class AddComment extends AsyncTask<String, Void, WSResult> {
+public class DeleteCartItem extends AsyncTask<String, Void, WSResult> {
 
-	private final static String URL = Keys.BASE_URL + "offer/add_comment";
+	private final static String URL = "http://jm3eia.com/API/ar/cart/add";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
 
-	public AddComment(Context context, OnProcessCompleteListener cb) {
+	public DeleteCartItem(Context context, OnProcessCompleteListener cb) {
 		dialog = new ProgressDialog(context);
 		callback = cb;
 		this.context = context;
@@ -42,7 +41,7 @@ public class AddComment extends AsyncTask<String, Void, WSResult> {
 	@Override
 	protected void onPreExecute() {
 		this.dialog.setMessage(context.getResources().getString(
-				R.string.loading_add_comment));
+				R.string.add_cart_laoding));
 		this.dialog.setCancelable(false);
 		this.dialog.show();
 	}
@@ -53,8 +52,8 @@ public class AddComment extends AsyncTask<String, Void, WSResult> {
 		WSResult obj = null;
 
 		try {
-			responseJSON = makeRequest(params[0], params[1], params[2],
-					params[3]);
+			responseJSON = makeRequest(params[0], params[1], params[2]
+					 );
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -89,18 +88,17 @@ public class AddComment extends AsyncTask<String, Void, WSResult> {
 		}
 	}
 
-	public static String makeRequest(String usename, String password,
-			String productID, String contents) throws Exception {
+	public static String makeRequest(String id, String quantity,
+			String date) throws Exception {
 
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
 		JSONObject json = new JSONObject();
 
-		json.put("AuthUserName", usename);
-		json.put("AuthPassword", password);
-		json.put("Offer", Integer.parseInt(productID));
-		json.put("Contents", contents);
+		json.put("ID", Integer.parseInt(id));
+		json.put("Quantity",Integer.parseInt( quantity));
+		json.put("CreatedDate",  date);
 
 		InputStreamEntity entity = null;
 		try {

@@ -8,10 +8,10 @@ import java.io.Serializable;
 public class AllProducts implements Serializable{
     private int ID;
     private double Code;
-    private int CategoryID;
-    private int BrandID;
+    private double CategoryID;
+    private double BrandID;
      private double Price;
-    private int Quantity;
+    private double Quantity;
     private String Picture;
     private String SliderPictures;
     private String CreatedDate;
@@ -40,7 +40,7 @@ public class AllProducts implements Serializable{
         CategoryName = categoryName;
     }
 
-    public AllProducts(int ID, double code, int categoryID, int brandID, double price, int quantity, String picture, String sliderPictures, String createdDate, String modifiedDate, int viewed, int featured, int state, int productID, int languageID, String name, String alias, String contents, String description, String keywords, String categoryName, String brandName) {
+    public AllProducts(int ID, double code, int categoryID, int brandID, double price, double quantity, String picture, String sliderPictures, String createdDate, String modifiedDate, int viewed, int featured, int state, int productID, int languageID, String name, String alias, String contents, String description, String keywords, String categoryName, String brandName) {
         this.ID = ID;
         Code = code;
         CategoryID = categoryID;
@@ -141,19 +141,19 @@ public class AllProducts implements Serializable{
         this.ID = ID;
     }
 
-    public int getCategoryID() {
+    public double getCategoryID() {
         return CategoryID;
     }
 
-    public void setCategoryID(int categoryID) {
+    public void setCategoryID(double categoryID) {
         CategoryID = categoryID;
     }
 
-    public int getBrandID() {
+    public double getBrandID() {
         return BrandID;
     }
 
-    public void setBrandID(int brandID) {
+    public void setBrandID(double brandID) {
         BrandID = brandID;
     }
 
@@ -165,11 +165,11 @@ public class AllProducts implements Serializable{
         Price = price;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return Quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         Quantity = quantity;
     }
 
@@ -331,11 +331,14 @@ public class AllProducts implements Serializable{
         result = ID;
         temp = Double.doubleToLongBits(Code);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + CategoryID;
-        result = 31 * result + BrandID;
+        temp = Double.doubleToLongBits(CategoryID);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(BrandID);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(Price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + Quantity;
+        temp = Double.doubleToLongBits(Quantity);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (Picture != null ? Picture.hashCode() : 0);
         result = 31 * result + (SliderPictures != null ? SliderPictures.hashCode() : 0);
         result = 31 * result + (CreatedDate != null ? CreatedDate.hashCode() : 0);

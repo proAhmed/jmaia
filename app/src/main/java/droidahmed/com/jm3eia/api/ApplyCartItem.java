@@ -1,9 +1,11 @@
 package droidahmed.com.jm3eia.api;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -12,29 +14,25 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
-import droidahmed.com.jm3eia.model.UserLoginResponse;
-import droidahmed.com.jm3eia.model.UserResponse;
 
 
-public class SignInApi extends AsyncTask<String, Void, Object> {
+public class ApplyCartItem extends AsyncTask<String, Void, WSResult> {
 
-	private final static String URL = Keys.BASE_URL + "/profile/signin";
+	private final static String URL = "http://jm3eia.com/API/ar/cart/add";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
 
-	public SignInApi(Context context, OnProcessCompleteListener cb) {
+	public ApplyCartItem(Context context, OnProcessCompleteListener cb) {
 		dialog = new ProgressDialog(context);
 		callback = cb;
 		this.context = context;
@@ -43,19 +41,19 @@ public class SignInApi extends AsyncTask<String, Void, Object> {
 	@Override
 	protected void onPreExecute() {
 		this.dialog.setMessage(context.getResources().getString(
-				R.string.loading_signin));
+				R.string.add_cart_laoding));
 		this.dialog.setCancelable(false);
 		this.dialog.show();
 	}
 
 	@Override
-	protected Object doInBackground(String... params) {
+	protected WSResult doInBackground(String... params) {
 		String responseJSON = null;
-		UserLoginResponse obj = null;
+		WSResult obj = null;
 
 		try {
-			responseJSON = makeRequest(params[0], params[1]);
-			Log.d("homess",responseJSON);
+			responseJSON = makeRequest(params[0], params[1], params[2]
+					 );
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,46 +66,57 @@ public class SignInApi extends AsyncTask<String, Void, Object> {
 			gb.serializeNulls();
 			gson = gb.create();
 			try {
-				obj = gson.fromJson(responseJSON, UserLoginResponse.class);
+				obj = gson.fromJson(responseJSON, WSResult.class);
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
+
 		}
 
 		return obj;
 	}
 
 	@Override
-	protected void onPostExecute(Object result) {
+	protected void onPostExecute(WSResult result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
-		if (result != null&&((UserResponse)result).isSuccess()) {
+		if (result != null) {
 			callback.onSuccess(result);
-		} else if(result != null&&!((UserResponse)result).isSuccess()) {
-			callback.onSuccess(  result );
-		}else{
+		} else {
 			callback.onFailure();
 		}
 	}
 
-	public static String makeRequest(String usename, String password)
-			throws Exception {
+	public static String makeRequest(String id, String quantity,
+			String date) throws Exception {
 
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
 		JSONObject json = new JSONObject();
 
-		json.put("UserName", usename);
-		json.put("Password", password);
+		json.put("ID", Integer.parseInt(id));
+		json.put("Quantity",Integer.parseInt( quantity));
+		json.put("CreatedDate",  date);
 
-		InputStream is = new ByteArrayInputStream(json.toString().getBytes(
-				"UTF-8"));
+		InputStreamEntity entity = null;
+		try {
+			InputStream is = new ByteArrayInputStream(json.toString().getBytes(
+					"UTF-8"));
 
-		InputStreamEntity entity = new InputStreamEntity(is, is.available());
+			entity = new InputStreamEntity(is, is.available());
+
+		} catch (UnsupportedEncodingException e) {
+
+			e.printStackTrace();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 
 		httpost.setEntity(entity);
+
 		httpost.setHeader("Content-type", "application/json");
 		HttpResponse response = (HttpResponse) httpclient.execute(httpost);
 
@@ -125,5 +134,4 @@ public class SignInApi extends AsyncTask<String, Void, Object> {
 		return total.toString();
 
 	}
-
 }

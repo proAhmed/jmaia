@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,12 +19,14 @@ import com.google.gson.GsonBuilder;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.model.CategoryParent;
+import droidahmed.com.jm3eia.model.MainCategory;
 
 
 public class CategoriesByParent extends
-		AsyncTask<String, Void, CategoriesByParentModel[]> {
+		AsyncTask<String, Void, MainCategory> {
 
-	private final String URL = "http://jm3eia.com/API/ar/product/c/";
+	private final String URL = "http://jm3eia.com/API/ar/general/categories/";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
@@ -43,13 +46,13 @@ public class CategoriesByParent extends
 	}
 
 	@Override
-	protected CategoriesByParentModel[] doInBackground(String... params) {
+	protected MainCategory doInBackground(String... params) {
 		String responseJSON = null;
-		CategoriesByParentModel[] obj = null;
+		MainCategory obj = null;
 
 		try {
-			responseJSON = invokeJSONWS(params[0]);
-		} catch (Exception e) {
+			responseJSON = invokeJSONWS();
+ 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -62,7 +65,7 @@ public class CategoriesByParent extends
 			gson = gb.create();
 			try {
 				obj = gson.fromJson(responseJSON,
-						CategoriesByParentModel[].class);
+						MainCategory.class);
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
@@ -72,7 +75,7 @@ public class CategoriesByParent extends
 	}
 
 	@Override
-	protected void onPostExecute(CategoriesByParentModel[] result) {
+	protected void onPostExecute(MainCategory result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
@@ -83,12 +86,12 @@ public class CategoriesByParent extends
 		}
 	}
 
-	private String invokeJSONWS(String id) throws IOException {
+	private String invokeJSONWS() throws IOException {
 
 		InputStream in = null;
 		int response = -1;
 		String responseJSON;
-		URL url = new URL(URL + id);
+		URL url = new URL(URL);
 		URLConnection conn = url.openConnection();
 		if (!(conn instanceof HttpURLConnection))
 			throw new IOException("Not an HTTP connection");

@@ -48,8 +48,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".account.ForgetPassword"
-            android:label="@string/title_activity_forget_password"
+            android:name=".account.ChangePass"
+            android:label="@string/title_activity_change_password"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity

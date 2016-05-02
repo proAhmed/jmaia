@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -27,6 +28,7 @@ import java.util.Locale;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.adapter.CuListAdapter;
+import droidahmed.com.jm3eia.api.CategoriesByParent;
 import droidahmed.com.jm3eia.api.GetHome;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
@@ -35,14 +37,17 @@ import droidahmed.com.jm3eia.fragment.FragmentProduct;
 import droidahmed.com.jm3eia.fragment.MenuFragment;
 import droidahmed.com.jm3eia.fragment.MenuFragmentRight;
 import droidahmed.com.jm3eia.model.AllProducts;
+import droidahmed.com.jm3eia.model.CategoryParent;
 import droidahmed.com.jm3eia.model.MainApi;
+import droidahmed.com.jm3eia.model.MainCategory;
+import droidahmed.com.jm3eia.model.PathName;
 
 public class MainActivity extends SlidingFragmentActivity {
   ImageView  imageToggle,imgLogo,imageToggleRight;
     TextView tvTitle;
-    AllProducts[] pro;
+    ArrayList<CategoryParent>  pro;
     private OnProcessCompleteListener ProductListener;
-    MainApi mainApi;
+    MainCategory mainApi;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +84,9 @@ public class MainActivity extends SlidingFragmentActivity {
 
                 @Override
                 public void onSuccess(Object result) {
-                    mainApi = (MainApi) result;
+                    mainApi = (MainCategory) result;
                     pro=   mainApi.getData();
+                 //   Log.d("iiii",pro.toString());
 //                    Gson gson = new Gson();
 //                    String json = gson.toJson(pro);
 //                    StoreData storeData = new StoreData(MainActivity.this);
@@ -91,16 +97,16 @@ public class MainActivity extends SlidingFragmentActivity {
 
 
                             Fragment fragmentProduct = new FragmentProduct();
-//                    FragmentManager fm = getSupportFragmentManager();
-//                    FragmentTransaction ft = fm.beginTransaction();
- //                    ft.replace(R.id.mainFragment, fragmentProduct);
-//                    ft.commit();
+                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                     ft.replace(R.id.mainFragment, fragmentProduct);
+                    ft.commit();
                             fragmentProduct.setArguments(bundle);
                             getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.mainFragment, fragmentProduct)
                                     .commitAllowingStateLoss();
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.menu_slide, MenuFragmentRight.newInstance(new ArrayList<>(Arrays.asList(pro))))
+                            .replace(R.id.menu_slide, MenuFragmentRight.newInstance( pro))
                                     .commitAllowingStateLoss();
 
                 }
@@ -111,7 +117,7 @@ public class MainActivity extends SlidingFragmentActivity {
                 }
             };
 
-            GetHome task = new GetHome(MainActivity.this, ProductListener);
+            CategoriesByParent task = new CategoriesByParent(MainActivity.this, ProductListener);
             task.execute();
 
         } else {

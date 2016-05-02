@@ -1,6 +1,7 @@
 package droidahmed.com.jm3eia.controller;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,6 +17,8 @@ import android.util.Base64;
 import android.view.inputmethod.InputMethodManager;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -143,4 +146,23 @@ public class Utility {
 
     }
 }
+    @SuppressLint("SimpleDateFormat")
+    public static String getCurrentTimeStamp() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+    }
+    public static void SaveData(Context context,String authName,String authPass,String fullNAme,String email,
+                          String mobile,String gada,String widget,String zone,
+                          String house,String street){
+        StoreData storeData =  new StoreData(context);
+        storeData.saveAuthName(authName);
+        storeData.saveAuthPass(authPass);
+        storeData.saveFullName(fullNAme);
+        storeData.saveEmail(email);
+        storeData.saveMobile(mobile);
+        storeData.saveGada(gada);
+        storeData.saveWidget(widget);
+        storeData.saveZone(zone);
+        storeData.saveHouse(house);
+        storeData.saveStreet(street);
+    }
 }

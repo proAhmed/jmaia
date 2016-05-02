@@ -29,15 +29,23 @@ import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.adapter.CuListAdapter;
 import droidahmed.com.jm3eia.adapter.ExpandableListAdapter;
 import droidahmed.com.jm3eia.adapter.ProGridAdapter;
+import droidahmed.com.jm3eia.api.AddCartItem;
+import droidahmed.com.jm3eia.controller.OnCartListener;
+import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
+import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
+import droidahmed.com.jm3eia.model.CartItem;
+import droidahmed.com.jm3eia.model.CartItemResponse;
+import droidahmed.com.jm3eia.model.MainApi;
 import droidahmed.com.jm3eia.model.Product;
+import droidahmed.com.jm3eia.model.ProductCart;
 import droidahmed.com.jm3eia.start.MainActivity;
 
 /**
  * Created by ahmed on 3/15/2016.
  */
-public class FragmentProductDetails extends Fragment {
+public class FragmentProductDetails extends Fragment implements OnCartListener {
      EditText edSearch;
     ExpandableListAdapter listAdapter;
     GridView gridView;
@@ -46,11 +54,22 @@ public class FragmentProductDetails extends Fragment {
     ImageView imgProduct;
     TextView tvName,tvCode,tvBrand,tvCategory;
     ArrayList<AllProducts>related;
+    AllProducts[] pro;
+    private OnProcessCompleteListener ProductListener;
+    MainApi mainApi;
+    ArrayList<CartItem> cartItems;
+    CartItemResponse cartItemResponse;
+    ArrayList<ProductCart>productCart;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product_details, container, false);
         gridView = (GridView) view.findViewById(R.id.grid);
+        final OnCartListener onCartListener = (OnCartListener) this;
+        cartItems = new ArrayList<>();
+        productCart = new ArrayList<>();
+
         Bundle bundle = getArguments();
       AllProducts allProducts = (AllProducts) bundle.getSerializable("products");
         Log.d("uuu", allProducts.getName());
@@ -69,7 +88,7 @@ public class FragmentProductDetails extends Fragment {
         tvBrand.setText(allProducts.getBrandName()+"");
         Picasso.with(getActivity()).load("http://jm3eia.com/" +allProducts.getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
 
-        gridView.setAdapter(new CuListAdapter(getActivity(),related));
+        gridView.setAdapter(new CuListAdapter(getActivity(),related,onCartListener));
 
 
 
@@ -110,5 +129,46 @@ public class FragmentProductDetails extends Fragment {
         });
 
     }
+
+    @Override
+    public void onAddCart(int position, int num,boolean watch,double price) {
+
+        related.get(position);
+        productCart.add(new ProductCart(related.get(position), num));
+        Log.d("uuu",productCart.toString());
+        if(watch==true){
+            FragmentProductCart  fragment =   new FragmentProductCart();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("cart",productCart);
+            fragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
+                    .replace(R.id.mainFragment, fragment).commit();
+        }
+//        if (Utility.isNetworkConnected(getActivity())) {
+//
+//            ProductListener = new OnProcessCompleteListener() {
+//
+//                @Override
+//                public void onSuccess(Object result) {
+//                    cartItemResponse = (CartItemResponse) result;
+//                    cartItems=   cartItemResponse.getData();
+//                }
+//
+//                @Override
+//                public void onFailure() {
+//                    Utility.showFailureDialog(getActivity(), false);
+//                }
+//            };
+//
+//            AddCartItem task = new AddCartItem(getActivity(), ProductListener);
+//            task.execute(String.valueOf(position),String.valueOf(num),Utility.getCurrentTimeStamp());
+//
+//        } else {
+//            Utility.showValidateDialog(
+//                    getResources().getString(R.string.failure_ws),
+//                    getActivity());
+//        }
+    }
+
 
 }

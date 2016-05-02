@@ -16,8 +16,11 @@ import android.widget.TextView;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.api.Register;
 import droidahmed.com.jm3eia.api.SignInApi;
+import droidahmed.com.jm3eia.api.User;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.Utility;
+import droidahmed.com.jm3eia.model.UserLogin;
+import droidahmed.com.jm3eia.model.UserLoginResponse;
 import droidahmed.com.jm3eia.model.UserResponse;
 import droidahmed.com.jm3eia.start.MainActivity;
 
@@ -26,7 +29,7 @@ public class SignIn extends AppCompatActivity {
     EditText edUserName,edPass;
     Button btn;
     private OnProcessCompleteListener signListener;
-    private UserResponse registerUser;
+    private UserLoginResponse registerUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +89,14 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void onSuccess(Object result) {
 try {
-    registerUser = (UserResponse) result;
+    registerUser = (UserLoginResponse) result;
 
     if (registerUser != null) {
         if (registerUser.getData().getID() != null
                 ) {
-
+            UserLogin user = registerUser.getData();
+            Utility.SaveData(SignIn.this,user.getUserName(),user.getAuthPassword(),user.getFullName(),user.getEmail()
+                    ,user.getMobile(),user.getGada(),user.getWidget(),user.getZone(),user.getHouse(),user.getStreet());
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     SignIn.this);
 
@@ -133,8 +138,8 @@ try {
                     message += registerUser.getData().getUserName();
                 if (registerUser.getData().getEmail() != null)
                     message += registerUser.getData().getEmail();
-                if (registerUser.getData().getPassword() != null)
-                    message += registerUser.getData().getPassword();
+                if (registerUser.getData().getAuthPassword() != null)
+                    message += registerUser.getData().getAuthPassword();
 
                 Utility.showValidateDialog(message, SignIn.this);
 

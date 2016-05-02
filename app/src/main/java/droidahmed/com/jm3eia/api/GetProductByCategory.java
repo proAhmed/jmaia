@@ -29,7 +29,7 @@ public class GetProductByCategory extends AsyncTask<String,Void,MainApi > {
     private  String URL =  "http://jm3eia.com/API/ar/product/c/";
     private OnProcessCompleteListener callback;
     private Context context;
-    public GetProductByCategory(Context context, OnProcessCompleteListener cb,int id) {
+    public GetProductByCategory(Context context,int id ,OnProcessCompleteListener cb) {
         dialog = new ProgressDialog(context);
         callback = cb;
         this.context = context;

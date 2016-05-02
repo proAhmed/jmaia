@@ -92,7 +92,7 @@
             android:gravity="right"
             android:layout_marginLeft="5dp"
             android:background="@drawable/market_icon"
-            >
+            android:id="@+id/imgCart">
 
 
             <TextView

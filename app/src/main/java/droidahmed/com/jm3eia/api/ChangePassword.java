@@ -22,12 +22,13 @@ import com.google.gson.GsonBuilder;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.model.ChangePassOutPut;
 
 
 public class ChangePassword extends
-		AsyncTask<String, Void, ChangePasswordModel> {
+		AsyncTask<String, Void, ChangePassOutPut> {
 
-	private final static String URL = Keys.BASE_URL + "profile/changepassword";
+	private final static String URL = "http://jm3eia.com/API/ar/profile/changepassword\n";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
@@ -47,9 +48,9 @@ public class ChangePassword extends
 	}
 
 	@Override
-	protected ChangePasswordModel doInBackground(String... params) {
+	protected ChangePassOutPut doInBackground(String... params) {
 		String responseJSON = null;
-		ChangePasswordModel obj = null;
+		ChangePassOutPut obj = null;
 
 		try {
 			responseJSON = makeRequest(params[0], params[1], params[2],
@@ -66,7 +67,7 @@ public class ChangePassword extends
 			gb.serializeNulls();
 			gson = gb.create();
 			try {
-				obj = gson.fromJson(responseJSON, ChangePasswordModel.class);
+				obj = gson.fromJson(responseJSON, ChangePassOutPut.class);
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
@@ -76,7 +77,7 @@ public class ChangePassword extends
 	}
 
 	@Override
-	protected void onPostExecute(ChangePasswordModel result) {
+	protected void onPostExecute(ChangePassOutPut result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}

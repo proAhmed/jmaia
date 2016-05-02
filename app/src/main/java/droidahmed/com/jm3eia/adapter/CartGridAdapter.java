@@ -18,24 +18,23 @@ import java.util.ArrayList;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.OnCartListener;
+import droidahmed.com.jm3eia.controller.OnItemListener;
 import droidahmed.com.jm3eia.model.AllProducts;
-import droidahmed.com.jm3eia.model.Product;
+import droidahmed.com.jm3eia.model.ProductCart;
 
 
 /**
  * Created by ahmed on 1/19/2016.
  */
-public class CuListAdapter extends BaseAdapter {
+public class CartGridAdapter extends BaseAdapter {
 
-    ArrayList<AllProducts>  _choices;
+    ArrayList<ProductCart>  _choices;
     private Context context;
      OnCartListener onCartListener;
-
-    public CuListAdapter(Context context,  ArrayList<AllProducts>  _choices, OnCartListener onCartListener) {
+    public CartGridAdapter(Context context, ArrayList<ProductCart> _choices, OnCartListener onCartListener) {
         this.context = context;
         this._choices = _choices;
-        this.onCartListener = onCartListener;
-
+         this.onCartListener = onCartListener;
     }
 
     @Override
@@ -55,53 +54,51 @@ public class CuListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final double[] price = {0};
         final int[] cartItem = {0};
-        final boolean[] cartWatch = {false};
+        final double[] price = {0};
 
+        final boolean[] cartWatch = {false};
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView tvName,tvPrice;
-        ImageView imgProduct;
-        RelativeLayout gridClickable;
-        ImageView imgAdd,imgDelete;
+        ImageView imgProduct,imgAdd,imgDelete;
         final LinearLayout imgCart;
         final EditText edNumber;
+        RelativeLayout gridClickable;
         if (convertView == null) {
            convertView = inflater.inflate(R.layout.main_items, parent, false);
         }
 
         imgProduct = (ImageView) convertView.findViewById(R.id.imgProduct);
-        tvName = (TextView) convertView.findViewById(R.id.tvName);
-        tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
-        tvName.setText(_choices.get(position).getName());
-        tvPrice.setText(_choices.get(position).getPrice()+"");
         imgAdd = (ImageView) convertView.findViewById(R.id.imgAdd);
         imgDelete = (ImageView) convertView.findViewById(R.id.imgDelete);
         imgCart = (LinearLayout) convertView.findViewById(R.id.imgCart);
         edNumber = (EditText)  convertView.findViewById(R.id.edNumber);
-        edNumber.setText("" + cartItem[0]);
+        edNumber.setText(_choices.get(position).getCount()+"");
 
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 edNumber.getText();
-                if (cartWatch[0] == false) {
-                    onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), false,price[0]);
+                if(cartWatch[0]==false){
+                    onCartListener.onAddCart(position,Integer.parseInt(edNumber.getText().toString()),false,price[0]);
                     imgCart.setBackgroundColor(Color.parseColor("#000000"));
 
-                    cartWatch[0] = true;
-                } else {
-                    cartWatch[0] = false;
-                    onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), true,price[0]);
+                    cartWatch[0] =true;
+                }else {
+                    cartWatch[0] =false;
+                    onCartListener.onAddCart(position,Integer.parseInt(edNumber.getText().toString()),true,price[0]);
+                    price[0] = _choices.get(position).getPrice()*cartItem[0];
+
                 }
+
             }
         });
         imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ++cartItem[0];
-                edNumber.setText("" + cartItem[0]);
+                 ++cartItem[0];
+                edNumber.setText(""+ cartItem[0]);
                 price[0] = _choices.get(position).getPrice()*cartItem[0];
 
             }
@@ -109,16 +106,21 @@ public class CuListAdapter extends BaseAdapter {
         imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cartItem[0] > 0) {
-                    --cartItem[0];
-                    edNumber.setText("" + cartItem[0]);
-                    price[0] = _choices.get(position).getPrice()*cartItem[0];
+if (cartItem[0] >0){
+    --cartItem[0];
+    edNumber.setText("" + cartItem[0]);
+    price[0] = _choices.get(position).getPrice()*cartItem[0];
 
-                }
+}
             }
         });
+        tvName = (TextView) convertView.findViewById(R.id.tvName);
+        tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
+        tvName.setText(_choices.get(position).getAllProducts().getName());
+        tvPrice.setText(_choices.get(position).getAllProducts().getPrice()+"");
 
-        Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
+        Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getAllProducts().getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
+
         return convertView;
     }
 }

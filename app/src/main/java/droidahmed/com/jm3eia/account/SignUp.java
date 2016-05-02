@@ -19,6 +19,7 @@ import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.api.Register;
 import droidahmed.com.jm3eia.api.User;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.InputNewUser;
 import droidahmed.com.jm3eia.model.UserResponse;

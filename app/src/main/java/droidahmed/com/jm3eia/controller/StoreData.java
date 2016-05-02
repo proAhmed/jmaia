@@ -26,13 +26,81 @@ public class StoreData {
         editor.apply();
     }
     public String getData() {
-        String jsonString = sharedPreferences.getString("data", "");
-        return jsonString;
+        return sharedPreferences.getString("data", "");
     }
 
+    public void saveAuthName(String category) {
+        editor.putString("AuthName", category);
+        editor.apply();
+    }
+    public String getAuthName() {
+        return sharedPreferences.getString("AuthName", "");
+    }
+    public void saveAuthPass(String category) {
+        editor.putString("AuthPass", category);
+        editor.apply();
+    }
+    public String getAuthPass() {
+        return sharedPreferences.getString("AuthPass", "");
+    }
 
+    public void saveEmail(String category) {
+        editor.putString("Email", category);
+        editor.apply();
+    }
+    public String getEmail() {
+        return sharedPreferences.getString("Email", "");
+    }
+    public void saveFullName(String category) {
+        editor.putString("FullName", category);
+        editor.apply();
+    }
+    public String getFullName() {
+        return sharedPreferences.getString("FullName", "");
+    }
+    public void saveMobile(String category) {
+        editor.putString("Mobile", category);
+        editor.apply();
+    }
+    public String getMobile() {
+        return sharedPreferences.getString("Mobile", "");
+    }
+    public void saveZone(String category) {
+        editor.putString("Zone", category);
+        editor.apply();
+    }
+    public String getZone() {
+        return sharedPreferences.getString("Zone", "");
+    }
 
+    public void saveWidget(String category) {
+        editor.putString("Widget", category);
+        editor.apply();
+    }
+    public String getWidget() {
+        return sharedPreferences.getString("Widget", "");
+    }
 
+    public void saveStreet(String category) {
+        editor.putString("Street", category);
+        editor.apply();
+    }
+    public String getStreet() {
+        return sharedPreferences.getString("Street", "");
+    }
 
-
+    public void saveGada(String category) {
+        editor.putString("Gada", category);
+        editor.apply();
+    }
+    public String getGada() {
+        return sharedPreferences.getString("Gada", "");
+    }
+    public void saveHouse(String category) {
+        editor.putString("House", category);
+        editor.apply();
+    }
+    public String getHouse() {
+        return sharedPreferences.getString("House", "");
+    }
 }

@@ -110,16 +110,22 @@ switch (position){
 
     case 1:
         ft.replace(R.id.mainFragment, new FragmentProduct());
-     //   ft.commit();
+        ft.commit();
 
         mainActivity. toggle();
         break;
     case 2:
         ft.replace(R.id.mainFragment, new FragmentProductCart());
-      //  ft.commit();
+         ft.commit();
 
         mainActivity. toggle();
          break;
+    case 3:
+        ft.replace(R.id.mainFragment, new SettingFragment());
+        ft.commit();
+
+        mainActivity. toggle();
+        break;
 
 
     case 5:

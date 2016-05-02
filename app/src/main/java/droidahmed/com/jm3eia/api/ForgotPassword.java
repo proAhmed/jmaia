@@ -26,7 +26,7 @@ import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 
 public class ForgotPassword extends AsyncTask<String, Void, WSResult> {
 
-	private final static String URL = Keys.BASE_URL + "profile/forgotpassword";
+	private final static String URL =   "http://jm3eia.com/ar/profile/forgotpassword";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
