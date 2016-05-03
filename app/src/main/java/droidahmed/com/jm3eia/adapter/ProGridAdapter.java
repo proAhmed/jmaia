@@ -61,7 +61,7 @@ public class ProGridAdapter extends BaseAdapter {
         final boolean[] cartWatch = {false};
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TextView tvName,tvPrice,item_change = null;
+        final TextView tvName,tvPrice,item_change;
         ImageView imgProduct,imgAdd,imgDelete;
         final LinearLayout imgCart;
         final EditText edNumber;
@@ -69,6 +69,7 @@ public class ProGridAdapter extends BaseAdapter {
         if (convertView == null) {
            convertView = inflater.inflate(R.layout.main_items, parent, false);
         }
+        item_change  = (TextView) convertView.findViewById(R.id.item_change);
 
         imgProduct = (ImageView) convertView.findViewById(R.id.imgProduct);
         imgAdd = (ImageView) convertView.findViewById(R.id.imgAdd);
@@ -77,14 +78,13 @@ public class ProGridAdapter extends BaseAdapter {
         edNumber = (EditText)  convertView.findViewById(R.id.edNumber);
         edNumber.setText("" + cartItem[0]);
 
-        final TextView finalItem_change = item_change;
-        imgCart.setOnClickListener(new View.OnClickListener() {
+         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 edNumber.getText();
                 if (cartWatch[0] == false) {
                     onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), false, price[0]);
-                     finalItem_change.setText(context.getResources().getString(R.string.see_cart));
+                    item_change.setText(context.getResources().getString(R.string.see_cart));
                     cartWatch[0] = true;
                 } else {
                     cartWatch[0] = false;
@@ -115,7 +115,6 @@ if (cartItem[0] >0){
         });
         tvName = (TextView) convertView.findViewById(R.id.tvName);
         tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
-        item_change  = (TextView) convertView.findViewById(R.id.item_change);
         tvName.setText(_choices.get(position).getName());
         tvPrice.setText(_choices.get(position).getPrice()+"");
         gridClickable = (RelativeLayout) convertView.findViewById(R.id.gridClickable);

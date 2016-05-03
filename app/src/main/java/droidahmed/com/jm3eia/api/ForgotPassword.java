@@ -20,13 +20,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.model.ForgetPassModel;
 
 
-public class ForgotPassword extends AsyncTask<String, Void, WSResult> {
+public class ForgotPassword extends AsyncTask<String, Void, ForgetPassModel> {
 
-	private final static String URL =   "http://jm3eia.com/ar/profile/forgotpassword";
+	private final static String URL ="https://jm3eia.com/API/ar/profile/forgotpassword";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
@@ -46,9 +46,9 @@ public class ForgotPassword extends AsyncTask<String, Void, WSResult> {
 	}
 
 	@Override
-	protected WSResult doInBackground(String... params) {
+	protected ForgetPassModel doInBackground(String... params) {
 		String responseJSON = null;
-		WSResult obj = null;
+		ForgetPassModel obj = null;
 
 		try {
 			responseJSON = makeRequest(params[0]);
@@ -64,7 +64,7 @@ public class ForgotPassword extends AsyncTask<String, Void, WSResult> {
 			gb.serializeNulls();
 			gson = gb.create();
 			try {
-				obj = gson.fromJson(responseJSON, WSResult.class);
+				obj = gson.fromJson(responseJSON, ForgetPassModel.class);
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
@@ -73,7 +73,7 @@ public class ForgotPassword extends AsyncTask<String, Void, WSResult> {
 		return obj;
 	}
 
-	protected void onPostExecute(WSResult result) {
+	protected void onPostExecute(ForgetPassModel result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
