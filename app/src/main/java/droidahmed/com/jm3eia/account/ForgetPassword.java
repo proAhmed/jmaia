@@ -14,9 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.api.ForgotPasswordApi;
 import droidahmed.com.jm3eia.api.SignInApi;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.Utility;
+import droidahmed.com.jm3eia.model.ForgetPassModel;
 import droidahmed.com.jm3eia.model.UserLogin;
 import droidahmed.com.jm3eia.model.UserLoginResponse;
 import droidahmed.com.jm3eia.start.MainActivity;
@@ -25,6 +27,7 @@ public class ForgetPassword extends Fragment {
 Button btnForgetPass;
     EditText edForgetPass;
     private OnProcessCompleteListener forgetListener;
+    ForgetPassModel forgetP;
 Context context;
     @Nullable
     @Override
@@ -58,21 +61,19 @@ Context context;
     }
     private void register(String userName,String password) {
 
-        signListener = new OnProcessCompleteListener() {
+        forgetListener = new OnProcessCompleteListener() {
 
             @Override
             public void onSuccess(Object result) {
                 try {
-                    registerUser = (UserLoginResponse) result;
+                    forgetP = (ForgetPassModel) result;
 
-                    if (registerUser != null) {
-                        if (registerUser.getData().getID() != null
+                    if (forgetP != null) {
+                        if (forgetP.getResult() != null
                                 ) {
-                            UserLogin user = registerUser.getData();
-                            Utility.SaveData(SignIn.this,user.getUserName(),user.getAuthPassword(),user.getFullName(),user.getEmail()
-                                    ,user.getMobile(),user.getGada(),user.getWidget(),user.getZone(),user.getHouse(),user.getStreet());
+
                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                    SignIn.this);
+                                    getActivity());
 
                             alertDialogBuilder
                                     .setMessage("success")
@@ -93,36 +94,19 @@ Context context;
 //                                                                android.R.id.tabcontent,
 //                                                                fragment)
 //                                                        .commit();
-                                                    Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                                    Intent intent = new Intent(getActivity(), MainActivity.class);
                                                     startActivity(intent);
                                                 }
                                             });
                             AlertDialog alertDialog = alertDialogBuilder.create();
                             alertDialog.show();
 
-                        } else {
-                            if (registerUser.getData().getID() == null
-                                    || registerUser.getData().getID().contains("null")) {
-                                String message = " ";
 
-                                if (registerUser.getData().getFullName() != null)
-                                    message += registerUser.getData().getFullName();
-
-                                if (registerUser.getData().getUserName() != null)
-                                    message += registerUser.getData().getUserName();
-                                if (registerUser.getData().getEmail() != null)
-                                    message += registerUser.getData().getEmail();
-                                if (registerUser.getData().getAuthPassword() != null)
-                                    message += registerUser.getData().getAuthPassword();
-
-                                Utility.showValidateDialog(message, SignIn.this);
-
-                            }
                         }
                     }
                 }catch (Exception e){
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                            SignIn.this);
+                            getActivity());
 
                     alertDialogBuilder
                             .setMessage(((UserLoginResponse) result).getError().toString())
@@ -143,13 +127,13 @@ Context context;
 //                                                                android.R.id.tabcontent,
 //                                                                fragment)
 //                                                        .commit();
-                                            if(intent.getExtras()!=null){
+                                            if(getActivity().getIntent().getExtras()!=null){
 
-                                                Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                                Intent intent = new Intent(getActivity(), MainActivity.class);
                                                 intent.putExtra("CartAuth","CartAuth");
                                                 startActivity(intent);
                                             }else{
-                                                Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                                Intent intent = new Intent(getActivity(), MainActivity.class);
                                                 startActivity(intent);
                                             }
 
@@ -165,7 +149,7 @@ Context context;
                 Utility.showFailureDialog(context, true);
             }
         };
-        ForgetPassword callWS = new ForgetPassword(getActivity(), forgetListener);
+        ForgotPasswordApi callWS = new ForgotPasswordApi(getActivity(), forgetListener);
 
         callWS.execute(userName,password);
     }

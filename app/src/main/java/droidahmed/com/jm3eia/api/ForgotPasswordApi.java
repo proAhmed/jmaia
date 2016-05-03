@@ -24,14 +24,14 @@ import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.model.ForgetPassModel;
 
 
-public class ForgotPassword extends AsyncTask<String, Void, ForgetPassModel> {
+public class ForgotPasswordApi extends AsyncTask<String, Void, ForgetPassModel> {
 
 	private final static String URL ="https://jm3eia.com/API/ar/profile/forgotpassword";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
 
-	public ForgotPassword(Context context, OnProcessCompleteListener cb) {
+	public ForgotPasswordApi(Context context, OnProcessCompleteListener cb) {
 		dialog = new ProgressDialog(context);
 		callback = cb;
 		this.context = context;
