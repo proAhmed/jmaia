@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.api.CheckOutToSign;
 import droidahmed.com.jm3eia.api.Register;
 import droidahmed.com.jm3eia.api.SignInApi;
 import droidahmed.com.jm3eia.api.User;
@@ -23,6 +24,7 @@ import droidahmed.com.jm3eia.model.UserLogin;
 import droidahmed.com.jm3eia.model.UserLoginResponse;
 import droidahmed.com.jm3eia.model.UserResponse;
 import droidahmed.com.jm3eia.start.MainActivity;
+import droidahmed.com.jm3eia.start.SaveAuth;
 
 public class SignIn extends AppCompatActivity {
     TextView tvRegister,tvForgetPass;
@@ -30,6 +32,7 @@ public class SignIn extends AppCompatActivity {
     Button btn;
     private OnProcessCompleteListener signListener;
     private UserLoginResponse registerUser;
+    SaveAuth saveAuth;
 Intent intent ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ Intent intent ;
 intent = new Intent();
         tvRegister = (TextView) findViewById(R.id.tvRegister);
         tvForgetPass = (TextView) findViewById(R.id.tvForget);
+        saveAuth = (SaveAuth) getApplicationContext();
         tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,9 +203,14 @@ try {
                 Utility.showFailureDialog(SignIn.this, true);
             }
         };
-        SignInApi callWS = new SignInApi(SignIn.this, signListener);
+        CheckOutToSign callWS = new CheckOutToSign(SignIn.this, signListener);
+        if(intent.getExtras()!=null&&saveAuth.getJsonProduct()!=null) {
 
-        callWS.execute(userName,password);
+            callWS.execute(userName, password,saveAuth.getJsonProduct());
+        }else{
+            callWS.execute(userName, password,"");
+
+        }
     }
 
 }

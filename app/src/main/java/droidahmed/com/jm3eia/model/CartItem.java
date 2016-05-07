@@ -6,12 +6,12 @@ package droidahmed.com.jm3eia.model;
 public class CartItem {
 
     private int  ID;
-    private int Code;
-    private int CategoryID;
-    private int BrandID;
+    private double Code;
+    private double CategoryID;
+    private double BrandID;
     private double OldPrice;
     private double Price;
-    private int Quantity;
+    private double Quantity;
     private String Picture;
     private String SliderPictures;
     private String CreatedDate;
@@ -19,8 +19,15 @@ public class CartItem {
     private int Viewed;
     private int Featured;
     private int State;
-    private int ProductID;
-    private int LanguageID;
+    private double ProductID;
+    private double LanguageID;
+    private String Name;
+    private String Alias;
+    private String Contents;
+    private String Description;
+    private String Keywords;
+    private String CategoryName;
+    private int cQuantity;
 
     public int getcQuantity() {
         return cQuantity;
@@ -67,27 +74,27 @@ public class CartItem {
         this.ID = ID;
     }
 
-    public int getCode() {
+    public double getCode() {
         return Code;
     }
 
-    public void setCode(int code) {
+    public void setCode(double code) {
         Code = code;
     }
 
-    public int getCategoryID() {
+    public double getCategoryID() {
         return CategoryID;
     }
 
-    public void setCategoryID(int categoryID) {
+    public void setCategoryID(double categoryID) {
         CategoryID = categoryID;
     }
 
-    public int getBrandID() {
+    public double getBrandID() {
         return BrandID;
     }
 
-    public void setBrandID(int brandID) {
+    public void setBrandID(double brandID) {
         BrandID = brandID;
     }
 
@@ -107,11 +114,11 @@ public class CartItem {
         Price = price;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return Quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         Quantity = quantity;
     }
 
@@ -171,19 +178,19 @@ public class CartItem {
         State = state;
     }
 
-    public int getProductID() {
+    public double getProductID() {
         return ProductID;
     }
 
-    public void setProductID(int productID) {
+    public void setProductID(double productID) {
         ProductID = productID;
     }
 
-    public int getLanguageID() {
+    public double getLanguageID() {
         return LanguageID;
     }
 
-    public void setLanguageID(int languageID) {
+    public void setLanguageID(double languageID) {
         LanguageID = languageID;
     }
 
@@ -235,13 +242,7 @@ public class CartItem {
         CategoryName = categoryName;
     }
 
-    private String Name;
-    private String Alias;
-    private String Contents;
-    private String Description;
-    private String Keywords;
-    private String CategoryName;
-    private int cQuantity;
+
 
     public CartItem() {
     }

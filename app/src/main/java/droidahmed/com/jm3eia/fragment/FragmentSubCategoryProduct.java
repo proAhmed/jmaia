@@ -10,24 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import droidahmed.com.jm3eia.R;
-  import droidahmed.com.jm3eia.adapter.ProGridAdapter;
- import droidahmed.com.jm3eia.api.GetProductByCategory;
+import droidahmed.com.jm3eia.adapter.ProGridAdapter;
+import droidahmed.com.jm3eia.api.GetProductByCategory;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.controller.OnItemListener;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
 import droidahmed.com.jm3eia.model.CartItem;
-import droidahmed.com.jm3eia.model.CartItemResponse;
 import droidahmed.com.jm3eia.model.MainApi;
-import droidahmed.com.jm3eia.model.Product;
 import droidahmed.com.jm3eia.model.ProductCart;
 import droidahmed.com.jm3eia.start.MainActivity;
 
@@ -41,8 +37,7 @@ public class FragmentSubCategoryProduct extends Fragment  implements OnItemListe
     private OnProcessCompleteListener ProductListener;
     MainApi mainApi;
     ArrayList<CartItem> cartItems;
-    CartItemResponse cartItemResponse;
-    ArrayList<AllProducts> arrayList;
+     ArrayList<AllProducts> arrayList;
     ArrayList<ProductCart>productCart;
     static  double pricesss;
 

@@ -10,34 +10,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.account.CartNotAuth;
 import droidahmed.com.jm3eia.account.SignIn;
 import droidahmed.com.jm3eia.adapter.CartGridAdapter;
-import droidahmed.com.jm3eia.adapter.CuCartListAdapter;
-import droidahmed.com.jm3eia.adapter.CuListAdapter;
+import droidahmed.com.jm3eia.adapter.ProGridAdapter;
 import droidahmed.com.jm3eia.api.AddCartItem;
+import droidahmed.com.jm3eia.api.CheckOutForSignUser;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
-import droidahmed.com.jm3eia.model.MainApi;
-import droidahmed.com.jm3eia.model.Product;
+import droidahmed.com.jm3eia.model.CartItem;
+import droidahmed.com.jm3eia.model.CartItemResponse;
 import droidahmed.com.jm3eia.model.ProductCart;
 import droidahmed.com.jm3eia.start.MainActivity;
+import droidahmed.com.jm3eia.start.SaveAuth;
 
 /**
  * Created by ahmed on 3/15/2016.
@@ -48,10 +49,11 @@ public class FragmentProductCart extends Fragment implements OnCartListener {
     Button btnRequest, btnCancel;
     TextView tvDeliver, tvTotal, tvFinalTotal;
     private OnProcessCompleteListener ProductListener;
-    MainApi mainApi;
-    AllProducts[] pros;
+     AllProducts[] pros;
 ArrayList<ProductCart>productCarts;
     ArrayList<ProductCart>productCartItems;
+    CartItemResponse cartItemResponse;
+    ArrayList<CartItem>cartItemArrayList;
 static double pricessss;
     @Nullable
     @Override
@@ -63,16 +65,60 @@ static double pricessss;
         final OnCartListener onCartListener = (OnCartListener) this;
         productCarts = new ArrayList<>();
         productCartItems = new ArrayList<>();
-Bundle bundle = getArguments();
-        productCarts = (ArrayList<ProductCart>) bundle.getSerializable("cart");
-        btnRequest = (Button) view.findViewById(R.id.btnRequest);
+
+final Bundle bundle = getArguments();
+        if(bundle!=null)
+         btnRequest = (Button) view.findViewById(R.id.btnRequest);
         btnCancel = (Button) view.findViewById(R.id.btnCancel);
         tvDeliver = (TextView) view.findViewById(R.id.tvDeliver);
         tvTotal = (TextView) view.findViewById(R.id.tvTotal);
         tvFinalTotal = (TextView) view.findViewById(R.id.tvFinalTotal);
-        pricessss=bundle.getDouble("price");
-        tvTotal.setText(""+pricessss);
+ //        tvTotal.setText(""+pricessss);
+        SaveAuth saveAuth = (SaveAuth) getActivity().getApplicationContext();
+        JSONArray jsonArray = saveAuth.getJsonProduct();
+         if (Utility.isNetworkConnected(getActivity())) {
 
+            ProductListener = new OnProcessCompleteListener() {
+
+                @Override
+                public void onSuccess(Object result) {
+                    cartItemResponse = (CartItemResponse) result;
+                    cartItemArrayList=   cartItemResponse.getData();
+                    priceProduct(cartItemArrayList);
+                    tvTotal.setText(""+priceProduct(cartItemArrayList));
+                    //   Log.d("iiii",pro.toString());
+//                    Gson gson = new Gson();
+//                    String json = gson.toJson(pro);
+//                    StoreData storeData = new StoreData(MainActivity.this);
+//                    storeData.saveData(json);
+
+                    lstProduct.setAdapter(new CartGridAdapter(getActivity(), cartItemArrayList, onCartListener));
+
+                    lstProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        public void onItemClick(AdapterView<?> parent, View v,
+                                                int position, long id) {
+
+                        }
+                    });
+
+
+
+                }
+
+                @Override
+                public void onFailure() {
+                    Utility.showFailureDialog(getActivity(), false);
+                }
+            };
+
+            AddCartItem task = new AddCartItem(getActivity(), ProductListener);
+            task.execute(jsonArray);
+
+        } else {
+            Utility.showValidateDialog(
+                    getResources().getString(R.string.failure_ws),
+                    getActivity());
+        }
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,24 +128,27 @@ Bundle bundle = getArguments();
         btnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(bundle.getString("CartAuth").equals("CartAuth")){
+                    callCheck();
+                }
                 if(pricessss>10){
                     dialog();
 
-                }else{
+                 }else{
                     Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.price_total),Toast.LENGTH_LONG).show();
                 }
 
             }
         });
-        ArrayList<ProductCart> result = new ArrayList<ProductCart>();
-        Set<String> titles = new HashSet<String>();
-
-        for( ProductCart item : productCarts ) {
-            if( titles.add( item.getAllProducts().getAlias()) ) {
-                result.add( item );
-            }
-        }
-        lstProduct.setAdapter(new CartGridAdapter(getActivity(), result, onCartListener));
+//        ArrayList<ProductCart> result = new ArrayList<ProductCart>();
+//        Set<String> titles = new HashSet<String>();
+//
+//        for( ProductCart item : productCarts ) {
+//            if( titles.add( item.getAllProducts().getAlias()) ) {
+//                result.add( item );
+//            }
+//        }
+//        lstProduct.setAdapter(new CartGridAdapter(getActivity(), result, onCartListener));
          return view;
     }
 
@@ -111,10 +160,25 @@ Bundle bundle = getArguments();
         getActivity().findViewById(R.id.imageToggle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity mainActivity = (MainActivity) getActivity();
-                mainActivity.toggle();
+                try {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    mainActivity.showSecondaryMenu();
+                } catch (Exception e) {
+
+                }
             }
         });
+
+        getActivity().findViewById(R.id.imageToggleCategory).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MainActivity mainActivity = (MainActivity) getActivity();
+                if (mainActivity != null)
+                    mainActivity.toggle();
+            }
+        });
+
         getActivity().findViewById(R.id.logo).setVisibility(View.GONE);
         getActivity().findViewById(R.id.textTitle).setVisibility(View.VISIBLE);
         TextView tv = (TextView) getActivity().findViewById(R.id.textTitle);
@@ -189,7 +253,7 @@ if(bundle.getDouble("price")==0){
             @Override
             public void onClick(View v) {
                 if(!new StoreData(getActivity()).getAuthName().equals("")){
-
+                    callCheck();
                 }else{
                     Intent intent = new Intent(getActivity(), SignIn.class);
                     intent.putExtra("cart_request","cart_request");
@@ -201,5 +265,46 @@ if(bundle.getDouble("price")==0){
         dialog.show();
     }
 
+private void callCheck(){
+    if (Utility.isNetworkConnected(getActivity())) {
 
+        ProductListener = new OnProcessCompleteListener() {
+
+            @Override
+            public void onSuccess(Object result) {
+//                                   cartItemResponse = (CartItemResponse) result;
+//                                   cartItemArrayList=   cartItemResponse.getData();
+                //   Log.d("iiii",pro.toString());
+//                    Gson gson = new Gson();
+//                    String json = gson.toJson(pro);
+//                    StoreData storeData = new StoreData(MainActivity.this);
+//                    storeData.saveData(json);
+
+
+
+            }
+
+            @Override
+            public void onFailure() {
+                Utility.showFailureDialog(getActivity(), false);
+            }
+        };
+
+        CheckOutForSignUser task = new CheckOutForSignUser(getActivity(), ProductListener);
+        task.execute(new StoreData(getActivity()).getAuthName(),new StoreData(getActivity()).getAuthPass());
+
+    } else {
+        Utility.showValidateDialog(
+                getResources().getString(R.string.failure_ws),
+                getActivity());
+    }
+
+}
+    public double priceProduct(ArrayList<CartItem> arrayList){
+        double price=0;
+        for (int i=0;i<arrayList.size();i++){
+            price +=   arrayList.get(i).getPrice();
+        }
+        return price;
+    }
 }

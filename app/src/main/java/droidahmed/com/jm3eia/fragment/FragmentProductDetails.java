@@ -8,37 +8,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Type;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.adapter.CuListAdapter;
-import droidahmed.com.jm3eia.adapter.ExpandableListAdapter;
-import droidahmed.com.jm3eia.adapter.ProGridAdapter;
-import droidahmed.com.jm3eia.api.AddCartItem;
 import droidahmed.com.jm3eia.controller.OnCartListener;
-import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
-import droidahmed.com.jm3eia.controller.StoreData;
-import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
 import droidahmed.com.jm3eia.model.CartItem;
-import droidahmed.com.jm3eia.model.CartItemResponse;
-import droidahmed.com.jm3eia.model.MainApi;
-import droidahmed.com.jm3eia.model.Product;
 import droidahmed.com.jm3eia.model.ProductCart;
 import droidahmed.com.jm3eia.start.MainActivity;
 
@@ -50,12 +34,8 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
       ImageView imgProduct;
     TextView tvName,tvCode,tvBrand,tvCategory;
     ArrayList<AllProducts>related;
-    AllProducts[] pro;
-    private OnProcessCompleteListener ProductListener;
-    MainApi mainApi;
-    ArrayList<CartItem> cartItems;
-    CartItemResponse cartItemResponse;
-    ArrayList<ProductCart>productCart;
+     ArrayList<CartItem> cartItems;
+     ArrayList<ProductCart>productCart;
     static  double pricess;
 
     @Nullable
@@ -135,6 +115,8 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
         productCart.add(new ProductCart(related.get(position), num));
         Log.d("uuu",productCart.toString());
         if(watch==true){
+            JSONObject objMainList = new JSONObject();
+
             FragmentProductCart  fragment =   new FragmentProductCart();
             Bundle bundle = new Bundle();
             bundle.putSerializable("cart",productCart);

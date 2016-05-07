@@ -16,6 +16,10 @@ import android.os.Build;
 import android.util.Base64;
 import android.view.inputmethod.InputMethodManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -164,5 +168,33 @@ public class Utility {
         storeData.saveZone(zone);
         storeData.saveHouse(house);
         storeData.saveStreet(street);
+    }
+    private boolean check;
+    public JSONArray jsonArrayCheck(JSONArray jsonArray,JSONObject jsonObject){
+
+        for(int i=0;i<jsonArray.length();i++){
+            try {
+                if(jsonArray.getJSONObject(i).getInt("ID")==jsonObject.getInt("ID")){
+                    setCheck(false);
+                    return jsonArray;
+                }else {
+                    setCheck(true);
+
+                    return jsonArray.put(jsonObject);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return jsonArray;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
     }
 }

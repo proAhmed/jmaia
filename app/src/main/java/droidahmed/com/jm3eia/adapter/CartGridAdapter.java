@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.OnCartListener;
+import droidahmed.com.jm3eia.model.CartItem;
 import droidahmed.com.jm3eia.model.ProductCart;
 
 
@@ -24,10 +25,10 @@ import droidahmed.com.jm3eia.model.ProductCart;
  */
 public class CartGridAdapter extends BaseAdapter {
 
-    ArrayList<ProductCart>  _choices;
+    ArrayList<CartItem>  _choices;
     private Context context;
      OnCartListener onCartListener;
-    public CartGridAdapter(Context context, ArrayList<ProductCart> _choices, OnCartListener onCartListener) {
+    public CartGridAdapter(Context context, ArrayList<CartItem> _choices, OnCartListener onCartListener) {
         this.context = context;
         this._choices = _choices;
          this.onCartListener = onCartListener;
@@ -70,7 +71,7 @@ public class CartGridAdapter extends BaseAdapter {
         imgDelete = (ImageView) convertView.findViewById(R.id.imgDelete);
         imgCart = (LinearLayout) convertView.findViewById(R.id.imgCart);
         edNumber = (EditText)  convertView.findViewById(R.id.edNumber);
-        edNumber.setText(_choices.get(position).getCount() + "");
+        edNumber.setText(_choices.get(position).getcQuantity() + "");
 
          imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,10 +112,10 @@ if (cartItem[0] >0){
         });
         tvName = (TextView) convertView.findViewById(R.id.tvName);
         tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
-        tvName.setText(_choices.get(position).getAllProducts().getName());
-        tvPrice.setText(_choices.get(position).getAllProducts().getPrice()+"");
+        tvName.setText(_choices.get(position).getName());
+        tvPrice.setText(_choices.get(position).getPrice()+"");
 
-        Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getAllProducts().getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
+        Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
 
         return convertView;
     }

@@ -98,8 +98,11 @@ public class MainActivity extends SlidingFragmentActivity {
 
 if(getIntent().getExtras()!=null){
     if(getIntent().getExtras().getString("CartAuth").equals("CartAuth")){
+        FragmentProductCart fragment = new FragmentProductCart();
+        Bundle bundles = new Bundle();
+        bundles.putString("CartAuth","CartAuth");
          getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainFragment, new FragmentProductCart())
+                .replace(R.id.mainFragment, fragment)
                 .commitAllowingStateLoss();
     }
 }else {

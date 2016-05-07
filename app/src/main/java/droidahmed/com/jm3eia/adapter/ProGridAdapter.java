@@ -100,6 +100,7 @@ public class ProGridAdapter extends BaseAdapter {
                 edNumber.setText(""+ cartItem[0]);
                 price[0] = _choices.get(position).getPrice()*cartItem[0];
 
+
             }
         });
         imgDelete.setOnClickListener(new View.OnClickListener() {

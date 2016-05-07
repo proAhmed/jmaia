@@ -2,7 +2,6 @@ package droidahmed.com.jm3eia.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,12 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckedTextView;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,15 +27,11 @@ import java.util.List;
 import java.util.Set;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.account.SignIn;
 import droidahmed.com.jm3eia.controller.ExpandableAdapter;
 import droidahmed.com.jm3eia.controller.OnItemListener;
 import droidahmed.com.jm3eia.model.AllProducts;
 import droidahmed.com.jm3eia.model.CategoryParent;
 import droidahmed.com.jm3eia.model.CategoryParentList;
-import droidahmed.com.jm3eia.model.MainCategory;
-import droidahmed.com.jm3eia.model.PathName;
-import droidahmed.com.jm3eia.model.Product;
 import droidahmed.com.jm3eia.model.SlidingMenuItem;
 import droidahmed.com.jm3eia.start.MainActivity;
 
@@ -58,8 +48,7 @@ public class MenuFragmentRight extends Fragment implements OnItemListener {
 HashMap<CategoryParent, CategoryParent>hashChild;
     ArrayList<CategoryParent>childArrayList;
     ArrayList<CategoryParent>mainArrayList;
-    private final static String TAG = "MenuFragment";
-ArrayList<CategoryParentList>categoryParentLists;
+ ArrayList<CategoryParentList>categoryParentLists;
     private RecyclerView recyclerview;
 
     public static Fragment newInstance(ArrayList<CategoryParent>allProductses) {

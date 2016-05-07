@@ -1,11 +1,11 @@
 package droidahmed.com.jm3eia.api;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -15,27 +15,26 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.model.CartItemResponse;
 
 
-public class AddCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
+public class CheckOutForSignUser extends AsyncTask<String, Void, CartItemResponse> {
 
-	private final static String URL = "http://jm3eia.com/API/ar/cart";
+	private final static String URL = "https://jm3eia.com/API/ar/checkout/buy";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
 
-	public AddCartItem(Context context, OnProcessCompleteListener cb) {
+	public CheckOutForSignUser(Context context, OnProcessCompleteListener cb) {
 		dialog = new ProgressDialog(context);
 		callback = cb;
 		this.context = context;
@@ -50,12 +49,12 @@ public class AddCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
 	}
 
 	@Override
-	protected CartItemResponse doInBackground(JSONArray... params) {
+	protected CartItemResponse doInBackground(String... params) {
 		String responseJSON = null;
 		CartItemResponse obj = null;
 
 		try {
-			responseJSON = makeRequest(params[0]);
+			responseJSON = makeRequest(params[0],params[1]);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -91,14 +90,15 @@ public class AddCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
 		}
 	}
 
-	public static String makeRequest(JSONArray jsonArray) throws Exception {
+	public static String makeRequest(String authName,String authPass) throws Exception {
 
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
  		JSONObject json = new JSONObject();
 
-		json.put("CartItems", jsonArray);
+		json.put("AuthUserName", authName);
+		json.put("AuthPassword", authPass);
 
 
 		InputStreamEntity entity = null;

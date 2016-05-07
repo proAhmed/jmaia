@@ -1,12 +1,9 @@
 package droidahmed.com.jm3eia.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,21 +11,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 import droidahmed.com.jm3eia.R;
-  import droidahmed.com.jm3eia.adapter.ProGridAdapter;
- import droidahmed.com.jm3eia.api.GetHome;
+import droidahmed.com.jm3eia.adapter.ProGridAdapter;
+import droidahmed.com.jm3eia.api.GetHome;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.controller.OnItemListener;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
@@ -36,12 +30,10 @@ import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
 import droidahmed.com.jm3eia.model.CartItem;
-import droidahmed.com.jm3eia.model.CartItemResponse;
 import droidahmed.com.jm3eia.model.MainApi;
-import droidahmed.com.jm3eia.model.MainCategory;
-import droidahmed.com.jm3eia.model.Product;
 import droidahmed.com.jm3eia.model.ProductCart;
 import droidahmed.com.jm3eia.start.MainActivity;
+import droidahmed.com.jm3eia.start.SaveAuth;
 
 /**
  * Created by ahmed on 3/15/2016.
@@ -54,9 +46,11 @@ public class FragmentProduct extends Fragment implements OnItemListener,OnCartLi
     private GridView lstProduct;
       ArrayList<AllProducts> arrayList;
     ArrayList<CartItem> cartItems;
-    CartItemResponse cartItemResponse;
-    ArrayList<ProductCart>productCart;
+     ArrayList<ProductCart>productCart;
+    JSONArray jsonArray;
 static  double prices;
+    SaveAuth saveAuth;
+    JSONArray jsonArrays;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +65,8 @@ static  double prices;
 //        Type type = new TypeToken<ArrayList<AllProducts>>() {}.getType();
      //   ArrayList<AllProducts> arrayList = gson.fromJson(category, type);
         final Bundle bundle = getArguments();
+        jsonArray = new JSONArray();
+          saveAuth = (SaveAuth) getActivity().getApplicationContext();
 
 
 
@@ -170,7 +166,7 @@ static  double prices;
                     mainActivity.showSecondaryMenu();
                 } catch (Exception e) {
 
-                }
+            }
             }
         });
 
@@ -210,10 +206,40 @@ static  double prices;
     }
 
     @Override
-    public void onAddCart(int position, int num, boolean watch,double price) {
+    public void onAddCart(int position, int num, boolean watch,double price)  {
          prices +=price;
-Log.d("ttt",""+prices);
+Log.d("ttt", "" + prices);
         arrayList.get(position);
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("ID", arrayList.get(position).getID());
+            jsonObject.put("Quantity", num);
+            jsonObject.put("CreatedDate",  Utility.getCurrentTimeStamp());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+Utility utility = new Utility();
+        if(saveAuth.getJsonProduct()!=null){
+            JSONArray jsonArrays=    utility.jsonArrayCheck(saveAuth.getJsonProduct(), jsonObject);
+           if( utility.isCheck()){
+               saveAuth.setJsonProduct(jsonArrays);
+
+           }else{
+               Toast.makeText(getActivity(),getResources().getString(R.string.find_cart),Toast.LENGTH_LONG).show();
+               return;
+           }
+            Log.d("jjj",jsonArrays.toString());
+
+        }else{
+             jsonArray.put(jsonObject);
+            Log.d("jjj", jsonArray.toString());
+
+            saveAuth.setJsonProduct(jsonArray.put(jsonObject));
+
+        }
+    //    jsonArray.put(jsonObject);
         productCart.add(new ProductCart(arrayList.get(position), num));
         Log.d("uuu",productCart.toString());
         if(watch==true){

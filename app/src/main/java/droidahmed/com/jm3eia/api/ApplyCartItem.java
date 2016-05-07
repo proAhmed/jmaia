@@ -96,7 +96,7 @@ public class ApplyCartItem extends AsyncTask<String, Void, WSResult> {
 		StringBuilder total = new StringBuilder();
 		JSONObject json = new JSONObject();
 
-		json.put("ID", Integer.parseInt(id));
+		json.put("Product", Integer.parseInt(id));
 		json.put("Quantity",Integer.parseInt( quantity));
 		json.put("CreatedDate",  date);
 
