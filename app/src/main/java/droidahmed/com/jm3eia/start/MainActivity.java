@@ -79,6 +79,28 @@ public class MainActivity extends SlidingFragmentActivity {
 
 
         setBehindView();
+
+if(getIntent().getExtras()!=null){
+            if(getIntent().getExtras().getString("CartAuth").equals("CartAuth")){
+                FragmentProductCart fragment = new FragmentProductCart();
+                Bundle bundles = new Bundle();
+                bundles.putString("CartAuth","CartAuth");
+                fragment.setArguments(bundles);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mainFragment, fragment)
+                        .commitAllowingStateLoss();
+
+            } else if (getIntent().getExtras().getString("CartAuth").equals("NonVisitor")) {
+                FragmentProductCart fragment = new FragmentProductCart();
+                Bundle bundles = new Bundle();
+                bundles.putString("CartAuth", "NonVisitor");
+                fragment.setArguments(bundles);
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mainFragment, fragment)
+                        .commitAllowingStateLoss();
+            }
+}
         if (Utility.isNetworkConnected(MainActivity.this)) {
 
             ProductListener = new OnProcessCompleteListener() {
@@ -96,28 +118,20 @@ public class MainActivity extends SlidingFragmentActivity {
                     bundle.putSerializable("array", new ArrayList<>(Arrays.asList(pro)));
 
 
-if(getIntent().getExtras()!=null){
-    if(getIntent().getExtras().getString("CartAuth").equals("CartAuth")){
-        FragmentProductCart fragment = new FragmentProductCart();
-        Bundle bundles = new Bundle();
-        bundles.putString("CartAuth","CartAuth");
-         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainFragment, fragment)
-                .commitAllowingStateLoss();
-    }
-}else {
-    Fragment fragmentProduct = new FragmentProduct();
+
+
+
+      Fragment fragmentProduct = new FragmentProduct();
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction ft = fm.beginTransaction();
     ft.replace(R.id.mainFragment, fragmentProduct);
-    ft.commit();
+    ft.commitAllowingStateLoss();
 
     fragmentProduct.setArguments(bundle);
     getSupportFragmentManager().beginTransaction()
             .replace(R.id.mainFragment, fragmentProduct)
             .commitAllowingStateLoss();
-}
-                    getSupportFragmentManager().beginTransaction()
+                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.menu_slide, MenuFragmentRight.newInstance( pro))
                                     .commitAllowingStateLoss();
 

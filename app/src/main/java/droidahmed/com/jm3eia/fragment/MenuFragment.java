@@ -1,6 +1,7 @@
 package droidahmed.com.jm3eia.fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,9 +25,11 @@ import java.util.ArrayList;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.account.SignIn;
-  import droidahmed.com.jm3eia.controller.Utility;
+import droidahmed.com.jm3eia.controller.StoreData;
+import droidahmed.com.jm3eia.controller.Utility;
  import droidahmed.com.jm3eia.model.SlidingMenuItem;
 import droidahmed.com.jm3eia.start.MainActivity;
+import droidahmed.com.jm3eia.start.SaveData;
 
 
 /**
@@ -57,8 +61,13 @@ public class MenuFragment extends Fragment {
         listMenuItems.add(new SlidingMenuItem(R.drawable.insta_icon, getResources().getString(R.string.instagram),7));
         listMenuItems.add(new SlidingMenuItem(0,getResources().getString(R.string.call_us),8));
         listMenuItems.add(new SlidingMenuItem(0,"",9));
+        if(new StoreData(getActivity()).getLogin().equals("")) {
+            listMenuItems.add(new SlidingMenuItem( 0,getResources().getString(R.string.login),10));
 
-        listMenuItems.add(new SlidingMenuItem( 0,getResources().getString(R.string.login),10));
+        }else {
+            listMenuItems.add(new SlidingMenuItem( 0,getResources().getString(R.string.sign_out),10));
+
+        }
 //for (int i=0;i<listMenuItems.size();i++){
 //    Log.d("iii",""+)
 //}
@@ -74,7 +83,7 @@ public class MenuFragment extends Fragment {
         View header = inflater.inflate(R.layout.view_head,  listView, false);
         header.setMinimumHeight(40);
         listView.addHeaderView(header);
-        return rootView;
+         return rootView;
     }
 
     @Override
@@ -86,6 +95,7 @@ public class MenuFragment extends Fragment {
     private void setListViewAdapter() {
         SlidingMenuAdapter adapter = new SlidingMenuAdapter(getActivity(), R.layout.item_menu, listMenuItems);
         listView.setAdapter(adapter);
+        adapter.setNotifyOnChange(true);
         listView.setOnItemClickListener(onItemClickListener());
         Log.i(TAG, "create adapter " + listMenuItems.size());
     }
@@ -181,9 +191,16 @@ switch (position){
 
         break;
     case 10:
-        Intent intent = new Intent(getActivity(), SignIn.class);
-        startActivity(intent);
-        mainActivity. toggle();
+        if(new StoreData(getActivity()).getLogin().equals("login")){
+            dialog();
+            mainActivity. toggle();
+
+        }else{
+            Intent intent = new Intent(getActivity(), SignIn.class);
+            startActivity(intent);
+            mainActivity. toggle();
+        }
+
 
         break;
  }
@@ -227,8 +244,13 @@ switch (position){
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu_three
                             , null);
                 }else if (items.get(position).getPositions() == 10) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu_five
-                            , null);
+                    if(new StoreData(getActivity()).getLogin().equals("")) {
+                        convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu_five
+                                , null);
+                    }else{
+                        convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu_six
+                                , null);
+                    }
                 }                // get all UI view
                 holder = new ViewHolder(convertView);
                 // set tag for holder
@@ -255,4 +277,31 @@ if(getItem(position).getPositions()!=9)
             }
         }
     }
+
+    private  void dialog(){
+          final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.sign_dialog);
+        dialog.setTitle(getResources().getString(R.string.dialog_sure));
+
+        // set the custom dialog components - text, image and button
+        Button yes = (Button) dialog.findViewById(R.id.yes);
+         Button no = (Button) dialog.findViewById(R.id.no);
+
+         // if button is clicked, close the custom dialog
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new StoreData(getActivity()).savLogin("");
+                dialog.dismiss();
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
 }

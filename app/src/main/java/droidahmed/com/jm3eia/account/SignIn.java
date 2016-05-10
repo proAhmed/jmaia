@@ -4,10 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,14 +12,12 @@ import android.widget.TextView;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.api.CheckOutToSign;
-import droidahmed.com.jm3eia.api.Register;
-import droidahmed.com.jm3eia.api.SignInApi;
-import droidahmed.com.jm3eia.api.User;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
+import droidahmed.com.jm3eia.fragment.FragmentProductCart;
 import droidahmed.com.jm3eia.model.UserLogin;
 import droidahmed.com.jm3eia.model.UserLoginResponse;
-import droidahmed.com.jm3eia.model.UserResponse;
 import droidahmed.com.jm3eia.start.MainActivity;
 import droidahmed.com.jm3eia.start.SaveAuth;
 
@@ -104,8 +99,9 @@ try {
     registerUser = (UserLoginResponse) result;
 
     if (registerUser != null) {
-        if (registerUser.getData().getID() != null
-                ) {
+        if (registerUser.getData().getID() != null) {
+            new StoreData(SignIn.this).savLogin("login");
+
             UserLogin user = registerUser.getData();
             Utility.SaveData(SignIn.this,user.getUserName(),user.getAuthPassword(),user.getFullName(),user.getEmail()
                     ,user.getMobile(),user.getGada(),user.getWidget(),user.getZone(),user.getHouse(),user.getStreet());
@@ -183,9 +179,12 @@ try {
 //                                                        .commit();
                             if(intent.getExtras()!=null){
 
-                                Intent intent = new Intent(SignIn.this, MainActivity.class);
-                                intent.putExtra("CartAuth","CartAuth");
-                                startActivity(intent);
+                                FragmentProductCart fragment = new FragmentProductCart();
+                                Bundle bundles = new Bundle();
+                                bundles.putString("CartAuth", "CartAuth");
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.mainFragment, fragment)
+                                        .commitAllowingStateLoss();
                             }else{
                                 Intent intent = new Intent(SignIn.this, MainActivity.class);
                                 startActivity(intent);
@@ -204,7 +203,7 @@ try {
             }
         };
         CheckOutToSign callWS = new CheckOutToSign(SignIn.this, signListener);
-        if(intent.getExtras()!=null&&saveAuth.getJsonProduct()!=null) {
+            if(intent.getExtras()!=null&&saveAuth.getJsonProduct()!=null) {
 
             callWS.execute(userName, password,saveAuth.getJsonProduct());
         }else{

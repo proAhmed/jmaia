@@ -11,7 +11,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
     android:orientation="vertical"
       tools:context="droidahmed.com.jm3eia.account.SignUp">
     <EditText
-        android:id="@+id/edRegUserName"
+        android:id="@+id/edUpdateFullName"
          android:paddingRight="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -23,7 +23,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/edRegName"
+        android:id="@+id/edUpdateUserName"
          android:paddingRight="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -34,21 +34,9 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
         android:hint="@string/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <EditText
-        android:id="@+id/edRegPass"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textPassword"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/pass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edRegEmail"
+        android:id="@+id/edUpdateEmail"
          android:paddingRight="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -61,7 +49,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/edRegPhone"
+        android:id="@+id/edUpdatePhone"
          android:paddingRight="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -87,7 +75,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
         android:layout_height="wrap_content"
          />
     <EditText
-        android:id="@+id/edRegAddressOne"
+        android:id="@+id/edUpdateZone"
          android:paddingRight="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -99,7 +87,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/edRegAddressTwo"
+        android:id="@+id/edUpdateWidget"
          android:paddingRight="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -111,7 +99,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/edRegAddressStreet"
+        android:id="@+id/edUpdateStreet"
          android:paddingRight="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -123,8 +111,22 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/edRegNum"
+        android:id="@+id/edGada"
          android:paddingRight="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="number"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_border"
+        android:hint="@string/gada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/edUpdateNum"
+        android:paddingRight="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:inputType="number"
@@ -152,6 +154,8 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
              android:layout_marginTop="10dp"
             android:text="@string/cancel"
             android:textColor="#fff"
+            android:layout_marginBottom="15dp"
+
             android:background="@drawable/button_red"
             />
         <LinearLayout
@@ -166,6 +170,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" >
              android:layout_marginTop="10dp"
             android:text="@string/save"
             android:textColor="#fff"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/button_green"
             />
         <LinearLayout

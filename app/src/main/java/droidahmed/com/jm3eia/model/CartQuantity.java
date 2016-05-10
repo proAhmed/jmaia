@@ -3,14 +3,14 @@ package droidahmed.com.jm3eia.model;
 import java.io.Serializable;
 
 /**
- * Created by ahmed on 4/4/2016.
+ * Created by ahmed on 5/10/2016.
  */
-public class AllProducts implements Serializable{
+public class CartQuantity implements Serializable{
     private int ID;
     private double Code;
     private double CategoryID;
     private double BrandID;
-     private double Price;
+    private double Price;
     private double Quantity;
     private String Picture;
     private String SliderPictures;
@@ -28,19 +28,17 @@ public class AllProducts implements Serializable{
     private String Keywords;
     private String CategoryName;
     private String BrandName;
+    private int cQuantity;
 
-    public AllProducts() {
+    public CartQuantity() {
     }
 
-    public String getCategoryName() {
-        return CategoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        CategoryName = categoryName;
-    }
-
-    public AllProducts(int ID, double code, int categoryID, int brandID, double price, double quantity, String picture, String sliderPictures, String createdDate, String modifiedDate, int viewed, int featured, int state, int productID, int languageID, String name, String alias, String contents, String description, String keywords, String categoryName, String brandName) {
+    public CartQuantity(int ID, double code, double categoryID,
+                        double brandID, double price, double quantity,
+                        String picture, String sliderPictures, String createdDate,
+                        String modifiedDate, int viewed, int featured, int state, int productID,
+                        int languageID, String name, String alias, String contents,
+                        String description, String keywords, String categoryName, String brandName, int cQuantity) {
         this.ID = ID;
         Code = code;
         CategoryID = categoryID;
@@ -63,74 +61,7 @@ public class AllProducts implements Serializable{
         Keywords = keywords;
         CategoryName = categoryName;
         BrandName = brandName;
-    }
-
-    public String getBrandName() {
-        return BrandName;
-    }
-
-    public void setBrandName(String brandName) {
-        BrandName = brandName;
-    }
-
-    public AllProducts(int ID, int code, int categoryID, int brandID, double price, int quantity, String picture,
-                       String sliderPictures, String createdDate, String modifiedDate, int viewed, int featured,
-                       int state, int productID, int languageID, String name, String alias, String contents,
-                       String description, String keywords) {
-        this.ID = ID;
-        Code = code;
-        CategoryID = categoryID;
-        BrandID = brandID;
-        Price = price;
-        Quantity = quantity;
-        Picture = picture;
-        SliderPictures = sliderPictures;
-        CreatedDate = createdDate;
-        ModifiedDate = modifiedDate;
-        Viewed = viewed;
-        Featured = featured;
-        State = state;
-        ProductID = productID;
-        LanguageID = languageID;
-        Name = name;
-        Alias = alias;
-        Contents = contents;
-        Description = description;
-        Keywords = keywords;
-    }
-
-    public AllProducts(int ID, int categoryID, int brandID, double price, int quantity,
-                       String picture, String sliderPictures, String createdDate,String modifiedDate,
-                       int viewed, int featured, int state,int productID, int languageID, String name,
-                       String alias,String contents, String description, String keywords ) {
-        this.ID = ID;
-        CategoryID = categoryID;
-        BrandID = brandID;
-        Price = price;
-        Quantity = quantity;
-        Picture = picture;
-        SliderPictures = sliderPictures;
-        CreatedDate = createdDate;
-        ModifiedDate = modifiedDate;
-        Viewed = viewed;
-        Featured = featured;
-        State = state;
-        ProductID = productID;
-        LanguageID = languageID;
-        Name = name;
-        Alias = alias;
-        Contents = contents;
-        Description = description;
-        Keywords = keywords;
-
-    }
-
-    public double getCode() {
-        return Code;
-    }
-
-    public void setCode(int code) {
-        Code = code;
+        this.cQuantity = cQuantity;
     }
 
     public int getID() {
@@ -139,6 +70,14 @@ public class AllProducts implements Serializable{
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public double getCode() {
+        return Code;
+    }
+
+    public void setCode(double code) {
+        Code = code;
     }
 
     public double getCategoryID() {
@@ -285,19 +224,27 @@ public class AllProducts implements Serializable{
         Keywords = keywords;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AllProducts that = (AllProducts) o;
-
-        return ID == that.ID;
-
+    public String getCategoryName() {
+        return CategoryName;
     }
 
-    @Override
-    public int hashCode() {
-        return ID;
+    public void setCategoryName(String categoryName) {
+        CategoryName = categoryName;
+    }
+
+    public String getBrandName() {
+        return BrandName;
+    }
+
+    public void setBrandName(String brandName) {
+        BrandName = brandName;
+    }
+
+    public int getcQuantity() {
+        return cQuantity;
+    }
+
+    public void setcQuantity(int cQuantity) {
+        this.cQuantity = cQuantity;
     }
 }

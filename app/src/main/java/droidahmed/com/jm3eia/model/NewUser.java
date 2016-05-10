@@ -23,4 +23,6 @@ public class NewUser {
     private String House;
     private String AuthUserName;
     private String AuthPassword;
+
+
 }

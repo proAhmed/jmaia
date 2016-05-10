@@ -22,11 +22,13 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.model.ItemJson;
 
 /**
  * Created by ahmed on 3/1/2016.
@@ -197,4 +199,17 @@ public class Utility {
     public void setCheck(boolean check) {
         this.check = check;
     }
+
+  public ArrayList<ItemJson> itemArrays(ArrayList<ItemJson> arrayList,ItemJson itemJson){
+      for( int i=0;arrayList.size()>i;i++){
+          if(arrayList.get(i).getIdItem()==itemJson.getIdItem()){
+              return arrayList;
+          }else {
+                arrayList.add(itemJson);
+              return arrayList;
+          }
+      }
+
+      return arrayList;
+  }
 }

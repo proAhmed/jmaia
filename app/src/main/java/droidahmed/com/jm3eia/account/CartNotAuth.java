@@ -1,12 +1,11 @@
 package droidahmed.com.jm3eia.account;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,12 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.adapter.CartGridAdapter;
-import droidahmed.com.jm3eia.api.AddCartItem;
-import droidahmed.com.jm3eia.api.AddCartItemNotAuth;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
-import droidahmed.com.jm3eia.controller.Utility;
-import droidahmed.com.jm3eia.model.CartItemResponse;
+import droidahmed.com.jm3eia.start.MainActivity;
 import droidahmed.com.jm3eia.start.SaveAuth;
 
 public class CartNotAuth extends AppCompatActivity {
@@ -63,45 +58,21 @@ EditText edName,edMobile,edZone,edWidget,edStreet,edGada,edNum;
                        jsonObject.put("Street", edStreet.getText().toString());
                        jsonObject.put("Gada", edGada.getText().toString());
                        jsonObject.put("House", edNum.getText().toString());
-                       jsonArray.put(jsonObject);
-                     //  jsonArray.put(saveAuth.getJsonProduct());
-                       Log.d("json", jsonArray.toString());
-                       jsonObjectSend.put("VisitorData", jsonObject);
+                      //  jsonArray.put(saveAuth.getJsonProduct());
+                        jsonObjectSend.put("VisitorData", jsonObject);
                        jsonObjectSend.put("CartItems", saveAuth.getJsonProduct());
 
-
-                       if (Utility.isNetworkConnected(CartNotAuth.this)) {
-
-                           ProductListener = new OnProcessCompleteListener() {
-
-                               @Override
-                               public void onSuccess(Object result) {
-//                                   cartItemResponse = (CartItemResponse) result;
-//                                   cartItemArrayList=   cartItemResponse.getData();
-                                   //   Log.d("iiii",pro.toString());
-//                    Gson gson = new Gson();
-//                    String json = gson.toJson(pro);
-//                    StoreData storeData = new StoreData(MainActivity.this);
-//                    storeData.saveData(json);
-
-
-
-                               }
-
-                               @Override
-                               public void onFailure() {
-                                   Utility.showFailureDialog(CartNotAuth.this, false);
-                               }
-                           };
-
-                           AddCartItemNotAuth task = new AddCartItemNotAuth(CartNotAuth.this, ProductListener);
-                           task.execute(jsonObjectSend);
-
-                       } else {
-                           Utility.showValidateDialog(
-                                   getResources().getString(R.string.failure_ws),
-                                   CartNotAuth.this);
-                       }
+SaveAuth saveAuth = (SaveAuth) getApplicationContext();
+                       saveAuth.setJsonVisitor(jsonObject);
+                       Intent intent = new Intent(CartNotAuth.this, MainActivity.class);
+                       intent.putExtra("CartAuth","NonVisitor");
+                       startActivity(intent);
+//                       FragmentProductCart fragment = new FragmentProductCart();
+//                       Bundle bundles = new Bundle();
+//                       bundles.putString("CartAuth","NonVisitor");
+//                       getSupportFragmentManager().beginTransaction()
+//                               .replace(R.id.mainFragment, fragment)
+//                               .commitAllowingStateLoss();
 
 
 

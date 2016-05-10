@@ -1,11 +1,11 @@
 package droidahmed.com.jm3eia.api;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -15,22 +15,24 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.model.CartItemResponse;
+import droidahmed.com.jm3eia.model.ItemJson;
 
 
-public class AddCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
+public class AddCartItem extends AsyncTask<HashSet, Void, CartItemResponse> {
 
-	private final static String URL = "http://jm3eia.com/API/ar/cart";
+	private final static String URL = "https://jm3eia.com/API/ar/cart/add";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
@@ -50,7 +52,7 @@ public class AddCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
 	}
 
 	@Override
-	protected CartItemResponse doInBackground(JSONArray... params) {
+	protected CartItemResponse doInBackground(HashSet... params) {
 		String responseJSON = null;
 		CartItemResponse obj = null;
 
@@ -91,15 +93,24 @@ public class AddCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
 		}
 	}
 
-	public static String makeRequest(JSONArray jsonArray) throws Exception {
+	public   String makeRequest(HashSet<ItemJson> hashSet) throws Exception {
 
 		DefaultHttpClient httpclient = new DefaultHttpClient();
-		HttpPost httpost = new HttpPost(URL);
+		HttpPost httpPost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
- 		JSONObject json = new JSONObject();
-
+		JSONObject json = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		ArrayList<ItemJson> arrayList = new ArrayList<>();
+		arrayList.addAll(hashSet);
+		for (int i=0;i<arrayList.size();i++){
+			JSONObject itemJson = new JSONObject();
+			itemJson.put("Product",arrayList.get(i).getIdItem());
+			itemJson.put("Quantity",arrayList.get(i).getIdItem());
+ 			jsonArray.put(itemJson);
+		}
 		json.put("CartItems", jsonArray);
-
+		json.put("AuthUserName",new StoreData(context).getAuthName());
+		json.put("AuthPassword",new StoreData(context).getAuthPass());
 
 		InputStreamEntity entity = null;
 		try {
@@ -108,18 +119,15 @@ public class AddCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
 
 			entity = new InputStreamEntity(is, is.available());
 
-		} catch (UnsupportedEncodingException e) {
-
-			e.printStackTrace();
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
 
-		httpost.setEntity(entity);
+		httpPost.setEntity(entity);
 
-		httpost.setHeader("Content-type", "application/json");
-		HttpResponse response = (HttpResponse) httpclient.execute(httpost);
+		httpPost.setHeader("Content-type", "application/json");
+		HttpResponse response = httpclient.execute(httpPost);
 
 		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 

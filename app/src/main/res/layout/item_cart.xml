@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
-android:id="@+id/cancel_order"
+                android:id="@+id/cancel_order"
                 android:layout_width="80dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
@@ -75,27 +75,17 @@ android:id="@+id/cancel_order"
         android:layout_below="@+id/divider"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="right"
-            android:gravity="right"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/market_icon"
-            android:id="@+id/imgCart">
+
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:textSize="10sp"
                 android:layout_gravity="center_vertical"
-                android:text="@string/add_cart"
-                android:id="@+id/item_change" />
-        </LinearLayout>
+                 android:id="@+id/tvPrice" />
 
 
         <ImageView
@@ -104,7 +94,6 @@ android:id="@+id/cancel_order"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="2dp"
-
             android:src="@drawable/delete"/>
 
         <EditText

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.model.AllProducts;
+import droidahmed.com.jm3eia.model.CartQuantity;
 import droidahmed.com.jm3eia.model.Product;
 
 
@@ -27,11 +28,11 @@ import droidahmed.com.jm3eia.model.Product;
  */
 public class CuListAdapter extends BaseAdapter {
 
-    ArrayList<AllProducts>  _choices;
+    ArrayList<CartQuantity>  _choices;
     private Context context;
      OnCartListener onCartListener;
 
-    public CuListAdapter(Context context,  ArrayList<AllProducts>  _choices, OnCartListener onCartListener) {
+    public CuListAdapter(Context context,  ArrayList<CartQuantity>  _choices, OnCartListener onCartListener) {
         this.context = context;
         this._choices = _choices;
         this.onCartListener = onCartListener;
@@ -55,7 +56,7 @@ public class CuListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final double[] price = {0};
+        final double[] price = {1};
         final int[] cartItem = {0};
         final boolean[] cartWatch = {false};
 
@@ -80,7 +81,7 @@ public class CuListAdapter extends BaseAdapter {
         imgDelete = (ImageView) convertView.findViewById(R.id.imgDelete);
         imgCart = (LinearLayout) convertView.findViewById(R.id.imgCart);
         edNumber = (EditText)  convertView.findViewById(R.id.edNumber);
-        edNumber.setText("" + cartItem[0]);
+        edNumber.setText("" + _choices.get(position).getcQuantity());
 
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +109,7 @@ public class CuListAdapter extends BaseAdapter {
         imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cartItem[0] > 0) {
+                if (cartItem[0] > 1) {
                     --cartItem[0];
                     edNumber.setText("" + cartItem[0]);
                     price[0] = _choices.get(position).getPrice()*cartItem[0];

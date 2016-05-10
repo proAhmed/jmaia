@@ -10,9 +10,9 @@ import droidahmed.com.jm3eia.api.User;
 public class CartItemResponse {
     private boolean success;
     private Object error;
-    private ArrayList<CartItem> data;
+    private ArrayList<CartQuantity> data;
 
-    public CartItemResponse(boolean success, Object error, ArrayList<CartItem> data) {
+    public CartItemResponse(boolean success, Object error, ArrayList<CartQuantity> data) {
         this.success = success;
         this.error = error;
         this.data = data;
@@ -37,11 +37,11 @@ public class CartItemResponse {
         this.error = error;
     }
 
-    public ArrayList<CartItem> getData() {
+    public ArrayList<CartQuantity> getData() {
         return data;
     }
 
-    public void setData(ArrayList<CartItem> data) {
+    public void setData(ArrayList<CartQuantity> data) {
         this.data = data;
     }
 }

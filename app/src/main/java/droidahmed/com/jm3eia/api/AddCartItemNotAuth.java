@@ -25,9 +25,10 @@ import java.io.UnsupportedEncodingException;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.model.CartItemResponse;
+import droidahmed.com.jm3eia.model.ResponseOfCheckOut;
 
 
-public class AddCartItemNotAuth extends AsyncTask<JSONObject, Void, CartItemResponse> {
+public class AddCartItemNotAuth extends AsyncTask<JSONObject, Void, ResponseOfCheckOut> {
 
 	private final static String URL = "https://jm3eia.com/API/ar/checkout/buy";
 	private ProgressDialog dialog;
@@ -43,15 +44,15 @@ public class AddCartItemNotAuth extends AsyncTask<JSONObject, Void, CartItemResp
 	@Override
 	protected void onPreExecute() {
 		this.dialog.setMessage(context.getResources().getString(
-				R.string.add_cart_laoding));
+				R.string.load_request));
 		this.dialog.setCancelable(false);
 		this.dialog.show();
 	}
 
 	@Override
-	protected CartItemResponse doInBackground(JSONObject... params) {
+	protected ResponseOfCheckOut doInBackground(JSONObject... params) {
 		String responseJSON = null;
-		CartItemResponse obj = null;
+		ResponseOfCheckOut obj = null;
 
 		try {
 			responseJSON = makeRequest(params[0]);
@@ -68,7 +69,7 @@ public class AddCartItemNotAuth extends AsyncTask<JSONObject, Void, CartItemResp
 			gb.serializeNulls();
 			gson = gb.create();
 			try {
-				obj = gson.fromJson(responseJSON, CartItemResponse.class);
+				obj = gson.fromJson(responseJSON, ResponseOfCheckOut.class);
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
@@ -79,7 +80,7 @@ public class AddCartItemNotAuth extends AsyncTask<JSONObject, Void, CartItemResp
 	}
 
 	@Override
-	protected void onPostExecute(CartItemResponse result) {
+	protected void onPostExecute(ResponseOfCheckOut result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}

@@ -15,8 +15,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.controller.OnCancelOrder;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.model.CartItem;
+import droidahmed.com.jm3eia.model.CartQuantity;
 import droidahmed.com.jm3eia.model.ProductCart;
 
 
@@ -25,13 +27,15 @@ import droidahmed.com.jm3eia.model.ProductCart;
  */
 public class CartGridAdapter extends BaseAdapter {
 
-    ArrayList<CartItem>  _choices;
+    ArrayList<CartQuantity>  _choices;
     private Context context;
      OnCartListener onCartListener;
-    public CartGridAdapter(Context context, ArrayList<CartItem> _choices, OnCartListener onCartListener) {
+    OnCancelOrder onCancelOrder;
+    public CartGridAdapter(Context context, ArrayList<CartQuantity> _choices, OnCartListener onCartListener,OnCancelOrder onCancelOrder) {
         this.context = context;
         this._choices = _choices;
          this.onCartListener = onCartListener;
+        this.onCancelOrder = onCancelOrder;
     }
 
     @Override
@@ -51,7 +55,7 @@ public class CartGridAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final int[] cartItem = {0};
+        final int[] cartItem = {1};
         final double[] price = {0};
 
         final boolean[] cartWatch = {false};
@@ -61,8 +65,9 @@ public class CartGridAdapter extends BaseAdapter {
         ImageView imgProduct,imgAdd,imgDelete;
         final LinearLayout imgCart;
         final EditText edNumber;
+        ImageView cancel_order;
          if (convertView == null) {
-           convertView = inflater.inflate(R.layout.main_items, parent, false);
+           convertView = inflater.inflate(R.layout.item_cart, parent, false);
         }
         item_change = (TextView) convertView.findViewById(R.id.item_change);
 
@@ -71,23 +76,30 @@ public class CartGridAdapter extends BaseAdapter {
         imgDelete = (ImageView) convertView.findViewById(R.id.imgDelete);
         imgCart = (LinearLayout) convertView.findViewById(R.id.imgCart);
         edNumber = (EditText)  convertView.findViewById(R.id.edNumber);
+        cancel_order  = (ImageView) convertView.findViewById(R.id.cancel_order);
         edNumber.setText(_choices.get(position).getcQuantity() + "");
 
          imgCart.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 edNumber.getText();
+                 if (cartWatch[0] == false) {
+                     onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), false, price[0]);
+                     item_change.setText(context.getResources().getString(R.string.see_cart));
+                     cartWatch[0] = true;
+                 } else {
+                     cartWatch[0] = false;
+                     onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), true, price[0]);
+                     price[0] = _choices.get(position).getPrice() * cartItem[0];
+
+                 }
+
+             }
+         });
+        cancel_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edNumber.getText();
-                if (cartWatch[0] == false) {
-                    onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), false, price[0]);
-                    item_change.setText(context.getResources().getString(R.string.see_cart));
-                    cartWatch[0] = true;
-                } else {
-                    cartWatch[0] = false;
-                    onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), true, price[0]);
-                    price[0] = _choices.get(position).getPrice() * cartItem[0];
-
-                }
-
+                onCancelOrder.cancel(position);
             }
         });
         imgAdd.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +114,7 @@ public class CartGridAdapter extends BaseAdapter {
         imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-if (cartItem[0] >0){
+if (cartItem[0] >1){
     --cartItem[0];
     edNumber.setText("" + cartItem[0]);
     price[0] = _choices.get(position).getPrice()*cartItem[0];

@@ -35,5 +35,6 @@ dependencies {
     compile project(':library')
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+    compile 'org.greenrobot:eventbus:3.0.0'
 
 }

@@ -11,32 +11,45 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.adapter.CuListAdapter;
+import droidahmed.com.jm3eia.controller.OnAddItem;
 import droidahmed.com.jm3eia.controller.OnCartListener;
+import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
 import droidahmed.com.jm3eia.model.CartItem;
+import droidahmed.com.jm3eia.model.CartQuantity;
+import droidahmed.com.jm3eia.model.ItemAddedAlready;
+import droidahmed.com.jm3eia.model.ItemJson;
 import droidahmed.com.jm3eia.model.ProductCart;
 import droidahmed.com.jm3eia.start.MainActivity;
+import droidahmed.com.jm3eia.start.SaveAuth;
 
 /**
  * Created by ahmed on 3/15/2016.
  */
-public class FragmentProductDetails extends Fragment implements OnCartListener {
+public class FragmentProductDetails extends Fragment implements OnCartListener,OnAddItem {
       GridView gridView;
       ImageView imgProduct;
     TextView tvName,tvCode,tvBrand,tvCategory;
-    ArrayList<AllProducts>related;
-     ArrayList<CartItem> cartItems;
+    ArrayList<CartQuantity>related;
+     ArrayList<CartQuantity> cartItems;
      ArrayList<ProductCart>productCart;
     static  double pricess;
+    HashSet<AllProducts> baseHashSet;
+    HashSet<ItemJson>itemHashSet;
+    SaveAuth saveAuth;
+    boolean add;
+    ArrayList<CartQuantity>cartItemsModify;
 
     @Nullable
     @Override
@@ -46,9 +59,13 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
         final OnCartListener onCartListener = (OnCartListener) this;
         cartItems = new ArrayList<>();
         productCart = new ArrayList<>();
+        baseHashSet = new HashSet<>();
+        itemHashSet = new HashSet<>();
+        cartItemsModify = new ArrayList<>();
+        saveAuth = (SaveAuth) getActivity().getApplicationContext();
 
         Bundle bundle = getArguments();
-      AllProducts allProducts = (AllProducts) bundle.getSerializable("products");
+        CartQuantity allProducts = (CartQuantity) bundle.getSerializable("products");
         Log.d("uuu", allProducts.getName());
 
         tvName = (TextView) view.findViewById(R.id.proName);
@@ -57,7 +74,7 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
         tvBrand = (TextView) view.findViewById(R.id.proBrand);
         imgProduct = (ImageView) view.findViewById(R.id.imgPro);
         related = new ArrayList<>();
-        related = (ArrayList<AllProducts>) bundle.getSerializable("related-product");
+        related = (ArrayList<CartQuantity>) bundle.getSerializable("related-product");
         assert allProducts != null;
         tvName.setText(allProducts.getName()+"");
         tvCode.setText(allProducts.getCode()+"");
@@ -67,26 +84,12 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
 
         gridView.setAdapter(new CuListAdapter(getActivity(),related,onCartListener));
 
-
-
-        // Listview Group click listener
-
-
-        // Listview Group expanded listener
-
-
-        // Listview Group collasped listener
-
-
-        // Listview on child click listener
-
          return view;
     }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        MainActivity mainActivity = new MainActivity();
-//        mainActivity.ui("Products");
+
         getActivity().findViewById(R.id.imageToggle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,13 +112,27 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
 
     @Override
     public void onAddCart(int position, int num,boolean watch,double price) {
-        pricess +=price;
+        if(!watch) {
+            pricess += price;
 
-        related.get(position);
-        productCart.add(new ProductCart(related.get(position), num));
-        Log.d("uuu",productCart.toString());
-        if(watch==true){
-            JSONObject objMainList = new JSONObject();
+            related.get(position);
+            cartItems.add(related.get(position));
+            Log.d("uuu", productCart.toString());
+            ItemJson itemJson = new ItemJson(cartItems.get(position).getID(), num, Utility.getCurrentTimeStamp());
+            if (saveAuth.getItemJsons() != null) {
+                itemHashSet = saveAuth.getItemJsons();
+
+            }
+            boolean add = itemHashSet.add(itemJson);
+            if (add) {
+                saveAuth.setItemJsons(itemHashSet);
+                checkAdd(true);
+                setAdd(true);
+            } else {
+                Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
+
+            }
+        }else if(isAdd()){
 
             FragmentProductCart  fragment =   new FragmentProductCart();
             Bundle bundle = new Bundle();
@@ -142,7 +159,7 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
 //                }
 //            };
 //
-//            AddCartItem task = new AddCartItem(getActivity(), ProductListener);
+//            ShowCartItem task = new ShowCartItem(getActivity(), ProductListener);
 //            task.execute(String.valueOf(position),String.valueOf(num),Utility.getCurrentTimeStamp());
 //
 //        } else {
@@ -152,5 +169,21 @@ public class FragmentProductDetails extends Fragment implements OnCartListener {
 //        }
     }
 
+    public boolean isAdd() {
+        return add;
+    }
 
+    public void setAdd(boolean add) {
+        this.add = add;
+    }
+
+    private boolean checkAdd(boolean check){
+        return check;
+    }
+
+    @Override
+    public void add(int num, int position) {
+        related.get(position).setcQuantity(num);
+        saveAuth.setCartQuan(related);
+    }
 }

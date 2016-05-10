@@ -103,4 +103,14 @@ public class StoreData {
     public String getHouse() {
         return sharedPreferences.getString("House", "");
     }
+
+    public void savLogin(String category) {
+        editor.putString("login", category);
+        editor.apply();
+    }
+    public String getLogin() {
+        return sharedPreferences.getString("login", "");
+    }
+
+
 }

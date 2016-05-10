@@ -7,6 +7,7 @@
     android:paddingLeft="12dp"
     android:paddingTop="10dp"
     android:background="#EBEBEC">
+
     <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="3dp"
@@ -31,32 +32,102 @@
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:background="#fff"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="right"
+            android:gravity="right"
             android:layout_marginStart="20dp"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/proName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="شكولاته"/>
             <TextView
                 android:id="@+id/proCode"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="55665"/>
             <TextView
                 android:id="@+id/proCategory"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="للللل"/>
             <TextView
                 android:id="@+id/proBrand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
+
+            <LinearLayout
+                android:id="@+id/cart_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                     android:background="@drawable/market_icon"
+                    android:id="@+id/imgCart">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:textSize="10sp"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/add_cart"
+                        android:id="@+id/item_change" />
+                </LinearLayout>
+
+
+                <ImageView
+                    android:id="@+id/imgDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="2dp"
+                    android:src="@drawable/delete"/>
+
+                <EditText
+                    android:id="@+id/edNumber"
+                    android:background="@drawable/white_edit_border"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="2dp"
+
+                    />
+
+                <ImageView
+                    android:id="@+id/imgAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="2dp"
+
+                    android:src="@drawable/add"/>
+
+            </LinearLayout>
+
+
         </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_gravity="center"
@@ -72,7 +143,11 @@
                 android:src="@drawable/login_border"/>
 
         </LinearLayout>
+
+
     </LinearLayout>
+
+
     <GridView
         android:id="@+id/grid"
         android:numColumns="2"

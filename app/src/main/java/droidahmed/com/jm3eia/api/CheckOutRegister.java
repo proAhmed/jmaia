@@ -3,6 +3,7 @@ package droidahmed.com.jm3eia.api;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,25 +18,24 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
-import droidahmed.com.jm3eia.model.CartItemResponse;
-import droidahmed.com.jm3eia.model.ResponseOfCheckOut;
+import droidahmed.com.jm3eia.model.InputNewUser;
+import droidahmed.com.jm3eia.model.UserResponse;
 
 
-public class CheckOutForSignUser extends AsyncTask<String, Void, ResponseOfCheckOut> {
+public class CheckOutRegister extends AsyncTask<Object, Void, Object> {
 
-	private final static String URL = "https://jm3eia.com/API/ar/checkout/buy";
+	private String URL = Keys.BASE_URL + "/profile/register";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
 
-	public CheckOutForSignUser(Context context, OnProcessCompleteListener cb) {
+	public CheckOutRegister(Context context, OnProcessCompleteListener cb) {
 		dialog = new ProgressDialog(context);
 		callback = cb;
 		this.context = context;
@@ -44,18 +44,20 @@ public class CheckOutForSignUser extends AsyncTask<String, Void, ResponseOfCheck
 	@Override
 	protected void onPreExecute() {
 		this.dialog.setMessage(context.getResources().getString(
-				R.string.load_request));
+				R.string.loading_register));
 		this.dialog.setCancelable(false);
 		this.dialog.show();
 	}
 
 	@Override
-	protected ResponseOfCheckOut doInBackground(String... params) {
+	protected UserResponse doInBackground(Object... params) {
+
+		UserResponse obj = null;
 		String responseJSON = null;
-		ResponseOfCheckOut obj = null;
 
 		try {
-			responseJSON = makeRequest(params[0],params[1]);
+			responseJSON = makeRequest(URL, params[0]);
+			Log.d("ioiio", responseJSON);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -63,62 +65,69 @@ public class CheckOutForSignUser extends AsyncTask<String, Void, ResponseOfCheck
 		}
 
 		Gson gson = new Gson();
+
 		if (responseJSON != null && responseJSON.length() > 1) {
 
 			GsonBuilder gb = new GsonBuilder();
 			gb.serializeNulls();
 			gson = gb.create();
 			try {
-				obj = gson.fromJson(responseJSON, ResponseOfCheckOut.class);
+
+				obj = gson.fromJson(responseJSON, UserResponse.class);
+
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
-
 		}
 
 		return obj;
 	}
 
 	@Override
-	protected void onPostExecute(ResponseOfCheckOut result) {
+	protected void onPostExecute(Object result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
-		if (result != null) {
-			callback.onSuccess(result);
-		} else {
-			callback.onFailure();
-		}
+
+			if (result != null&&((UserResponse)result).isSuccess()) {
+                callback.onSuccess(result);
+            } else if(result != null&&!((UserResponse)result).isSuccess()) {
+				callback.onSuccess(  result );
+            }else{
+				callback.onFailure();
+			}
+
 	}
 
-	public static String makeRequest(String authName,String authPass) throws Exception {
+	public static String makeRequest(String URL,Object ...  inputNewUser) throws Exception {
 
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
- 		JSONObject json = new JSONObject();
+		JSONObject json = new JSONObject();
 
-		json.put("AuthUserName", authName);
-		json.put("AuthPassword", authPass);
+		json.put("FullName", ((InputNewUser) inputNewUser[0]).getFullName());
 
+		json.put("UserName", ((InputNewUser) inputNewUser[0]).getUserName());
+		json.put("Password", ((InputNewUser) inputNewUser[0]).getPassword());
+		json.put("Email", ((InputNewUser) inputNewUser[0]).getEmail());
+		json.put("Mobile", ((InputNewUser) inputNewUser[0]).getMobile());
+//		json.put("Picture", Picture);
+		json.put("Zone", ((InputNewUser)inputNewUser[0]).getZone());
+		json.put("Widget", ((InputNewUser) inputNewUser[0]).getWidget());
+		json.put("Street", ((InputNewUser) inputNewUser[0]).getStreet());
+		json.put("Gada", ((InputNewUser)inputNewUser[0]).getGada());
+		json.put("House", ((InputNewUser)inputNewUser[0]).getHouse());
+		if(!inputNewUser[10].equals("")){
+			json.put("CartItems",(JSONArray) inputNewUser[2]);
 
-		InputStreamEntity entity = null;
-		try {
-			InputStream is = new ByteArrayInputStream(json.toString().getBytes(
-					"UTF-8"));
-
-			entity = new InputStreamEntity(is, is.available());
-
-		} catch (UnsupportedEncodingException e) {
-
-			e.printStackTrace();
-		} catch (IOException e) {
-
-			e.printStackTrace();
 		}
+ 		InputStream is = new ByteArrayInputStream(json.toString().getBytes(
+				"UTF-8"));
+
+		InputStreamEntity entity = new InputStreamEntity(is, is.available());
 
 		httpost.setEntity(entity);
-
 		httpost.setHeader("Content-type", "application/json");
 		HttpResponse response = (HttpResponse) httpclient.execute(httpost);
 

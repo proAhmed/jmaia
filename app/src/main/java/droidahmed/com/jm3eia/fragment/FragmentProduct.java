@@ -19,17 +19,25 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.adapter.ProGridAdapter;
+import droidahmed.com.jm3eia.api.AddCartItem;
 import droidahmed.com.jm3eia.api.GetHome;
+import droidahmed.com.jm3eia.controller.OnAddItem;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.controller.OnItemListener;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.OnUpdateAdapter;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
 import droidahmed.com.jm3eia.model.CartItem;
+import droidahmed.com.jm3eia.model.CartItemResponse;
+import droidahmed.com.jm3eia.model.CartQuantity;
+import droidahmed.com.jm3eia.model.ItemAddedAlready;
+import droidahmed.com.jm3eia.model.ItemJson;
 import droidahmed.com.jm3eia.model.MainApi;
 import droidahmed.com.jm3eia.model.ProductCart;
 import droidahmed.com.jm3eia.start.MainActivity;
@@ -38,7 +46,7 @@ import droidahmed.com.jm3eia.start.SaveAuth;
 /**
  * Created by ahmed on 3/15/2016.
  */
-public class FragmentProduct extends Fragment implements OnItemListener,OnCartListener {
+public class FragmentProduct extends Fragment implements OnItemListener,OnCartListener,OnAddItem {
      EditText edSearch;
     AllProducts[] pro;
     private OnProcessCompleteListener ProductListener;
@@ -47,20 +55,33 @@ public class FragmentProduct extends Fragment implements OnItemListener,OnCartLi
       ArrayList<AllProducts> arrayList;
     ArrayList<CartItem> cartItems;
      ArrayList<ProductCart>productCart;
+ static   ArrayList<ItemJson>itemList;
+    HashSet<AllProducts>baseHashSet;
+    HashSet<ItemJson>itemHashSet;
     JSONArray jsonArray;
 static  double prices;
     SaveAuth saveAuth;
-    JSONArray jsonArrays;
-    @Nullable
+     ArrayList<ItemAddedAlready>itemAddedAlreadies;
+      OnItemListener onItemListener;
+    OnCartListener onCartListener;
+      OnAddItem onAddItem;
+    ArrayList<CartQuantity>cartItemsModify;
+      @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product, container, false);
         lstProduct = (GridView) view.findViewById(R.id.lstProduct);
        StoreData storeData =   new StoreData(getActivity());
-        final OnItemListener onItemListener = (OnItemListener) this;
-        final OnCartListener onCartListener = (OnCartListener) this;
-        cartItems = new ArrayList<>();
+            onItemListener = this;
+            onCartListener = this;
+              onAddItem = this;
+          cartItemsModify = new ArrayList<>();
+          cartItems = new ArrayList<>();
         productCart = new ArrayList<>();
+        itemList = new ArrayList<>();
+        baseHashSet = new HashSet<>();
+        itemHashSet = new HashSet<>();
+        itemAddedAlreadies = new ArrayList<>();
         //        Gson gson = new Gson();
 //        Type type = new TypeToken<ArrayList<AllProducts>>() {}.getType();
      //   ArrayList<AllProducts> arrayList = gson.fromJson(category, type);
@@ -81,24 +102,30 @@ static  double prices;
                 public void onSuccess(Object result) {
                     mainApi = (MainApi) result;
                     pro=   mainApi.getData();
-                    //   Log.d("iiii",pro.toString());
-//                    Gson gson = new Gson();
-//                    String json = gson.toJson(pro);
-//                    StoreData storeData = new StoreData(MainActivity.this);
-//                    storeData.saveData(json);
+                    arrayList =  new ArrayList<>(Arrays.asList(pro));
 
-                    arrayList=    new ArrayList<>(Arrays.asList(pro));
-                    lstProduct.setAdapter(new ProGridAdapter(getActivity(), arrayList,onItemListener,onCartListener));
+                    for(int i =0;i<arrayList.size();i++){
 
-                    lstProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView<?> parent, View v,
-                                                int position, long id) {
+                       AllProducts allProducts = arrayList.get(i);
+                        CartQuantity cartItem = new CartQuantity(allProducts.getID(),allProducts.getCode(),allProducts.getCategoryID(),
+                        allProducts.getBrandID(),allProducts.getPrice(), allProducts.getQuantity(), allProducts.getPicture(),allProducts.getSliderPictures(),
+                        allProducts.getCreatedDate(),allProducts.getModifiedDate(),allProducts.getViewed(), allProducts.getFeatured(),allProducts.getState(),
+                       allProducts.getProductID(),allProducts.getLanguageID(),allProducts.getName(),allProducts.getAlias(),
+                                allProducts.getContents(),allProducts.getDescription(), allProducts.getKeywords(),allProducts.getCategoryName(),allProducts.getBrandName(),
+                      1);
 
-                        }
-                    });
+                        cartItemsModify.add(cartItem);
+                    //    saveAuth.setCartQuan(cartItemsModify);
 
+                    }
+                    Log.d("oooo1", cartItemsModify.size() + "");
+                    Log.d("oooo2",arrayList.size()+"");
+                    if(saveAuth.getCartQuan()==null) {
+                        lstProduct.setAdapter(new ProGridAdapter(getActivity(), cartItemsModify, onItemListener, onCartListener, itemAddedAlreadies, onAddItem));
+                    }else{
+                        lstProduct.setAdapter(new ProGridAdapter(getActivity(), saveAuth.getCartQuan(), onItemListener, onCartListener, saveAuth.getItemAdded(), onAddItem));
 
-
+                    }
                 }
 
                 @Override
@@ -115,6 +142,7 @@ static  double prices;
                     getResources().getString(R.string.failure_ws),
                     getActivity());
         }
+
 //            }
 //        });
 //        if (Utility.isNetworkConnected(getActivity())) {
@@ -166,7 +194,7 @@ static  double prices;
                     mainActivity.showSecondaryMenu();
                 } catch (Exception e) {
 
-            }
+                }
             }
         });
 
@@ -190,11 +218,11 @@ static  double prices;
                 //                    ft.replace(R.id.mainFragment, fragmentProduct);
 //                    ft.commit();h
                    Bundle bundle = new Bundle();
-                bundle.putSerializable("products", arrayList.get(position));
-        ArrayList<AllProducts>related =new ArrayList<>();
+                bundle.putSerializable("products", cartItemsModify.get(position));
+        ArrayList<CartQuantity>related =new ArrayList<>();
         for (int i =0;i<arrayList.size();i++){
-            if(arrayList.get(position).getCategoryID()==arrayList.get(i).getCategoryID())
-                related.add(arrayList.get(i));
+            if(cartItemsModify.get(position).getCategoryID()==cartItemsModify.get(i).getCategoryID())
+                related.add(cartItemsModify.get(i));
         }
         if(related.size()>0)
         bundle.putSerializable("related-product", related);
@@ -204,54 +232,59 @@ static  double prices;
                         .replace(R.id.mainFragment, fragmentProduct).addToBackStack("")
                         .commitAllowingStateLoss();
     }
-
+    boolean add;
     @Override
     public void onAddCart(int position, int num, boolean watch,double price)  {
-         prices +=price;
-Log.d("ttt", "" + prices);
-        arrayList.get(position);
-        JSONObject jsonObject = new JSONObject();
 
-        try {
-            jsonObject.put("ID", arrayList.get(position).getID());
-            jsonObject.put("Quantity", num);
-            jsonObject.put("CreatedDate",  Utility.getCurrentTimeStamp());
+if(!watch) {
+    prices += price;
+    Log.d("ttt", "" + prices);
+    arrayList.get(position);
+    ItemJson itemJson = new ItemJson(arrayList.get(position).getID(), num, Utility.getCurrentTimeStamp());
+    Log.d("uuid", arrayList.get(position).getID() + "");
+    if (saveAuth.getItemJsons() != null) {
+        itemHashSet = saveAuth.getItemJsons();
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-Utility utility = new Utility();
-        if(saveAuth.getJsonProduct()!=null){
-            JSONArray jsonArrays=    utility.jsonArrayCheck(saveAuth.getJsonProduct(), jsonObject);
-           if( utility.isCheck()){
-               saveAuth.setJsonProduct(jsonArrays);
+    }
 
-           }else{
-               Toast.makeText(getActivity(),getResources().getString(R.string.find_cart),Toast.LENGTH_LONG).show();
-               return;
-           }
-            Log.d("jjj",jsonArrays.toString());
+    add = itemHashSet.add(itemJson);
+    if (add) {
+        saveAuth.setItemJsons(itemHashSet);
+        checkAdd(true);
+        setAdd(true);
+    } else {
+        Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
 
-        }else{
-             jsonArray.put(jsonObject);
-            Log.d("jjj", jsonArray.toString());
 
-            saveAuth.setJsonProduct(jsonArray.put(jsonObject));
+        return;
+    }
 
-        }
-    //    jsonArray.put(jsonObject);
-        productCart.add(new ProductCart(arrayList.get(position), num));
-        Log.d("uuu",productCart.toString());
-        if(watch==true){
-            FragmentProductCart  fragment =   new FragmentProductCart();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("cart", productCart);
-            bundle.putDouble("price", prices);
+    productCart.add(new ProductCart(arrayList.get(position), num));
+    Log.d("uuu", productCart.toString());
+}else   if(isAdd()) {
+    if(new StoreData(getActivity()).getAuthName().equals("")) {
+        FragmentProductCart fragment = new FragmentProductCart();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("cart", productCart);
+        bundle.putDouble("price", prices);
 
-            fragment.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
-                    .replace(R.id.mainFragment, fragment).commit();
-        }
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
+                .replace(R.id.mainFragment, fragment).commit();
+    }else{
+        AddAuth(itemHashSet);
+        FragmentProductCart fragment = new FragmentProductCart();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("cart", productCart);
+        bundle.putString("login","login");
+        bundle.putDouble("price", prices);
+
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
+                .replace(R.id.mainFragment, fragment).commit();
+    }
+
+       }
 //        if (Utility.isNetworkConnected(getActivity())) {
 //
 //            ProductListener = new OnProcessCompleteListener() {
@@ -268,7 +301,7 @@ Utility utility = new Utility();
 //                }
 //            };
 //
-//            AddCartItem task = new AddCartItem(getActivity(), ProductListener);
+//            ShowCartItem task = new ShowCartItem(getActivity(), ProductListener);
 //            task.execute(String.valueOf(position),String.valueOf(num),Utility.getCurrentTimeStamp());
 //
 //        } else {
@@ -278,5 +311,68 @@ Utility utility = new Utility();
 //        }
     }
 
+    private void AddAuth(HashSet hashSet){
+        if (Utility.isNetworkConnected(getActivity())) {
 
+            ProductListener = new OnProcessCompleteListener() {
+
+                @Override
+                public void onSuccess(Object result) {
+                    CartItemResponse cartItemResponse = (CartItemResponse) result;
+
+                    cartItemResponse.getData();
+
+                }
+
+                @Override
+                public void onFailure() {
+                    Utility.showFailureDialog(getActivity(), false);
+                }
+            };
+
+            AddCartItem task = new AddCartItem(getActivity(), ProductListener);
+            task.execute(hashSet);
+
+        } else {
+            Utility.showValidateDialog(
+                    getResources().getString(R.string.failure_ws),
+                    getActivity());
+        }
+    }
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public void setAdd(boolean add) {
+        this.add = add;
+    }
+
+    private boolean checkAdd(boolean check){
+    return check;
+}
+
+
+    @Override
+    public void add(int num, int position) {
+        arrayList.get(position);
+        cartItemsModify.get(position).setcQuantity(num);
+        saveAuth.setCartQuan(cartItemsModify);
+if(saveAuth.getItemAdded()!=null)
+    if(saveAuth.getItemAdded().size()>0) {
+        for (int i = 0; i < saveAuth.getItemAdded().size(); i++) {
+            if (arrayList.get(position).getID()==(saveAuth.getItemAdded().get(i).getId())) {
+                saveAuth.getItemAdded().get(i).setNum(num);
+            } else {
+                itemAddedAlreadies.add(new ItemAddedAlready(arrayList.get(position).getID(), arrayList.get(position).getName(), num));
+
+            }
+        }
+    }else {
+        itemAddedAlreadies.add(new ItemAddedAlready(arrayList.get(position).getID(), arrayList.get(position).getName(), num));
+
+    }
+         Log.d("oo",itemAddedAlreadies.size()+"");
+        saveAuth.setItemAdded(itemAddedAlreadies);
+    }
 }

@@ -1,43 +1,40 @@
 package droidahmed.com.jm3eia.account;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.api.CheckOutRegister;
 import droidahmed.com.jm3eia.api.Register;
-import droidahmed.com.jm3eia.api.User;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.InputNewUser;
 import droidahmed.com.jm3eia.model.UserResponse;
 import droidahmed.com.jm3eia.start.MainActivity;
+import droidahmed.com.jm3eia.start.SaveAuth;
 
 public class SignUp extends AppCompatActivity {
-EditText edUserName,edName,edPass,edEmail,edPhone,edAddressOne,edAddressTwo,edAddressStreet,edAddressNum;
+EditText edUserName,edName,edPass,edEmail,edPhone,edAddressOne,edAddressTwo,edAddressStreet,edAddressNum,edGada;
     Button btnSave;
     InputNewUser inputNewUser;
     private OnProcessCompleteListener registerListener;
     private UserResponse registerUser;
     private String picURL;
+    SaveAuth saveAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         edUserName = (EditText) findViewById(R.id.edRegUserName);
+        saveAuth = (SaveAuth) getApplicationContext();
 
         edName = (EditText) findViewById(R.id.edRegName);
         edPass = (EditText) findViewById(R.id.edRegPass);
@@ -46,7 +43,8 @@ EditText edUserName,edName,edPass,edEmail,edPhone,edAddressOne,edAddressTwo,edAd
         edAddressOne = (EditText) findViewById(R.id.edRegAddressOne);
         edAddressTwo = (EditText) findViewById(R.id.edRegAddressTwo);
         edAddressStreet = (EditText) findViewById(R.id.edRegAddressStreet);
-        edAddressNum = (EditText) findViewById(R.id.edRegNum);
+        edAddressNum = (EditText) findViewById(R.id.edUpdateNum);
+        edGada = (EditText) findViewById(R.id.edGada);
         btnSave = (Button) findViewById(R.id.btnSave);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +56,7 @@ EditText edUserName,edName,edPass,edEmail,edPhone,edAddressOne,edAddressTwo,edAd
                         edPass.getText().toString(),edEmail.getText().toString(),
                         edPhone.getText().toString(),edAddressOne.getText().toString(),
                         edAddressTwo.getText().toString(),edAddressStreet.getText().toString(),
-                        edAddressTwo.getText().toString(), edAddressNum.getText().toString());
+                        edGada.getText().toString(), edAddressNum.getText().toString());
                 validate();
             }
         });
@@ -106,11 +104,10 @@ try {
     registerUser = (UserResponse) result;
 
                 if (registerUser != null) {
-                    if (registerUser.getData().getID() != null
-                             ) {
+                    if (registerUser.getData().getID() != null) {
 
-                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                SignUp.this);
+                     new StoreData(SignUp.this).savLogin("login");
+                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SignUp.this);
 
                         alertDialogBuilder
                                 .setMessage("success")
@@ -203,9 +200,16 @@ try {
             }
         };
         picURL = "ddddd";
-        Register callWS = new Register(SignUp.this, registerListener);
+        CheckOutRegister callWS = new CheckOutRegister(SignUp.this, registerListener);
 
-          callWS.execute(inputNewUser);
+        if(getIntent().getExtras()!=null&&saveAuth.getJsonProduct()!=null) {
+
+
+            callWS.execute(inputNewUser,saveAuth.getJsonProduct());
+        }else{
+            callWS.execute(inputNewUser,"");
+
+        }
     }
 
 }

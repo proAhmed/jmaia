@@ -19,15 +19,16 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.StoreData;
+import droidahmed.com.jm3eia.model.DeleteProduct;
 
 
-public class DeleteCartItem extends AsyncTask<String, Void, WSResult> {
+public class DeleteCartItem extends AsyncTask<String, Void, DeleteProduct> {
 
-	private final static String URL = "http://jm3eia.com/API/ar/cart/add";
+	private final static String URL = "https://jm3eia.com/API/ar/cart/delete";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
@@ -47,13 +48,12 @@ public class DeleteCartItem extends AsyncTask<String, Void, WSResult> {
 	}
 
 	@Override
-	protected WSResult doInBackground(String... params) {
+	protected DeleteProduct doInBackground(String... params) {
 		String responseJSON = null;
-		WSResult obj = null;
+		DeleteProduct obj = null;
 
 		try {
-			responseJSON = makeRequest(params[0], params[1], params[2]
-					 );
+			responseJSON = makeRequest(params[0]);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,7 +66,7 @@ public class DeleteCartItem extends AsyncTask<String, Void, WSResult> {
 			gb.serializeNulls();
 			gson = gb.create();
 			try {
-				obj = gson.fromJson(responseJSON, WSResult.class);
+				obj = gson.fromJson(responseJSON, DeleteProduct.class);
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
@@ -77,7 +77,7 @@ public class DeleteCartItem extends AsyncTask<String, Void, WSResult> {
 	}
 
 	@Override
-	protected void onPostExecute(WSResult result) {
+	protected void onPostExecute(DeleteProduct result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
@@ -88,18 +88,16 @@ public class DeleteCartItem extends AsyncTask<String, Void, WSResult> {
 		}
 	}
 
-	public static String makeRequest(String id, String quantity,
-			String date) throws Exception {
+	public   String makeRequest(String id) throws Exception {
 
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
 		JSONObject json = new JSONObject();
 
-		json.put("ID", Integer.parseInt(id));
-		json.put("Quantity",Integer.parseInt( quantity));
-		json.put("CreatedDate",  date);
-
+		json.put("Product", Integer.parseInt(id));
+ 		json.put("AuthUserName",new StoreData(context).getAuthName());
+		json.put("AuthPassword",new StoreData(context).getAuthPass());
 		InputStreamEntity entity = null;
 		try {
 			InputStream is = new ByteArrayInputStream(json.toString().getBytes(
@@ -107,9 +105,6 @@ public class DeleteCartItem extends AsyncTask<String, Void, WSResult> {
 
 			entity = new InputStreamEntity(is, is.available());
 
-		} catch (UnsupportedEncodingException e) {
-
-			e.printStackTrace();
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -118,18 +113,18 @@ public class DeleteCartItem extends AsyncTask<String, Void, WSResult> {
 		httpost.setEntity(entity);
 
 		httpost.setHeader("Content-type", "application/json");
-		HttpResponse response = (HttpResponse) httpclient.execute(httpost);
+		HttpResponse response = httpclient.execute(httpost);
 
 		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 
-			InputStream instream = response.getEntity().getContent();
+			InputStream inStream = response.getEntity().getContent();
 			BufferedReader r = new BufferedReader(new InputStreamReader(
-					instream), 8000);
+					inStream), 8000);
 			String line;
 			while ((line = r.readLine()) != null) {
 				total.append(line);
 			}
-			instream.close();
+			inStream.close();
 		}
 		return total.toString();
 

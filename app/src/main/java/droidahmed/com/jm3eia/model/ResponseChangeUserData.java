@@ -1,23 +1,23 @@
 package droidahmed.com.jm3eia.model;
 
 /**
- * Created by ahmed on 4/5/2016.
+ * Created by ahmed on 5/9/2016.
  */
-public class DeleteProduct {
+public class ResponseChangeUserData {
     private boolean success;
-    private String error;
+    private Object error;
     private String data;
 
-    public DeleteProduct() {
+    public ResponseChangeUserData() {
     }
 
-    public DeleteProduct(boolean success, String error, String data) {
+    public ResponseChangeUserData(boolean success, Object error, String data) {
         this.success = success;
         this.error = error;
         this.data = data;
     }
 
-    public boolean getSuccess() {
+    public boolean isSuccess() {
         return success;
     }
 
@@ -25,11 +25,11 @@ public class DeleteProduct {
         this.success = success;
     }
 
-    public String getError() {
+    public Object getError() {
         return error;
     }
 
-    public void setError(String error) {
+    public void setError(Object error) {
         this.error = error;
     }
 
