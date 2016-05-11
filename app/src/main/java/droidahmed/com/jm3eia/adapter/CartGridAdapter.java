@@ -63,8 +63,7 @@ public class CartGridAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final TextView tvName,tvPrice,item_change;
         ImageView imgProduct,imgAdd,imgDelete;
-        final LinearLayout imgCart;
-        final EditText edNumber;
+         final EditText edNumber;
         ImageView cancel_order;
          if (convertView == null) {
            convertView = inflater.inflate(R.layout.item_cart, parent, false);
@@ -74,28 +73,27 @@ public class CartGridAdapter extends BaseAdapter {
         imgProduct = (ImageView) convertView.findViewById(R.id.imgProduct);
         imgAdd = (ImageView) convertView.findViewById(R.id.imgAdd);
         imgDelete = (ImageView) convertView.findViewById(R.id.imgDelete);
-        imgCart = (LinearLayout) convertView.findViewById(R.id.imgCart);
-        edNumber = (EditText)  convertView.findViewById(R.id.edNumber);
+         edNumber = (EditText)  convertView.findViewById(R.id.edNumber);
         cancel_order  = (ImageView) convertView.findViewById(R.id.cancel_order);
         edNumber.setText(_choices.get(position).getcQuantity() + "");
 
-         imgCart.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 edNumber.getText();
-                 if (cartWatch[0] == false) {
-                     onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), false, price[0]);
-                     item_change.setText(context.getResources().getString(R.string.see_cart));
-                     cartWatch[0] = true;
-                 } else {
-                     cartWatch[0] = false;
-                     onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), true, price[0]);
-                     price[0] = _choices.get(position).getPrice() * cartItem[0];
-
-                 }
-
-             }
-         });
+//             imgCart.setOnClickListener(new View.OnClickListener() {
+//             @Override
+//             public void onClick(View v) {
+//                 edNumber.getText();
+//                 if (cartWatch[0] == false) {
+//                     onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), false, price[0]);
+//                     item_change.setText(context.getResources().getString(R.string.see_cart));
+//                     cartWatch[0] = true;
+//                 } else {
+//                     cartWatch[0] = false;
+//                     onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), true, price[0]);
+//                     price[0] = _choices.get(position).getPrice() * cartItem[0];
+//
+//                 }
+//
+//             }
+//         });
         cancel_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

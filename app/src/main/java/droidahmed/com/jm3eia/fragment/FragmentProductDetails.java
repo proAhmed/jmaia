@@ -112,37 +112,39 @@ public class FragmentProductDetails extends Fragment implements OnCartListener,O
 
     @Override
     public void onAddCart(int position, int num,boolean watch,double price) {
-        if(!watch) {
-            pricess += price;
+        try {
+            if (!watch) {
 
-            related.get(position);
-            cartItems.add(related.get(position));
-            Log.d("uuu", productCart.toString());
-            ItemJson itemJson = new ItemJson(cartItems.get(position).getID(), num, Utility.getCurrentTimeStamp());
-            if (saveAuth.getItemJsons() != null) {
-                itemHashSet = saveAuth.getItemJsons();
+                pricess += price;
 
+                related.get(position);
+                cartItems.add(related.get(position));
+                Log.d("uuu", productCart.toString());
+                ItemJson itemJson = new ItemJson(cartItems.get(position).getID(), num, Utility.getCurrentTimeStamp());
+                if (saveAuth.getItemJsons() != null) {
+                    itemHashSet = saveAuth.getItemJsons();
+
+                }
+                boolean add = itemHashSet.add(itemJson);
+                if (add) {
+                    saveAuth.setItemJsons(itemHashSet);
+                    checkAdd(true);
+                    setAdd(true);
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
+
+                }
+            } else if (isAdd()) {
+
+                FragmentProductCart fragment = new FragmentProductCart();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("cart", productCart);
+                bundle.putDouble("price", pricess);
+
+                fragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
+                        .replace(R.id.mainFragment, fragment).commit();
             }
-            boolean add = itemHashSet.add(itemJson);
-            if (add) {
-                saveAuth.setItemJsons(itemHashSet);
-                checkAdd(true);
-                setAdd(true);
-            } else {
-                Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
-
-            }
-        }else if(isAdd()){
-
-            FragmentProductCart  fragment =   new FragmentProductCart();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("cart",productCart);
-            bundle.putDouble("price",pricess);
-
-            fragment.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
-                    .replace(R.id.mainFragment, fragment).commit();
-        }
 //        if (Utility.isNetworkConnected(getActivity())) {
 //
 //            ProductListener = new OnProcessCompleteListener() {
@@ -167,6 +169,9 @@ public class FragmentProductDetails extends Fragment implements OnCartListener,O
 //                    getResources().getString(R.string.failure_ws),
 //                    getActivity());
 //        }
+        }catch (Exception e){
+
+        }
     }
 
     public boolean isAdd() {

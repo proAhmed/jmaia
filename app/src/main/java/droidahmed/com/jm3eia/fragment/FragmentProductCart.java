@@ -89,6 +89,7 @@ static double pricessss;
          btnRequest = (Button) view.findViewById(R.id.btnRequest);
         btnCancel = (Button) view.findViewById(R.id.btnCancel);
         tvDeliver = (TextView) view.findViewById(R.id.tvDeliver);
+        tvDeliver.setText("1 دك");
         tvTotal = (TextView) view.findViewById(R.id.tvTotal);
         tvFinalTotal = (TextView) view.findViewById(R.id.tvFinalTotal);
  //        tvTotal.setText(""+pricessss);
@@ -116,7 +117,8 @@ static double pricessss;
                     cartItemResponse = (CartItemResponse) result;
                     cartItemArrayList=   cartItemResponse.getData();
                     priceProduct(cartItemArrayList);
-                    tvTotal.setText(""+priceProduct(cartItemArrayList));
+                    tvTotal.setText("" + priceProduct(cartItemArrayList));
+                    tvFinalTotal.setText(""+priceProduct(cartItemArrayList)+1);
                     //   Log.d("iiii",pro.toString());
 //                    Gson gson = new Gson();
 //                    String json = gson.toJson(pro);
@@ -388,7 +390,12 @@ private void callCheck(){
 
     @Override
     public void cancel(int position) {
+
         cancelApi(itemJsonArrayList.get(position));
+        if(cartItemArrayList.size()>0){
+            itemJsonArrayList.remove(itemJsonArrayList.get(position));}
+        if(cartItemArrayList.size()>0)
+        cartItemArrayList.remove(cartItemArrayList.get(position));
     }
     private void cancelApi(ItemJson itemJsons){
         if (Utility.isNetworkConnected(getActivity())) {
@@ -406,8 +413,15 @@ private void callCheck(){
                             cartItemResponse = (CartItemResponse) result;
                             cartItemArrayList=   cartItemResponse.getData();
                             priceProduct(cartItemArrayList);
-                            tvTotal.setText(""+priceProduct(cartItemArrayList));
-                            //   Log.d("iiii",pro.toString());
+                            tvTotal.setText("" + priceProduct(cartItemArrayList));
+                            if(priceProduct(cartItemArrayList)>0){
+                            tvFinalTotal.setText(""+priceProduct(cartItemArrayList)+1);
+                            }
+                            else{
+                                tvFinalTotal.setText("");
+
+                            }
+                             Log.d("iiii",cartItemArrayList.toString());
 //                    Gson gson = new Gson();
 //                    String json = gson.toJson(pro);
 //                    StoreData storeData = new StoreData(MainActivity.this);

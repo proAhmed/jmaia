@@ -192,6 +192,7 @@
     <string name="cart_without_auth_request">إكمال الطلب بدون تسجيل</string>
     <string name="request_done"> تنفيذ الطلب</string>
     <string name="title_activity_cart_not_auth">CartNotAuth</string>
+    <string name="delete_cart_laoding"> حذف المنتج من السلة</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="gada"> الجادة </string>

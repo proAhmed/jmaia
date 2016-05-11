@@ -247,4 +247,12 @@ public class CartQuantity implements Serializable{
     public void setcQuantity(int cQuantity) {
         this.cQuantity = cQuantity;
     }
+
+    @Override
+    public String toString() {
+        return "CartQuantity{" +
+                "ID=" + ID +
+                ", Name='" + Name + '\'' +
+                '}';
+    }
 }
