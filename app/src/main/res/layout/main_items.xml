@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                  android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
-                android:textSize="10sp"
+                android:textSize="8sp"
                 android:layout_gravity="center_vertical"
                 android:text="@string/add_cart"
                 android:id="@+id/item_change" />

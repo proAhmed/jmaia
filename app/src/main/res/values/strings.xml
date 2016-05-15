@@ -86,7 +86,7 @@
     <!--<string name="category">Category</string>-->
 
     <string name="app_name">Jm3eia</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings"> إعدادات</string>
     <string name="title_activity_sign_up">SignUp</string>
     <string name="title_activity_sign_in">SignIn</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
@@ -129,8 +129,7 @@
     <string name="quantity">الكمية</string>
     <string name="date">التاريخ</string>
     <string name="my_cart">سلة مشترياتى</string>
-    <string name="loading_uploading_ad">يتم الان رفع الإعلان    &#8230;</string>
-    <string name="loading_report_product">&#8230;جاري إرسال</string>
+     <string name="loading_report_product">&#8230;جاري إرسال</string>
     <string name="loading_categories">جاري تحميل الاقسام &#8230;</string>
     <string name="loading_myfavorit">جاري تحميل مفضلتي &#8230;</string>
     <string name="loading_add_comment">جاري رفع التعليق &#8230;</string>

@@ -1,4 +1,4 @@
-package droidahmed.com.jm3eia.api;
+package droidahmed.com.jm3eia.model;
 
 import java.io.Serializable;
 

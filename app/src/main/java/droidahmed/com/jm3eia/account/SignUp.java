@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.api.CheckOutRegister;
@@ -28,6 +29,7 @@ EditText edUserName,edName,edPass,edEmail,edPhone,edAddressOne,edAddressTwo,edAd
     private UserResponse registerUser;
     private String picURL;
     SaveAuth saveAuth;
+    ImageView imgClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,13 @@ EditText edUserName,edName,edPass,edEmail,edPhone,edAddressOne,edAddressTwo,edAd
         setContentView(R.layout.activity_sign_up);
         edUserName = (EditText) findViewById(R.id.edRegUserName);
         saveAuth = (SaveAuth) getApplicationContext();
-
+        imgClose = (ImageView) findViewById(R.id.imageClose);
+        imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         edName = (EditText) findViewById(R.id.edRegName);
         edPass = (EditText) findViewById(R.id.edRegPass);
         edEmail = (EditText) findViewById(R.id.edRegEmail);

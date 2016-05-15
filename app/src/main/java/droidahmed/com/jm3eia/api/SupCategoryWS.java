@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.model.SupCategoryModel;
 
 
 public class SupCategoryWS extends AsyncTask<String, Void, SupCategoryModel[]> {

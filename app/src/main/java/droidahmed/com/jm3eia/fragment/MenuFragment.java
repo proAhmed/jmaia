@@ -194,6 +194,8 @@ switch (position){
         if(new StoreData(getActivity()).getLogin().equals("login")){
             dialog();
             mainActivity. toggle();
+        new StoreData(getActivity()).saveAuthName("");
+            new StoreData(getActivity()).saveAuthPass("");
 
         }else{
             Intent intent = new Intent(getActivity(), SignIn.class);

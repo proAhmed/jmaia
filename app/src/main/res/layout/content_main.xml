@@ -57,7 +57,8 @@ android:orientation="vertical"
             android:layout_marginRight="16dp"
             android:src="@drawable/fillter_icon" />
 
-    </RelativeLayout></LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
     <FrameLayout
         android:id="@+id/mainFragment"
         android:layout_width="match_parent"

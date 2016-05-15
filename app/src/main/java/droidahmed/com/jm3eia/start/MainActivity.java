@@ -30,6 +30,7 @@ import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.adapter.CuListAdapter;
 import droidahmed.com.jm3eia.api.CategoriesByParent;
 import droidahmed.com.jm3eia.api.GetHome;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
@@ -191,5 +192,13 @@ if(getIntent().getExtras()!=null){
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("jjj","ooo");
+        DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
+         databaseHelper.delete();
     }
 }

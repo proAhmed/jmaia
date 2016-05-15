@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.controller.OnAddItem;
 import droidahmed.com.jm3eia.controller.OnCancelOrder;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.model.CartItem;
@@ -31,11 +32,13 @@ public class CartGridAdapter extends BaseAdapter {
     private Context context;
      OnCartListener onCartListener;
     OnCancelOrder onCancelOrder;
-    public CartGridAdapter(Context context, ArrayList<CartQuantity> _choices, OnCartListener onCartListener,OnCancelOrder onCancelOrder) {
+    OnAddItem onAddItem;
+    public CartGridAdapter(Context context, ArrayList<CartQuantity> _choices, OnCartListener onCartListener,OnCancelOrder onCancelOrder,OnAddItem onAddItem) {
         this.context = context;
         this._choices = _choices;
          this.onCartListener = onCartListener;
         this.onCancelOrder = onCancelOrder;
+        this.onAddItem  =onAddItem;
     }
 
     @Override
@@ -106,7 +109,7 @@ public class CartGridAdapter extends BaseAdapter {
                  ++cartItem[0];
                 edNumber.setText(""+ cartItem[0]);
                 price[0] = _choices.get(position).getPrice()*cartItem[0];
-
+                onAddItem.add(cartItem[0],position);
             }
         });
         imgDelete.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +119,7 @@ if (cartItem[0] >1){
     --cartItem[0];
     edNumber.setText("" + cartItem[0]);
     price[0] = _choices.get(position).getPrice()*cartItem[0];
+    onAddItem.add(cartItem[0],position);
 
 }
             }

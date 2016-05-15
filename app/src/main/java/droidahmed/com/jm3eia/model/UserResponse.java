@@ -1,9 +1,5 @@
 package droidahmed.com.jm3eia.model;
 
-import java.util.ArrayList;
-
-import droidahmed.com.jm3eia.api.User;
-
 /**
  * Created by ahmed on 4/21/2016.
  */

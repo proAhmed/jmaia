@@ -32,14 +32,14 @@ Context context;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.forget_password,container,false);
+        View view = inflater.inflate(R.layout.forget_password, container, false);
         context = getContext();
         btnForgetPass = (Button) view.findViewById(R.id.btnForgetPass);
         edForgetPass = (EditText) view.findViewById(R.id.edForgetPass);
         btnForgetPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                validate();
             }
         });
         return view;
@@ -49,17 +49,19 @@ Context context;
 
         String email = edForgetPass.getText().toString();
 
-        if ( !email.equals("")) {
+        if ( email.equals("")) {
 
             Utility.showValidateDialog(
                     getResources().getString(
                             R.string.registeration_validate1),context );
 
+        }else {
+            forgetPass(email);
         }
      //   register(useName, password);
 
     }
-    private void register(String userName,String password) {
+    private void forgetPass(String email) {
 
         forgetListener = new OnProcessCompleteListener() {
 
@@ -151,6 +153,6 @@ Context context;
         };
         ForgotPasswordApi callWS = new ForgotPasswordApi(getActivity(), forgetListener);
 
-        callWS.execute(userName,password);
+        callWS.execute(email);
     }
 }

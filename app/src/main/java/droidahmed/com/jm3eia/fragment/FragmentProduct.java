@@ -1,38 +1,37 @@
 package droidahmed.com.jm3eia.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+ import org.json.JSONArray;
+ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-
-import droidahmed.com.jm3eia.R;
+ import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.adapter.ProGridAdapter;
 import droidahmed.com.jm3eia.api.AddCartItem;
+import droidahmed.com.jm3eia.api.AddCartItemAuth;
 import droidahmed.com.jm3eia.api.GetHome;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
 import droidahmed.com.jm3eia.controller.OnAddItem;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.controller.OnItemListener;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
-import droidahmed.com.jm3eia.controller.OnUpdateAdapter;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
+import droidahmed.com.jm3eia.model.CartCheck;
 import droidahmed.com.jm3eia.model.CartItem;
 import droidahmed.com.jm3eia.model.CartItemResponse;
 import droidahmed.com.jm3eia.model.CartQuantity;
@@ -40,6 +39,7 @@ import droidahmed.com.jm3eia.model.ItemAddedAlready;
 import droidahmed.com.jm3eia.model.ItemJson;
 import droidahmed.com.jm3eia.model.MainApi;
 import droidahmed.com.jm3eia.model.ProductCart;
+import droidahmed.com.jm3eia.model.ResponseChangeUserData;
 import droidahmed.com.jm3eia.start.MainActivity;
 import droidahmed.com.jm3eia.start.SaveAuth;
 
@@ -66,7 +66,13 @@ static  double prices;
     OnCartListener onCartListener;
       OnAddItem onAddItem;
     ArrayList<CartQuantity>cartItemsModify;
-      @Nullable
+    ArrayList<CartQuantity>cartItemsDeleted;
+    ArrayList<CartQuantity>cartItemsResult;
+boolean searched;
+    DatabaseHelper databaseHelper;
+    int checkAdds = 0;
+    int checkEnter = 0;
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product, container, false);
@@ -82,13 +88,16 @@ static  double prices;
         baseHashSet = new HashSet<>();
         itemHashSet = new HashSet<>();
         itemAddedAlreadies = new ArrayList<>();
+        cartItemsResult = new ArrayList<>();
+        edSearch = (EditText) view.findViewById(R.id.edSearch);
+        initSearchView(edSearch);
+        databaseHelper = new DatabaseHelper(getActivity());
         //        Gson gson = new Gson();
 //        Type type = new TypeToken<ArrayList<AllProducts>>() {}.getType();
      //   ArrayList<AllProducts> arrayList = gson.fromJson(category, type);
-        final Bundle bundle = getArguments();
         jsonArray = new JSONArray();
           saveAuth = (SaveAuth) getActivity().getApplicationContext();
-
+        cartItemsDeleted = new ArrayList<>();
 
 
 //        lstProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -119,11 +128,14 @@ static  double prices;
 
                     }
                     Log.d("oooo1", cartItemsModify.size() + "");
-                    Log.d("oooo2",arrayList.size()+"");
-                    if(saveAuth.getCartQuan()==null) {
-                        lstProduct.setAdapter(new ProGridAdapter(getActivity(), cartItemsModify, onItemListener, onCartListener, itemAddedAlreadies, onAddItem));
-                    }else{
+                    if(saveAuth.getCartQuan()!=null&&saveAuth.getCartQuan().size()>0) {
                         lstProduct.setAdapter(new ProGridAdapter(getActivity(), saveAuth.getCartQuan(), onItemListener, onCartListener, saveAuth.getItemAdded(), onAddItem));
+
+
+                    }else{
+                        Log.d("oooo2", arrayList.size() + "");
+                        lstProduct.setAdapter(new ProGridAdapter(getActivity(), cartItemsModify, onItemListener, onCartListener, itemAddedAlreadies, onAddItem));
+
 
                     }
                 }
@@ -143,42 +155,7 @@ static  double prices;
                     getActivity());
         }
 
-//            }
-//        });
-//        if (Utility.isNetworkConnected(getActivity())) {
-//
-//            ProductListener = new OnProcessCompleteListener() {
-//
-//                @Override
-//                public void onSuccess(Object result) {
-//                    mainApi = (MainApi) result;
-//                    pro=   mainApi.getData();
-//
-//
-//                }
-//
-//                @Override
-//                public void onFailure() {
-//                    Utility.showFailureDialog(getActivity(), false);
-//                }
-//            };
-//
-//            GetHome task = new GetHome(getActivity(), ProductListener);
-//            task.execute();
-//
-//        } else {
-//            Utility.showValidateDialog(
-//                    getActivity().getResources().getString(R.string.failure_ws),
-//                    getActivity());
-//        }
-//        pro = new ArrayList<>();
-//        pro.add(new Product("","",1));
-//        pro.add(new Product("","",1));
-//        pro.add(new Product("","",1));
-//        pro.add(new Product("","",1));
-//        pro.add(new Product("","",1));
 
-//        lstProduct.setAdapter(new CuListAdapter(getActivity(),pro));
         return view;
     }
     @Override
@@ -212,21 +189,24 @@ static  double prices;
 
     @Override
     public void onClick(int position, boolean isLongClick) {
+
+
                         Fragment fragmentProduct = new FragmentProductDetails();
 //                    FragmentManager fm = getSupportFragmentManager();
 //                    FragmentTransaction ft = fm.beginTransaction();
                 //                    ft.replace(R.id.mainFragment, fragmentProduct);
 //                    ft.commit();h
                    Bundle bundle = new Bundle();
-                bundle.putSerializable("products", cartItemsModify.get(position));
-        ArrayList<CartQuantity>related =new ArrayList<>();
-        for (int i =0;i<arrayList.size();i++){
-            if(cartItemsModify.get(position).getCategoryID()==cartItemsModify.get(i).getCategoryID())
-                related.add(cartItemsModify.get(i));
-        }
-        if(related.size()>0)
-        bundle.putSerializable("related-product", related);
+        if(isSearched()){
+            bundle.putSerializable("products", cartItemsResult.get(position));
+            bundle.putDouble("item_id",cartItemsResult.get(position).getCategoryID());
+        }else{
 
+
+                bundle.putSerializable("products", cartItemsModify.get(position));
+        bundle.putDouble("item_id",cartItemsModify.get(position).getCategoryID());
+
+    }
         fragmentProduct.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.mainFragment, fragmentProduct).addToBackStack("")
@@ -235,38 +215,66 @@ static  double prices;
     boolean add;
     @Override
     public void onAddCart(int position, int num, boolean watch,double price)  {
+        if(databaseHelper.getItem(cartItemsModify.get(position).getID())!=null){
+            CartCheck cartCheck =  databaseHelper.getItem(cartItemsModify.get(position).getID());
+            checkAdds =  cartCheck.getAdd();
+            checkEnter =  cartCheck.getEnter();
+            Log.d("iiiooo",cartCheck.toString()+"");
+        }else{
+            Log.d("iiiooo",11+"");
+            checkAdds=0;
+            checkEnter=0;
+        }
 
-if(!watch) {
-    prices += price;
-    Log.d("ttt", "" + prices);
-    arrayList.get(position);
-    ItemJson itemJson = new ItemJson(arrayList.get(position).getID(), num, Utility.getCurrentTimeStamp());
-    Log.d("uuid", arrayList.get(position).getID() + "");
-    if (saveAuth.getItemJsons() != null) {
-        itemHashSet = saveAuth.getItemJsons();
-
+        if(checkAdds==0&&checkEnter==0) {
+    databaseHelper.createAdd(cartItemsModify.get(position),0,1);
+    if(saveAuth.getCartQuan()!=null){
+        cartItemsDeleted.add(saveAuth.getCartQuan().get(position));
+    saveAuth.setCartQuanDelete( cartItemsDeleted);
     }
+    else{
+        cartItemsDeleted.add(cartItemsModify.get(position));
+        saveAuth.setCartQuanDelete( cartItemsDeleted);
+    }
+    arrayList.get(position);
+     ItemJson itemJson = new ItemJson(arrayList.get(position).getID(), num, Utility.getCurrentTimeStamp());
 
-    add = itemHashSet.add(itemJson);
-    if (add) {
-        saveAuth.setItemJsons(itemHashSet);
+    if(new StoreData(getActivity()).getAuthName().equals("")) {
+
+        prices += price;
+
+        Log.d("uuid", arrayList.get(position).getID() + "");
+        if (saveAuth.getItemJsons() != null) {
+            itemHashSet = saveAuth.getItemJsons();
+
+        }
+
+        add = itemHashSet.add(itemJson);
+//        if (add) {
+           saveAuth.setItemJsons(itemHashSet);
+            checkAdd(true);
+            setAdd(true);
+//        } else {
+//            Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
+//
+//
+//            return;
+//        }
+
+        productCart.add(new ProductCart(arrayList.get(position), num));
+        Log.d("uuu", productCart.toString());
+    }else{
+        addAuth(itemJson);
         checkAdd(true);
         setAdd(true);
-    } else {
-        Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
-
-
-        return;
     }
-
-    productCart.add(new ProductCart(arrayList.get(position), num));
-    Log.d("uuu", productCart.toString());
-}else   if(isAdd()) {
+}else   if(checkEnter==1) {
     if(new StoreData(getActivity()).getAuthName().equals("")) {
         FragmentProductCart fragment = new FragmentProductCart();
         Bundle bundle = new Bundle();
         bundle.putSerializable("cart", productCart);
         bundle.putDouble("price", prices);
+        databaseHelper.createAdd(cartItemsModify.get(position),1,0);
 
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
@@ -284,31 +292,11 @@ if(!watch) {
                 .replace(R.id.mainFragment, fragment).commit();
     }
 
-       }
-//        if (Utility.isNetworkConnected(getActivity())) {
-//
-//            ProductListener = new OnProcessCompleteListener() {
-//
-//                @Override
-//                public void onSuccess(Object result) {
-//                    mainApi = (MainApi) result;
-//                    pro=   mainApi.getData();
-//                 }
-//
-//                @Override
-//                public void onFailure() {
-//                    Utility.showFailureDialog(getActivity(), false);
-//                }
-//            };
-//
-//            ShowCartItem task = new ShowCartItem(getActivity(), ProductListener);
-//            task.execute(String.valueOf(position),String.valueOf(num),Utility.getCurrentTimeStamp());
-//
-//        } else {
-//            Utility.showValidateDialog(
-//                    getResources().getString(R.string.failure_ws),
-//                    getActivity());
-//        }
+       }else {
+            Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
+
+        }
+
     }
 
     private void AddAuth(HashSet hashSet){
@@ -358,8 +346,8 @@ if(!watch) {
         arrayList.get(position);
         cartItemsModify.get(position).setcQuantity(num);
         saveAuth.setCartQuan(cartItemsModify);
-if(saveAuth.getItemAdded()!=null)
-    if(saveAuth.getItemAdded().size()>0) {
+        if(saveAuth.getItemAdded()!=null)
+         if(saveAuth.getItemAdded().size()>0) {
         for (int i = 0; i < saveAuth.getItemAdded().size(); i++) {
             if (arrayList.get(position).getID()==(saveAuth.getItemAdded().get(i).getId())) {
                 saveAuth.getItemAdded().get(i).setNum(num);
@@ -374,5 +362,140 @@ if(saveAuth.getItemAdded()!=null)
     }
          Log.d("oo",itemAddedAlreadies.size()+"");
         saveAuth.setItemAdded(itemAddedAlreadies);
+    }
+
+    private void addAuth(ItemJson itemJson ){
+        if (Utility.isNetworkConnected(getActivity())) {
+
+            ProductListener = new OnProcessCompleteListener() {
+
+                @Override
+                public void onSuccess(Object result) {
+                    String success= ((ResponseChangeUserData)result).getData();
+                    Toast.makeText(getActivity(),success,Toast.LENGTH_LONG).show();
+                  }
+
+                @Override
+                public void onFailure() {
+                    Utility.showFailureDialog(getActivity(), false);
+                }
+            };
+
+            AddCartItemAuth task = new AddCartItemAuth(getActivity(), ProductListener);
+            task.execute(itemJson );
+
+        } else {
+            Utility.showValidateDialog(
+                    getResources().getString(R.string.failure_ws),
+                    getActivity());
+        }
+    }
+
+    ///////////  search //////////////////
+
+    private void initSearchView(EditText edSearch ) {
+        try {
+
+            edSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    try {
+
+
+                        String    myTextString = editable.toString().toLowerCase();
+
+                        search(myTextString);
+
+
+                        if (myTextString.equals("")) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getActivity(). runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //    ent = null;
+                      cartItemsResult.clear();
+              lstProduct.setAdapter(new ProGridAdapter(getActivity(), cartItemsModify, onItemListener, onCartListener, itemAddedAlreadies, onAddItem));
+                                            //    Log.d("sss", ent.toString());
+                                            setSearched(false);
+
+                                        }
+
+                                    });
+                                }
+                            }).start();
+                        }
+                    } catch (Exception ignored) {
+                        Log.d("hhhyess", ignored.toString());
+                    }
+                }
+            });
+        }catch (Exception ignored){
+            Log.d("hhhyesss",ignored.toString());
+
+
+        }
+    }
+    private void search(final String text){
+        try {
+            cartItemsResult.clear();
+
+            //  Log.d("kkk",_choices.size()+"");
+            for (int i = 0; i < cartItemsModify.size(); i++) {
+                if (cartItemsModify.get(i).getName().toLowerCase().contains(text)) {
+
+                    cartItemsResult.add(cartItemsModify.get(i));
+
+                }
+
+            }
+
+            if (cartItemsResult.size() > 0) {
+                lstProduct.setAdapter(new ProGridAdapter(getActivity(), cartItemsResult, onItemListener, onCartListener, itemAddedAlreadies, onAddItem));
+                setSearched(true);
+
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        cartItemsResult.clear();
+                         getActivity(). runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                setSearched(false);
+
+                                lstProduct.setAdapter(null);
+
+                            }
+
+
+                        });
+                    }
+                }).start(); }
+        }catch (Exception ignored){
+            Log.d("hhhye0",ignored.toString());
+
+        }
+
+
+    }
+
+    public boolean isSearched() {
+        return searched;
+    }
+
+    public void setSearched(boolean searched) {
+        this.searched = searched;
     }
 }

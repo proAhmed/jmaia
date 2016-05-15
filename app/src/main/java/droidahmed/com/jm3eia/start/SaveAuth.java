@@ -21,6 +21,9 @@ public class SaveAuth extends Application {
     private HashSet<ItemJson>itemJsons;
     private ArrayList<ItemAddedAlready> itemAdded;
     private ArrayList<CartQuantity> cartQuan;
+    private int cancelPosition;
+    private ArrayList<Integer> cartQuanPos;
+    private ArrayList<CartQuantity> cartQuanDelete;
 
     public JSONArray getJsonProduct() {
         return jsonProduct;
@@ -60,5 +63,29 @@ public class SaveAuth extends Application {
 
     public void setCartQuan(ArrayList<CartQuantity> cartQuan) {
         this.cartQuan = cartQuan;
+    }
+
+    public int getCancelPosition() {
+        return cancelPosition;
+    }
+
+    public void setCancelPosition(int cancelPosition) {
+        this.cancelPosition = cancelPosition;
+    }
+
+    public ArrayList<Integer> getCartQuanPos() {
+        return cartQuanPos;
+    }
+
+    public void setCartQuanPos(ArrayList<Integer> cartQuanPos) {
+        this.cartQuanPos = cartQuanPos;
+    }
+
+    public ArrayList<CartQuantity> getCartQuanDelete() {
+        return cartQuanDelete;
+    }
+
+    public void setCartQuanDelete(ArrayList<CartQuantity> cartQuanDelete) {
+        this.cartQuanDelete = cartQuanDelete;
     }
 }

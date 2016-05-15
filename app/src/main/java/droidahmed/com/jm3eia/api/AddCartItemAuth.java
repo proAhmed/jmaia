@@ -1,38 +1,44 @@
 package droidahmed.com.jm3eia.api;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
-import droidahmed.com.jm3eia.model.ForgetPassModel;
+import droidahmed.com.jm3eia.controller.StoreData;
+import droidahmed.com.jm3eia.model.CartItemResponse;
+import droidahmed.com.jm3eia.model.ItemJson;
+import droidahmed.com.jm3eia.model.ResponseChangeUserData;
 
 
-public class ForgotPasswordApi extends AsyncTask<String, Void, ForgetPassModel> {
+public class AddCartItemAuth extends AsyncTask<ItemJson, Void, ResponseChangeUserData> {
 
-	private final static String URL ="https://jm3eia.com/API/ar/profile/forgotpassword";
+	private final static String URL = "https://jm3eia.com/API/ar/cart/add";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
 
-	public ForgotPasswordApi(Context context, OnProcessCompleteListener cb) {
+	public AddCartItemAuth(Context context, OnProcessCompleteListener cb) {
 		dialog = new ProgressDialog(context);
 		callback = cb;
 		this.context = context;
@@ -41,19 +47,19 @@ public class ForgotPasswordApi extends AsyncTask<String, Void, ForgetPassModel> 
 	@Override
 	protected void onPreExecute() {
 		this.dialog.setMessage(context.getResources().getString(
-				R.string.loading_change_password));
+				R.string.add_cart_laoding));
 		this.dialog.setCancelable(false);
 		this.dialog.show();
 	}
 
 	@Override
-	protected ForgetPassModel doInBackground(String... params) {
+	protected ResponseChangeUserData doInBackground(ItemJson... params) {
 		String responseJSON = null;
-		ForgetPassModel obj = null;
+		ResponseChangeUserData obj = null;
 
 		try {
 			responseJSON = makeRequest(params[0]);
-			Log.d("for",responseJSON);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,16 +72,18 @@ public class ForgotPasswordApi extends AsyncTask<String, Void, ForgetPassModel> 
 			gb.serializeNulls();
 			gson = gb.create();
 			try {
-				obj = gson.fromJson(responseJSON, ForgetPassModel.class);
+				obj = gson.fromJson(responseJSON, ResponseChangeUserData.class);
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
+
 		}
 
 		return obj;
 	}
 
-	protected void onPostExecute(ForgetPassModel result) {
+	@Override
+	protected void onPostExecute(ResponseChangeUserData result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
@@ -86,23 +94,33 @@ public class ForgotPasswordApi extends AsyncTask<String, Void, ForgetPassModel> 
 		}
 	}
 
-	public static String makeRequest(String email) throws Exception {
+	public   String makeRequest(ItemJson itemJson) throws Exception {
 
 		DefaultHttpClient httpclient = new DefaultHttpClient();
-		HttpPost httpost = new HttpPost(URL);
+		HttpPost httpPost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
 		JSONObject json = new JSONObject();
+   		json.put("Product",itemJson.getIdItem());
+		json.put("Quantity",itemJson.getIdItem());
+   		json.put("AuthUserName",new StoreData(context).getAuthName());
+		json.put("AuthPassword",new StoreData(context).getAuthPass());
 
-		json.put("Email", email);
+		InputStreamEntity entity = null;
+		try {
+			InputStream is = new ByteArrayInputStream(json.toString().getBytes(
+					"UTF-8"));
 
-		InputStream is = new ByteArrayInputStream(json.toString().getBytes(
-				"UTF-8"));
+			entity = new InputStreamEntity(is, is.available());
 
-		InputStreamEntity entity = new InputStreamEntity(is, is.available());
-		httpost.setEntity(entity);
-		httpost.setHeader("Content-type", "application/json");
+		} catch (IOException e) {
 
-		HttpResponse response = (HttpResponse) httpclient.execute(httpost);
+			e.printStackTrace();
+		}
+
+		httpPost.setEntity(entity);
+
+		httpPost.setHeader("Content-type", "application/json");
+		HttpResponse response = httpclient.execute(httpPost);
 
 		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 

@@ -1,4 +1,4 @@
-package droidahmed.com.jm3eia.api;
+package droidahmed.com.jm3eia.model;
 
 public class SupCategoryModel {
 

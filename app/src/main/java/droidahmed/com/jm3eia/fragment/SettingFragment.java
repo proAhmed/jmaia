@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -116,7 +117,8 @@ public class SettingFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+     TextView tv = (TextView) getActivity().findViewById(R.id.textTitle);
+        tv.setText(getActivity().getResources().getString(R.string.action_settings));
         getActivity().findViewById(R.id.imageToggle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

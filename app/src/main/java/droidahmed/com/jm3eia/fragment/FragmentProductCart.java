@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.account.CartNotAuth;
@@ -30,12 +31,16 @@ import droidahmed.com.jm3eia.api.DeleteCartItem;
 import droidahmed.com.jm3eia.api.ShowCartItem;
 import droidahmed.com.jm3eia.api.AddCartItemNotAuth;
 import droidahmed.com.jm3eia.api.CheckOutForSignUser;
+import droidahmed.com.jm3eia.api.ShowCartItemAuth;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
+import droidahmed.com.jm3eia.controller.OnAddItem;
 import droidahmed.com.jm3eia.controller.OnCancelOrder;
 import droidahmed.com.jm3eia.controller.OnCartListener;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
+import droidahmed.com.jm3eia.model.CartCheck;
 import droidahmed.com.jm3eia.model.CartItem;
 import droidahmed.com.jm3eia.model.CartItemResponse;
 import droidahmed.com.jm3eia.model.CartQuantity;
@@ -50,7 +55,7 @@ import droidahmed.com.jm3eia.start.SaveAuth;
 /**
  * Created by ahmed on 3/15/2016.
  */
-public class FragmentProductCart extends Fragment implements OnCartListener ,OnCancelOrder {
+public class FragmentProductCart extends Fragment implements OnCartListener ,OnCancelOrder,OnAddItem{
     GridView lstProduct;
     ArrayList<AllProducts> pro;
     Button btnRequest, btnCancel;
@@ -69,6 +74,12 @@ static double pricessss;
     private JSONArray jsonArrayItem;
       OnCartListener onCartListener;
     OnCancelOrder onCancelOrder;
+    SaveAuth saveAuth;
+    FragmentProductCart fragmentProductCart;
+    OnAddItem onAddItem;
+    DatabaseHelper databaseHelper;
+    int checkAdd = 0;
+    int checkEnter = 0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,67 +87,69 @@ static double pricessss;
         lstProduct = (GridView) view.findViewById(R.id.cart);
         pro = new ArrayList<>();
         // lstProduct.setAdapter(new CuListAdapter(getActivity(),pro));
-            onCartListener = (OnCartListener) this;
-            onCancelOrder = (OnCancelOrder) this;
-
+        onCartListener = (OnCartListener) this;
+        onCancelOrder = (OnCancelOrder) this;
+        onAddItem = this;
+        fragmentProductCart = this;
         productCarts = new ArrayList<>();
         productCartItems = new ArrayList<>();
-        checkCart  = new ArrayList<>();
+        checkCart = new ArrayList<>();
         checkOutDatas = new CheckOutData();
         itemJsonArrayList = new ArrayList<>();
- final Bundle bundle = getArguments();
+        final Bundle bundle = getArguments();
         jsonArrayItem = new JSONArray();
-         btnRequest = (Button) view.findViewById(R.id.btnRequest);
+        btnRequest = (Button) view.findViewById(R.id.btnRequest);
         btnCancel = (Button) view.findViewById(R.id.btnCancel);
         tvDeliver = (TextView) view.findViewById(R.id.tvDeliver);
         tvDeliver.setText("1 دك");
+        databaseHelper = new DatabaseHelper(getActivity());
+
         tvTotal = (TextView) view.findViewById(R.id.tvTotal);
         tvFinalTotal = (TextView) view.findViewById(R.id.tvFinalTotal);
- //        tvTotal.setText(""+pricessss);
-        SaveAuth saveAuth = (SaveAuth) getActivity().getApplicationContext();
-        JSONArray jsonArray = saveAuth.getJsonProduct();
-        itemJsonArrayList.addAll(saveAuth.getItemJsons());
-        for(int i=0;i<itemJsonArrayList.size();i++){
+        //        tvTotal.setText(""+pricessss);
+        saveAuth = (SaveAuth) getActivity().getApplicationContext();
+        if (new StoreData(getActivity()).getAuthName().equals("")){
+            if(saveAuth.getItemJsons()!=null)
+            itemJsonArrayList.addAll(saveAuth.getItemJsons());
+        for (int i = 0; i < itemJsonArrayList.size(); i++) {
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("ID", itemJsonArrayList.get(i).getIdItem());
 
-            jsonObject.put("Quantity", itemJsonArrayList.get(i).getQuantityItem());
-            jsonObject.put("CreatedDate", itemJsonArrayList.get(i).getTimeItem());
+                jsonObject.put("Quantity", itemJsonArrayList.get(i).getQuantityItem());
+                jsonObject.put("CreatedDate", itemJsonArrayList.get(i).getTimeItem());
                 jsonArrayItem.put(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        }
-         if (Utility.isNetworkConnected(getActivity())) {
+        if (Utility.isNetworkConnected(getActivity())) {
 
             ProductListener = new OnProcessCompleteListener() {
 
                 @Override
                 public void onSuccess(Object result) {
                     cartItemResponse = (CartItemResponse) result;
-                    cartItemArrayList=   cartItemResponse.getData();
-                    priceProduct(cartItemArrayList);
-                    tvTotal.setText("" + priceProduct(cartItemArrayList));
-                    tvFinalTotal.setText(""+priceProduct(cartItemArrayList)+1);
-                    //   Log.d("iiii",pro.toString());
-//                    Gson gson = new Gson();
-//                    String json = gson.toJson(pro);
-//                    StoreData storeData = new StoreData(MainActivity.this);
-//                    storeData.saveData(json);
+                    cartItemArrayList = cartItemResponse.getData();
+                    if(saveAuth.getCartQuanPos()!=null){
+                        cartItemArrayList = deletedbyId(cartItemArrayList);
+                    }
+                    if(saveAuth.getCartQuanDelete()!=null){
+                        lstProduct.setAdapter(new CartGridAdapter(getActivity(), saveAuth.getCartQuanDelete(), onCartListener, onCancelOrder,onAddItem));
 
-                    lstProduct.setAdapter(new CartGridAdapter(getActivity(), cartItemArrayList, onCartListener,onCancelOrder));
+                        lstProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            public void onItemClick(AdapterView<?> parent, View v,
+                                                    int position, long id) {
 
-                    lstProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView<?> parent, View v,
-                                                int position, long id) {
+                            }
+                        });
+                        priceProduct( saveAuth.getCartQuanDelete());
+                        tvTotal.setText("" + priceProduct( saveAuth.getCartQuanDelete()));
+                        tvFinalTotal.setText("" + (priceProduct( saveAuth.getCartQuanDelete()) + 1));
+                    }else {
 
-                        }
-                    });
-
-
-
-                }
+                    }
+                 }
 
                 @Override
                 public void onFailure() {
@@ -152,9 +165,49 @@ static double pricessss;
                     getResources().getString(R.string.failure_ws),
                     getActivity());
         }
+    }else{
+            if (Utility.isNetworkConnected(getActivity())) {
+
+                ProductListener = new OnProcessCompleteListener() {
+
+                    @Override
+                    public void onSuccess(Object result) {
+                        cartItemResponse = (CartItemResponse) result;
+                        cartItemArrayList = cartItemResponse.getData();
+                        priceProduct(cartItemArrayList);
+                        tvTotal.setText("" + priceProduct(cartItemArrayList));
+                        tvFinalTotal.setText("" + (priceProduct(cartItemArrayList) + 1));
+
+                        lstProduct.setAdapter(new CartGridAdapter(getActivity(), cartItemArrayList, onCartListener, onCancelOrder,onAddItem));
+
+                        lstProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            public void onItemClick(AdapterView<?> parent, View v,
+                                                    int position, long id) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        Utility.showFailureDialog(getActivity(), false);
+                    }
+                };
+
+                ShowCartItemAuth task = new ShowCartItemAuth(getActivity(), ProductListener);
+                task.execute(jsonArrayItem);
+
+            } else {
+                Utility.showValidateDialog(
+                        getResources().getString(R.string.failure_ws),
+                        getActivity());
+            }
+        }
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                 getActivity().getSupportFragmentManager().beginTransaction().remove(fragmentProductCart).commit();
 
             }
         });
@@ -187,23 +240,14 @@ static double pricessss;
                 }
             }
         });
-//        ArrayList<ProductCart> result = new ArrayList<ProductCart>();
-//        Set<String> titles = new HashSet<String>();
-//
-//        for( ProductCart item : productCarts ) {
-//            if( titles.add( item.getAllProducts().getAlias()) ) {
-//                result.add( item );
-//            }
-//        }
-//        lstProduct.setAdapter(new CartGridAdapter(getActivity(), result, onCartListener));
+
          return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        MainActivity mainActivity = new MainActivity();
-//        mainActivity.ui("Products");
+
         getActivity().findViewById(R.id.imageToggle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,12 +269,7 @@ static double pricessss;
                     mainActivity.toggle();
             }
         });
-
-        getActivity().findViewById(R.id.logo).setVisibility(View.GONE);
-        getActivity().findViewById(R.id.textTitle).setVisibility(View.VISIBLE);
-        TextView tv = (TextView) getActivity().findViewById(R.id.textTitle);
-        tv.setText(getResources().getString(R.string.my_cart));
-    }
+       }
 
     @Override
     public void onAddCart(int position, int num,boolean watch,double price) {
@@ -251,31 +290,7 @@ static double pricessss;
             getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
                     .replace(R.id.mainFragment, fragment).commit();
         }
-//        if (Utility.isNetworkConnected(getActivity())) {
-//
-//            ProductListener = new OnProcessCompleteListener() {
-//
-//                @Override
-//                public void onSuccess(Object result) {
-//                    mainApi = (MainApi) result;
-//                    pros = mainApi.getData();
-//                }
-//
-//                @Override
-//                public void onFailure() {
-//                    Utility.showFailureDialog(getActivity(), false);
-//                }
-//            };
-//
-//            ShowCartItem task = new ShowCartItem(getActivity(), ProductListener);
-//            task.execute(String.valueOf(position), String.valueOf(num), Utility.getCurrentTimeStamp());
-//
-//        } else {
-//            Utility.showValidateDialog(
-//                    getResources().getString(R.string.failure_ws),
-//                    getActivity());
-//        }
-    }
+     }
     private void dialog(){
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.cart_dialog);
@@ -348,7 +363,7 @@ private void callCheck(){
         return price;
     }
     private void sendNonVisitor(){
-        SaveAuth saveAuth = (SaveAuth) getActivity().getApplicationContext();
+          saveAuth = (SaveAuth) getActivity().getApplicationContext();
         saveAuth.getJsonVisitor();
         saveAuth.getJsonProduct();
         JSONObject jsonObjectSend  = new JSONObject();
@@ -391,13 +406,52 @@ private void callCheck(){
     @Override
     public void cancel(int position) {
 
-        cancelApi(itemJsonArrayList.get(position));
-        if(cartItemArrayList.size()>0){
-            itemJsonArrayList.remove(itemJsonArrayList.get(position));}
-        if(cartItemArrayList.size()>0)
-        cartItemArrayList.remove(cartItemArrayList.get(position));
+
+
+
+
+        if(new StoreData(getActivity()).getAuthName().equals("")) {
+         //   saveAuth.setCancelPosition(itemJsonArrayList.get(position).getIdItem());
+            try {
+                for (int i = 0; i < itemJsonArrayList.size(); i++) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("ID", itemJsonArrayList.get(i).getIdItem());
+
+                        jsonObject.put("Quantity", itemJsonArrayList.get(i).getQuantityItem());
+                        jsonObject.put("CreatedDate", itemJsonArrayList.get(i).getTimeItem());
+                        jsonArrayItem.put(jsonObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ArrayList<Integer> arrayList = new ArrayList<>();
+                arrayList.add(itemJsonArrayList.get(position).getIdItem());
+                saveAuth.setCartQuanPos(arrayList);
+                cancelApi(position);
+              HashSet<ItemJson> hash= saveAuth.getItemJsons();
+                hash.remove(itemJsonArrayList.get(position));
+                saveAuth.setItemJsons(hash);
+                if (cartItemArrayList.size() > 0) {
+                    boolean check = itemJsonArrayList.remove(itemJsonArrayList.get(position));
+                    Log.d("uuu", "" + check);
+                }
+                if (cartItemArrayList.size() > 0) {
+                    boolean checks = cartItemArrayList.remove(cartItemArrayList.get(position));
+                    Log.d("uunu", "" + cartItemArrayList.size());
+                }
+            }catch (Exception e){
+
+            }
+        }else{
+
+
+             cancelApiAuth(cartItemArrayList.get(position).getID());
+
+        }
+
     }
-    private void cancelApi(ItemJson itemJsons){
+    private void cancelApiAuth(int id){
         if (Utility.isNetworkConnected(getActivity())) {
 
             ProductListener = new OnProcessCompleteListener() {
@@ -405,29 +459,30 @@ private void callCheck(){
                 @Override
                 public void onSuccess(Object result) {
                     DeleteProduct deleteProduct = (DeleteProduct) result;
-                 Toast.makeText(getActivity(),deleteProduct.getData(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),deleteProduct.getData(),Toast.LENGTH_LONG).show();
                     ProductListener = new OnProcessCompleteListener() {
 
                         @Override
                         public void onSuccess(Object result) {
                             cartItemResponse = (CartItemResponse) result;
                             cartItemArrayList=   cartItemResponse.getData();
-                            priceProduct(cartItemArrayList);
-                            tvTotal.setText("" + priceProduct(cartItemArrayList));
+                            cartItemArrayList.remove(saveAuth.getCancelPosition());
                             if(priceProduct(cartItemArrayList)>0){
-                            tvFinalTotal.setText(""+priceProduct(cartItemArrayList)+1);
+                                priceProduct(cartItemArrayList);
+
+                                tvFinalTotal.setText(""+(priceProduct(cartItemArrayList)+1));
+
                             }
+
                             else{
                                 tvFinalTotal.setText("");
+                                tvTotal.setText("");
 
                             }
-                             Log.d("iiii",cartItemArrayList.toString());
-//                    Gson gson = new Gson();
-//                    String json = gson.toJson(pro);
-//                    StoreData storeData = new StoreData(MainActivity.this);
-//                    storeData.saveData(json);
 
-                            lstProduct.setAdapter(new CartGridAdapter(getActivity(), cartItemArrayList, onCartListener,onCancelOrder));
+                            CartGridAdapter cartGridAdapter = new CartGridAdapter(getActivity(), cartItemArrayList, onCartListener, onCancelOrder,onAddItem);
+                            cartGridAdapter.notifyDataSetChanged();
+                            lstProduct.setAdapter(cartGridAdapter);
 
                             lstProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 public void onItemClick(AdapterView<?> parent, View v,
@@ -435,9 +490,6 @@ private void callCheck(){
 
                                 }
                             });
-
-
-
                         }
 
                         @Override
@@ -446,8 +498,8 @@ private void callCheck(){
                         }
                     };
 
-                    ShowCartItem task = new ShowCartItem(getActivity(), ProductListener);
-                    task.execute(jsonArrayItem);
+                    ShowCartItemAuth task = new ShowCartItemAuth(getActivity(), ProductListener);
+                    task.execute();
                 }
 
                 @Override
@@ -457,7 +509,7 @@ private void callCheck(){
             };
 
             DeleteCartItem task = new DeleteCartItem(getActivity(), ProductListener);
-            task.execute(itemJsons.getIdItem()+"");
+            task.execute(id+"");
 
         } else {
             Utility.showValidateDialog(
@@ -465,5 +517,109 @@ private void callCheck(){
                     getActivity());
         }
 
+    }
+    private void cancelApi(final int itemJsons){
+        if(databaseHelper.getItem(cartItemArrayList.get(itemJsons).getID())!=null){
+            CartCheck cartCheck =  databaseHelper.getItem(cartItemArrayList.get(itemJsons).getID());
+            checkAdd =  cartCheck.getAdd();
+            checkEnter =  cartCheck.getEnter();
+            Log.d("iiiooo",cartCheck.getEnter()+"");
+            databaseHelper.updateToDo(cartItemArrayList.get(itemJsons), 0, 0);
+
+        }
+        if (Utility.isNetworkConnected(getActivity())) {
+
+            ProductListener = new OnProcessCompleteListener() {
+
+                @Override
+                public void onSuccess(Object result) {
+                    cartItemResponse = (CartItemResponse) result;
+                    cartItemArrayList=   cartItemResponse.getData();
+                CartQuantity cartQuantity=    saveAuth.getCartQuanDelete().remove(itemJsons);
+                    ArrayList<CartQuantity>cartQuantities =new ArrayList<>();
+                    try {
+                        for (int i = 0; i < saveAuth.getCartQuan().size(); i++) {
+                            if (saveAuth.getCartQuan().get(i).getID() == cartQuantity.getID()) {
+                                saveAuth.getCartQuan().get(i).setcQuantity(1);
+
+                            }
+                        }
+                    }catch (Exception e){
+
+                    }
+                    cartQuantities.addAll(saveAuth.getCartQuan());
+
+                    saveAuth.getCartQuan().removeAll(saveAuth.getCartQuan());
+                    saveAuth.setCartQuan(cartQuantities);
+                    ArrayList<CartQuantity> arrayList =    saveAuth.getCartQuanDelete();
+                    saveAuth.getCartQuanDelete().removeAll(saveAuth.getCartQuanDelete());
+                    saveAuth.setCartQuanDelete(arrayList);
+                    Log.d("iiii", saveAuth.getCartQuanDelete()+"");
+
+                    if( saveAuth.getCartQuanDelete().size()>0){
+                        priceProduct(cartItemArrayList);
+
+                        tvFinalTotal.setText(""+(priceProduct(cartItemArrayList)+1));
+
+                    }
+
+                    else{
+                        tvFinalTotal.setText("");
+                        tvTotal.setText("");
+
+                    }
+
+                    CartGridAdapter cartGridAdapter = new CartGridAdapter(getActivity(), saveAuth.getCartQuanDelete(), onCartListener, onCancelOrder,onAddItem);
+                    cartGridAdapter.notifyDataSetChanged();
+                    lstProduct.setAdapter(cartGridAdapter);
+
+                    lstProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        public void onItemClick(AdapterView<?> parent, View v,
+                                                int position, long id) {
+
+                        }
+                    });
+
+
+
+                }
+
+                @Override
+                public void onFailure() {
+                    Utility.showFailureDialog(getActivity(), false);
+                }
+            };
+
+            ShowCartItem task = new ShowCartItem(getActivity(), ProductListener);
+            task.execute(jsonArrayItem);
+
+        } else {
+            Utility.showValidateDialog(
+                    getResources().getString(R.string.failure_ws),
+                    getActivity());
+        }
+
+    }
+    private ArrayList<CartQuantity> deletedbyId(ArrayList<CartQuantity> cartQuantities){
+         for(int i=0;i<cartQuantities.size();i++){
+            for (int ii =0;ii<saveAuth.getCartQuanPos().size();ii++)
+            if(cartQuantities.get(i).getID()==saveAuth.getCartQuanPos().get(ii)){
+             boolean c=   cartQuantities.remove(cartQuantities.get(i));
+                Log.d("uu",""+c);
+                saveAuth.setCartQuan(cartQuantities);
+                return cartQuantities;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void add(int num, int position) {
+         cartItemArrayList.get(position).setcQuantity(num);
+        cartItemArrayList.remove(cartItemArrayList.get(position));
+        cartItemArrayList.add(cartItemArrayList.get(position));
+   double  pric=   priceProduct(cartItemArrayList) ;
+        tvTotal.setText(""+pric);
+        tvFinalTotal.setText(""+(pric+1));
     }
 }
