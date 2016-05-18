@@ -17,7 +17,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.controller.OnAddItem;
 import droidahmed.com.jm3eia.controller.OnCartListener;
+import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AllProducts;
 import droidahmed.com.jm3eia.model.CartQuantity;
 import droidahmed.com.jm3eia.model.Product;
@@ -31,11 +33,13 @@ public class CuListAdapter extends BaseAdapter {
     ArrayList<CartQuantity>  _choices;
     private Context context;
      OnCartListener onCartListener;
+    OnAddItem onAddItem;
 
-    public CuListAdapter(Context context,  ArrayList<CartQuantity>  _choices, OnCartListener onCartListener) {
+    public CuListAdapter(Context context,  ArrayList<CartQuantity>  _choices, OnCartListener onCartListener,OnAddItem onAddItem) {
         this.context = context;
         this._choices = _choices;
         this.onCartListener = onCartListener;
+        this.onAddItem = onAddItem;
 
     }
 
@@ -88,12 +92,12 @@ public class CuListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 edNumber.getText();
                 if (cartWatch[0] == false) {
-                    onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), false,price[0]);
+                    onCartListener.onAddCart(_choices.get(position), Integer.parseInt(edNumber.getText().toString()), false,price[0]);
                      item_change.setText(context.getResources().getString(R.string.see_cart));
                     cartWatch[0] = true;
                 } else {
                     cartWatch[0] = false;
-                    onCartListener.onAddCart(position, Integer.parseInt(edNumber.getText().toString()), true,price[0]);
+                    onCartListener.onAddCart(_choices.get(position), Integer.parseInt(edNumber.getText().toString()), true,price[0]);
                 }
             }
         });
@@ -103,6 +107,8 @@ public class CuListAdapter extends BaseAdapter {
                 ++cartItem[0];
                 edNumber.setText("" + cartItem[0]);
                 price[0] = _choices.get(position).getPrice()*cartItem[0];
+                onAddItem.add(Integer.parseInt(edNumber.getText().toString()),_choices.get(position));
+
 
             }
         });
@@ -112,13 +118,23 @@ public class CuListAdapter extends BaseAdapter {
                 if (cartItem[0] > 1) {
                     --cartItem[0];
                     edNumber.setText("" + cartItem[0]);
-                    price[0] = _choices.get(position).getPrice()*cartItem[0];
+                    price[0] = _choices.get(position).getPrice() * cartItem[0];
+                    onAddItem.add(Integer.parseInt(edNumber.getText().toString()), _choices.get(position));
 
                 }
             }
         });
+        if(Utility.widthScreen(context)>=580) {
+            Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).resize(115,150).placeholder(R.drawable.place_holder_list).into(imgProduct);
 
-        Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
-        return convertView;
+
+        } else if(Utility.widthScreen(context)>=760){
+            Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).resize(150,190).placeholder(R.drawable.place_holder_list).into(imgProduct);
+
+        }else{
+            Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
+
+        }
+         return convertView;
     }
 }

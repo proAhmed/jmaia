@@ -20,11 +20,14 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.Utility;
+import droidahmed.com.jm3eia.model.CartQuantity;
 import droidahmed.com.jm3eia.model.UserLoginResponse;
 
 
@@ -99,12 +102,20 @@ public class CheckOutToSign extends AsyncTask<Object, Void, UserLoginResponse> {
 		HttpPost httpost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
 		JSONObject json = new JSONObject();
-
+JSONArray jsonArray = new JSONArray();
 		json.put("UserName", (String)param[0]);
 		json.put("Password", (String)param[1]);
-		if(!param[2].equals(""))
-		json.put("CartItems",(JSONArray) param[2]);
-
+		if(!param[2].equals("")) {
+			for(int i=0;i< ((ArrayList<CartQuantity>)param[2]).size();i++){
+				JSONObject jsonCart = new JSONObject();
+				jsonCart.put("ID",((ArrayList<CartQuantity>)param[2]).get(i).getID());
+				jsonCart.put("Quantity",((ArrayList<CartQuantity>)param[2]).get(i).getcQuantity());
+				jsonCart.put("CreatedDate", Utility.getCurrentTimeStamp());
+				jsonArray.put(jsonCart);
+			}
+			Log.d("oooo",jsonArray.toString());
+			json.put("CartItems", jsonArray);
+		}
 		InputStream is = new ByteArrayInputStream(json.toString().getBytes(
 				"UTF-8"));
 

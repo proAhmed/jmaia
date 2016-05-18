@@ -18,6 +18,7 @@ import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.OnAddItem;
 import droidahmed.com.jm3eia.controller.OnCancelOrder;
 import droidahmed.com.jm3eia.controller.OnCartListener;
+import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.CartItem;
 import droidahmed.com.jm3eia.model.CartQuantity;
 import droidahmed.com.jm3eia.model.ProductCart;
@@ -100,7 +101,7 @@ public class CartGridAdapter extends BaseAdapter {
         cancel_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onCancelOrder.cancel(position);
+                onCancelOrder.cancel(_choices.get(position));
             }
         });
         imgAdd.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +110,7 @@ public class CartGridAdapter extends BaseAdapter {
                  ++cartItem[0];
                 edNumber.setText(""+ cartItem[0]);
                 price[0] = _choices.get(position).getPrice()*cartItem[0];
-                onAddItem.add(cartItem[0],position);
+                onAddItem.add(cartItem[0], _choices.get(position));
             }
         });
         imgDelete.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +120,7 @@ if (cartItem[0] >1){
     --cartItem[0];
     edNumber.setText("" + cartItem[0]);
     price[0] = _choices.get(position).getPrice()*cartItem[0];
-    onAddItem.add(cartItem[0],position);
+    onAddItem.add(cartItem[0],_choices.get(position));
 
 }
             }
@@ -127,9 +128,18 @@ if (cartItem[0] >1){
         tvName = (TextView) convertView.findViewById(R.id.tvName);
         tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
         tvName.setText(_choices.get(position).getName());
-        tvPrice.setText(_choices.get(position).getPrice()+"");
+         tvPrice.setText(String.format("%.3f", _choices.get(position).getPrice()) + " " + context.getResources().getString(R.string.dr));
+        if(Utility.widthScreen(context)>=580) {
+            Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).resize(115,150).placeholder(R.drawable.place_holder_list).into(imgProduct);
 
-        Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
+
+        } else if(Utility.widthScreen(context)>=760){
+            Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).resize(150,190).placeholder(R.drawable.place_holder_list).into(imgProduct);
+
+        }else{
+            Picasso.with(context).load("http://jm3eia.com/" + _choices.get(position).getPicture()).placeholder(R.drawable.place_holder_list).into(imgProduct);
+
+        }
 
         return convertView;
     }

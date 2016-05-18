@@ -33,6 +33,14 @@ public class CartQuantity implements Serializable{
     public CartQuantity() {
     }
 
+    public CartQuantity(int ID, int cQuantity, String Name,double price) {
+        this.ID = ID;
+        this.cQuantity = cQuantity;
+        this.Name = Name;
+        this.Price = price;
+
+    }
+
     public CartQuantity(int ID, double code, double categoryID,
                         double brandID, double price, double quantity,
                         String picture, String sliderPictures, String createdDate,
@@ -246,6 +254,22 @@ public class CartQuantity implements Serializable{
 
     public void setcQuantity(int cQuantity) {
         this.cQuantity = cQuantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CartQuantity that = (CartQuantity) o;
+
+        return ID == that.ID;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return ID;
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +36,7 @@ import droidahmed.com.jm3eia.start.MainActivity;
  * Created by ahmed on 3/1/2016.
  */
 public class SettingFragment extends Fragment {
-    EditText edUserName,edName,edEmail,edPhone,edZone,edWidget,edStreet,edGada,edNum;
+    EditText edUserName,edName,edEmail,edPhone,edZone,edWidget,edStreet,edGada,edNum,edUpdatePass;
     Button btnSave,btnCancel;
     private OnProcessCompleteListener ProductListener;
     ResponseChangeUserData responseChange;
@@ -43,7 +44,7 @@ public class SettingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          View view = inflater.inflate(R.layout.fragment_setting,container,false);
-
+        edUpdatePass = (EditText) view.findViewById(R.id.edUpdatePass);
         edName = (EditText) view.findViewById(R.id.edUpdateFullName);
         edUserName = (EditText) view.findViewById(R.id.edUpdateUserName);
         edEmail = (EditText) view.findViewById(R.id.edUpdateEmail);
@@ -63,6 +64,7 @@ public class SettingFragment extends Fragment {
         edStreet.setText(""+new StoreData(getActivity()).getStreet());
         edGada.setText("" + new StoreData(getActivity()).getGada());
         edNum.setText("" + new StoreData(getActivity()).getHouse());
+        edUpdatePass.setText("" + new StoreData(getActivity()).getAuthPass());
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,10 +117,37 @@ public class SettingFragment extends Fragment {
 
     }
     @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().findViewById(R.id.imageToggle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    mainActivity.showSecondaryMenu();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
+        getActivity().findViewById(R.id.imageToggleCategory).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MainActivity mainActivity = (MainActivity) getActivity();
+                if (mainActivity != null)
+                    mainActivity.toggle();
+            }
+        });
+    }
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
      TextView tv = (TextView) getActivity().findViewById(R.id.textTitle);
         tv.setText(getActivity().getResources().getString(R.string.action_settings));
+        ImageView img = (ImageView) getActivity().findViewById(R.id.logo);
+        img.setVisibility(View.INVISIBLE);
         getActivity().findViewById(R.id.imageToggle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

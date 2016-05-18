@@ -109,6 +109,8 @@
     <string name="login">تسجيل الدخول</string>
     <string name="sign_out">تسجيل الخروج</string>
 
+    <string name="success_login">تم تسجيل الدخول بنجاج </string>
+    <string name="success_register">تم التسجيل بنجاج </string>
     <string name="forget_pass">نسيت كلمة المرور</string>
     <string name="register">تسجيل عضو جديد</string>
     <string name="account">حسابى</string>
@@ -177,9 +179,9 @@
     <string name="category11">العناية بالطفل</string>
     <string name="category12">الصيدلية</string>
     <string name="category13">المطحنة (القهوة ومشتقاتها)</string>
-    <string name="deliver">:خدمة التوصيل</string>
-    <string name="total">:الإجمالى</string>
-    <string name="final_total">:الإجمالى النهائى</string>
+    <string name="final_total">الإجمالى النهائى</string>
+    <string name="deliver">خدمة التوصيل</string>
+    <string name="total">الإجمالى</string>
     <string name="inform_request">اتمام الطلب</string>
     <string name="cancel_request">إلغاء الطلب</string>
     <string name="old_pass">الرقم السرى القديم</string>
@@ -204,5 +206,9 @@
     <string name="dialog_yes"> نعم </string>
     <string name="dialog_no"> لا </string>
     <string name="dialog_sure">هل تريد تسجيل الخروج</string>
+    <string name="dialog_buy"> طريقة الطلب </string>
+    <string name="dr">  دك   </string>
+    <string name="about_us">من نحن</string>
+    <string name="rules">شروط إستخدام الموقع</string>
 
 </resources>

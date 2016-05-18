@@ -42,7 +42,7 @@ public class DeleteCartItem extends AsyncTask<String, Void, DeleteProduct> {
 	@Override
 	protected void onPreExecute() {
 		this.dialog.setMessage(context.getResources().getString(
-				R.string.add_cart_laoding));
+				R.string.delete_cart_laoding));
 		this.dialog.setCancelable(false);
 		this.dialog.show();
 	}

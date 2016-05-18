@@ -22,7 +22,7 @@ public class User implements Serializable {
 	private String State;
 	private String Mobile;
 	private String Password;
-
+	private boolean  CartHasItems;
 	/**
 	 * 
 	 * @return The ID
@@ -125,10 +125,38 @@ public class User implements Serializable {
 		this.IsActive = IsActive;
 	}
 
+	public boolean isCartHasItems() {
+		return CartHasItems;
+	}
+
+	public User(String result, String ID, String fullName, String userName, String email, String picture, String isActive, String createdDate, String lastLogIn, Object lastPassChanged, String logInCount, String state, String mobile, String password, boolean cartHasItems) {
+		Result = result;
+		this.ID = ID;
+		FullName = fullName;
+		UserName = userName;
+		Email = email;
+		Picture = picture;
+		IsActive = isActive;
+		CreatedDate = createdDate;
+		LastLogIn = lastLogIn;
+		LastPassChanged = lastPassChanged;
+		LogInCount = logInCount;
+		State = state;
+		Mobile = mobile;
+		Password = password;
+		CartHasItems = cartHasItems;
+	}
+
+	public void setCartHasItems(boolean cartHasItems) {
+		CartHasItems = cartHasItems;
+	}
+
 	/**
 	 * 
 	 * @return The CreatedDate
 	 */
+
+
 	public String getCreatedDate() {
 		return CreatedDate;
 	}

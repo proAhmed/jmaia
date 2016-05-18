@@ -61,11 +61,15 @@ public class MenuFragment extends Fragment {
         listMenuItems.add(new SlidingMenuItem(R.drawable.insta_icon, getResources().getString(R.string.instagram),7));
         listMenuItems.add(new SlidingMenuItem(0,getResources().getString(R.string.call_us),8));
         listMenuItems.add(new SlidingMenuItem(0,"",9));
+
+        listMenuItems.add(new SlidingMenuItem(0,getResources().getString(R.string.about_us),10));
+        listMenuItems.add(new SlidingMenuItem(0,getResources().getString(R.string.rules),11));
+
         if(new StoreData(getActivity()).getLogin().equals("")) {
-            listMenuItems.add(new SlidingMenuItem( 0,getResources().getString(R.string.login),10));
+            listMenuItems.add(new SlidingMenuItem( 0,getResources().getString(R.string.login),12));
 
         }else {
-            listMenuItems.add(new SlidingMenuItem( 0,getResources().getString(R.string.sign_out),10));
+            listMenuItems.add(new SlidingMenuItem( 0,getResources().getString(R.string.sign_out),12));
 
         }
 //for (int i=0;i<listMenuItems.size();i++){
@@ -96,6 +100,7 @@ public class MenuFragment extends Fragment {
         SlidingMenuAdapter adapter = new SlidingMenuAdapter(getActivity(), R.layout.item_menu, listMenuItems);
         listView.setAdapter(adapter);
         adapter.setNotifyOnChange(true);
+
         listView.setOnItemClickListener(onItemClickListener());
         Log.i(TAG, "create adapter " + listMenuItems.size());
     }
@@ -186,11 +191,31 @@ switch (position){
 //        mainActivity4. toggle();
         break;
     case 9:
-         Utility.call(getActivity(),666000931);
+         Utility.call(getActivity(), 666000931);
         mainActivity. toggle();
 
         break;
     case 10:
+        Fragment aboutFragments = new AboutFragment();
+
+         getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFragment, aboutFragments).addToBackStack("")
+                .commitAllowingStateLoss();
+
+        mainActivity. toggle();
+
+        break;
+    case 11:
+        Fragment ruleFragments = new RulesFragment();
+
+         getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFragment, ruleFragments).addToBackStack("")
+                .commitAllowingStateLoss();
+
+        mainActivity. toggle();
+
+        break;
+    case 12:
         if(new StoreData(getActivity()).getLogin().equals("login")){
             dialog();
             mainActivity. toggle();
@@ -235,7 +260,8 @@ switch (position){
             // If holder not exist then locate all view from UI file.
         //    if (convertView == null) {
                 // inflate UI from XML file
-                if (items.get(position).getPositions() == 0||items.get(position).getPositions() == 1||items.get(position).getPositions() == 2|items.get(position).getPositions() == 3) {
+                if (items.get(position).getPositions() == 0||items.get(position).getPositions() == 1||items.get(position).getPositions() == 2|items.get(position).getPositions() == 3
+                        |items.get(position).getPositions() == 10|items.get(position).getPositions() == 11) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu, null);
                 } else if (items.get(position).getPositions() == 5||items.get(position).getPositions() == 6||items.get(position).getPositions() == 7) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu_two, null);
@@ -245,7 +271,7 @@ switch (position){
                 }else if (items.get(position).getPositions() == 9) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu_three
                             , null);
-                }else if (items.get(position).getPositions() == 10) {
+                }else if (items.get(position).getPositions() == 12) {
                     if(new StoreData(getActivity()).getLogin().equals("")) {
                         convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu_five
                                 , null);
@@ -294,6 +320,10 @@ if(getItem(position).getPositions()!=9)
             @Override
             public void onClick(View v) {
                 new StoreData(getActivity()).savLogin("");
+                setListViewAdapter();
+                listMenuItems.remove(11);
+                listMenuItems.add(new SlidingMenuItem(0, getResources().getString(R.string.login), 12));
+
                 dialog.dismiss();
             }
         });

@@ -2,6 +2,7 @@ package droidahmed.com.jm3eia.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
  import org.json.JSONArray;
  import java.util.ArrayList;
@@ -72,6 +75,7 @@ boolean searched;
     DatabaseHelper databaseHelper;
     int checkAdds = 0;
     int checkEnter = 0;
+    boolean check;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,7 +95,14 @@ boolean searched;
         cartItemsResult = new ArrayList<>();
         edSearch = (EditText) view.findViewById(R.id.edSearch);
         initSearchView(edSearch);
+        Log.d("nnn",Utility.widthScreen(getActivity())+"");
         databaseHelper = new DatabaseHelper(getActivity());
+        if(android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            if (getActivity().getWindow().getDecorView().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+                lstProduct.setHorizontalSpacing((int) -1);
+            } else {
+                lstProduct.setHorizontalSpacing((int) 1);
+            } }
         //        Gson gson = new Gson();
 //        Type type = new TypeToken<ArrayList<AllProducts>>() {}.getType();
      //   ArrayList<AllProducts> arrayList = gson.fromJson(category, type);
@@ -128,16 +139,35 @@ boolean searched;
 
                     }
                     Log.d("oooo1", cartItemsModify.size() + "");
-                    if(saveAuth.getCartQuan()!=null&&saveAuth.getCartQuan().size()>0) {
-                        lstProduct.setAdapter(new ProGridAdapter(getActivity(), saveAuth.getCartQuan(), onItemListener, onCartListener, saveAuth.getItemAdded(), onAddItem));
+                   if( databaseHelper.getCartAdd()!=null){
+                       for(int i=0;i<cartItemsModify.size();i++) {
+                           for(int ii=0;ii<databaseHelper.getCartAdd().size();ii++) {
+                               if( databaseHelper.getCartAdd().get(ii).getID()==cartItemsModify.get(i).getID()){
+                                   cartItemsModify.get(i).setcQuantity(databaseHelper.getCartAdd().get(ii).getcQuantity());
+                               }
+                           }
+                           }
+                       }
+//                    if(saveAuth.getItemAdded()!=null&&saveAuth.getItemAdded().size()>0) {
+//                        for(int i=0;i<cartItemsModify.size();i++){
+//                            for(int ii=0;ii<saveAuth.getItemAdded().size();ii++){
+//                              if(  saveAuth.getItemAdded().get(ii).getId()==cartItemsModify.get(i).getID()){
+//                                  cartItemsModify.get(i).setcQuantity(saveAuth.getItemAdded().get(ii).getNum());
+//                              }
+//                            }
+//                        }
+//                    }
 
-
-                    }else{
-                        Log.d("oooo2", arrayList.size() + "");
+//                        if(saveAuth.getCartQuan()!=null&&saveAuth.getCartQuan().size()>0) {
+//                        lstProduct.setAdapter(new ProGridAdapter(getActivity(), saveAuth.getCartQuan(), onItemListener, onCartListener, saveAuth.getItemAdded(), onAddItem));
+//
+//
+//                    }else{
+//                        Log.d("oooo2", arrayList.size() + "");
                         lstProduct.setAdapter(new ProGridAdapter(getActivity(), cartItemsModify, onItemListener, onCartListener, itemAddedAlreadies, onAddItem));
 
 
-                    }
+//                    }
                 }
 
                 @Override
@@ -212,91 +242,159 @@ boolean searched;
                         .replace(R.id.mainFragment, fragmentProduct).addToBackStack("")
                         .commitAllowingStateLoss();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().findViewById(R.id.imageToggle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    mainActivity.showSecondaryMenu();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+        TextView tv = (TextView) getActivity().findViewById(R.id.textTitle);
+        tv.setVisibility(View.GONE);
+        ImageView img = (ImageView) getActivity().findViewById(R.id.logo);
+        img.setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.imageToggleCategory).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MainActivity mainActivity = (MainActivity) getActivity();
+                if (mainActivity != null)
+                    mainActivity.toggle();
+            }
+        });
+    }
+
     boolean add;
     @Override
-    public void onAddCart(int position, int num, boolean watch,double price)  {
-        if(databaseHelper.getItem(cartItemsModify.get(position).getID())!=null){
-            CartCheck cartCheck =  databaseHelper.getItem(cartItemsModify.get(position).getID());
+    public void onAddCart(CartQuantity cartQuantity, int num, boolean watch,double price)  {
+        Log.d("iiiooo",num+"");
+
+        if(databaseHelper.getItem(cartQuantity.getID())!=null){
+            CartCheck cartCheck =  databaseHelper.getItem(cartQuantity.getID());
             checkAdds =  cartCheck.getAdd();
             checkEnter =  cartCheck.getEnter();
-            Log.d("iiiooo",cartCheck.toString()+"");
         }else{
-            Log.d("iiiooo",11+"");
             checkAdds=0;
             checkEnter=0;
         }
+        if(!new StoreData(getActivity()).getAuthName().equals("")) {
+            ItemJson itemJson = new ItemJson(cartQuantity.getID(), num, Utility.getCurrentTimeStamp());
+            if(checkAdds==0) {
+                if (databaseHelper.getItem(cartQuantity.getID()) != null) {
+                    databaseHelper.updateToDo(cartQuantity, 1, 1);
 
-        if(checkAdds==0&&checkEnter==0) {
-    databaseHelper.createAdd(cartItemsModify.get(position),0,1);
-    if(saveAuth.getCartQuan()!=null){
-        cartItemsDeleted.add(saveAuth.getCartQuan().get(position));
-    saveAuth.setCartQuanDelete( cartItemsDeleted);
-    }
-    else{
-        cartItemsDeleted.add(cartItemsModify.get(position));
-        saveAuth.setCartQuanDelete( cartItemsDeleted);
-    }
-    arrayList.get(position);
-     ItemJson itemJson = new ItemJson(arrayList.get(position).getID(), num, Utility.getCurrentTimeStamp());
+                } else {
+                    databaseHelper.createAdd(cartQuantity, 1, 1);
 
-    if(new StoreData(getActivity()).getAuthName().equals("")) {
-
-        prices += price;
-
-        Log.d("uuid", arrayList.get(position).getID() + "");
-        if (saveAuth.getItemJsons() != null) {
-            itemHashSet = saveAuth.getItemJsons();
-
-        }
-
-        add = itemHashSet.add(itemJson);
-//        if (add) {
-           saveAuth.setItemJsons(itemHashSet);
+                }
+                Log.d("iii",itemJson.toString());
+                addAuth(itemJson);
             checkAdd(true);
             setAdd(true);
-//        } else {
-//            Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
-//
-//
-//            return;
-//        }
+        }else
+            if(check){
+                if(new StoreData(getActivity()).getAuthName().equals("")) {
+                    FragmentProductCart fragment = new FragmentProductCart();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("cart", productCart);
+                    bundle.putDouble("price", prices);
+                    databaseHelper.updateToDo(cartQuantity, 2, 2);
 
-        productCart.add(new ProductCart(arrayList.get(position), num));
-        Log.d("uuu", productCart.toString());
-    }else{
-        addAuth(itemJson);
-        checkAdd(true);
-        setAdd(true);
-    }
-}else   if(checkEnter==1) {
-    if(new StoreData(getActivity()).getAuthName().equals("")) {
-        FragmentProductCart fragment = new FragmentProductCart();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("cart", productCart);
-        bundle.putDouble("price", prices);
-        databaseHelper.createAdd(cartItemsModify.get(position),1,0);
+                    fragment.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
+                            .replace(R.id.mainFragment, fragment).commit();
+                }else{
+                    AddAuth(itemHashSet);
+                    FragmentProductCart fragment = new FragmentProductCart();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("cart", productCart);
+                    bundle.putString("login","login");
+                    bundle.putDouble("price", prices);
+                    databaseHelper.updateToDo(cartQuantity,2,2);
 
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
-                .replace(R.id.mainFragment, fragment).commit();
-    }else{
-        AddAuth(itemHashSet);
-        FragmentProductCart fragment = new FragmentProductCart();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("cart", productCart);
-        bundle.putString("login","login");
-        bundle.putDouble("price", prices);
+                    fragment.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
+                            .replace(R.id.mainFragment, fragment).commit();
+                }
+            }
+        }else {
 
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
-                .replace(R.id.mainFragment, fragment).commit();
-    }
 
-       }else {
-            Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
+            if (checkAdds == 0) {
+                if (databaseHelper.getItem(cartQuantity.getID()) != null) {
+                    databaseHelper.updateToDo(cartQuantity, 1, 1);
 
+                } else {
+                    databaseHelper.createAdd(cartQuantity, 1, 1);
+
+                }
+
+                databaseHelper.createCart(cartQuantity);
+                Log.d("iiiooo", cartQuantity.getName() + "");
+
+
+                ItemJson itemJson = new ItemJson(cartQuantity.getID(), num, Utility.getCurrentTimeStamp());
+
+                if (new StoreData(getActivity()).getAuthName().equals("")) {
+
+                    prices += price;
+
+                    Log.d("uuid", cartQuantity.getID() + "");
+                    if (saveAuth.getItemJsons() != null) {
+                        itemHashSet = saveAuth.getItemJsons();
+
+                    }
+
+                    add = itemHashSet.add(itemJson);
+//        if (add) {
+                    saveAuth.setItemJsons(itemHashSet);
+                    checkAdd(true);
+                    setAdd(true);
+
+                } else {
+                    addAuth(itemJson);
+                    checkAdd(true);
+                    setAdd(true);
+                }
+            } else if (databaseHelper.getItem(cartQuantity.getID()).getAdd() == 1) {
+
+                if (new StoreData(getActivity()).getAuthName().equals("")) {
+                    FragmentProductCart fragment = new FragmentProductCart();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("cart", productCart);
+                    bundle.putDouble("price", prices);
+                    databaseHelper.updateToDo(cartQuantity, 2, 2);
+
+                    fragment.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
+                            .replace(R.id.mainFragment, fragment).commit();
+                } else {
+                    AddAuth(itemHashSet);
+                    FragmentProductCart fragment = new FragmentProductCart();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("cart", productCart);
+                    bundle.putString("login", "login");
+                    bundle.putDouble("price", prices);
+                    databaseHelper.updateToDo(cartQuantity, 2, 2);
+
+                    fragment.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("")
+                            .replace(R.id.mainFragment, fragment).commit();
+                }
+
+            } else if (databaseHelper.getItem(cartQuantity.getID()).getAdd() == 2) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.find_cart), Toast.LENGTH_LONG).show();
+
+            }
         }
-
     }
 
     private void AddAuth(HashSet hashSet){
@@ -342,29 +440,34 @@ boolean searched;
 
 
     @Override
-    public void add(int num, int position) {
-        arrayList.get(position);
-        cartItemsModify.get(position).setcQuantity(num);
+    public void add(int num, CartQuantity cartQuantity) {
+        cartQuantity.setcQuantity(num);
+        if(databaseHelper.getCartItemAdd(cartQuantity.getID())!=null){
+            cartQuantity.setcQuantity(num);
+            databaseHelper.updateCartAdd(cartQuantity);
+        }else{
+            databaseHelper.createCartAdd(cartQuantity);
+        }
         saveAuth.setCartQuan(cartItemsModify);
         if(saveAuth.getItemAdded()!=null)
          if(saveAuth.getItemAdded().size()>0) {
         for (int i = 0; i < saveAuth.getItemAdded().size(); i++) {
-            if (arrayList.get(position).getID()==(saveAuth.getItemAdded().get(i).getId())) {
+            if (cartQuantity.getID()==(saveAuth.getItemAdded().get(i).getId())) {
                 saveAuth.getItemAdded().get(i).setNum(num);
             } else {
-                itemAddedAlreadies.add(new ItemAddedAlready(arrayList.get(position).getID(), arrayList.get(position).getName(), num));
+                itemAddedAlreadies.add(new ItemAddedAlready(cartQuantity.getID(), cartQuantity.getName(), num));
 
             }
         }
     }else {
-        itemAddedAlreadies.add(new ItemAddedAlready(arrayList.get(position).getID(), arrayList.get(position).getName(), num));
+        itemAddedAlreadies.add(new ItemAddedAlready(cartQuantity.getID(), cartQuantity.getName(), num));
 
     }
          Log.d("oo",itemAddedAlreadies.size()+"");
         saveAuth.setItemAdded(itemAddedAlreadies);
     }
 
-    private void addAuth(ItemJson itemJson ){
+    private boolean addAuth(ItemJson itemJson ){
         if (Utility.isNetworkConnected(getActivity())) {
 
             ProductListener = new OnProcessCompleteListener() {
@@ -373,6 +476,7 @@ boolean searched;
                 public void onSuccess(Object result) {
                     String success= ((ResponseChangeUserData)result).getData();
                     Toast.makeText(getActivity(),success,Toast.LENGTH_LONG).show();
+                    check =  ((ResponseChangeUserData)result).isSuccess();
                   }
 
                 @Override
@@ -389,6 +493,7 @@ boolean searched;
                     getResources().getString(R.string.failure_ws),
                     getActivity());
         }
+        return false;
     }
 
     ///////////  search //////////////////

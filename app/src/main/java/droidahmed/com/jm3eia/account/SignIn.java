@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.api.CheckOutToSign;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
@@ -29,6 +31,7 @@ public class SignIn extends AppCompatActivity {
     private UserLoginResponse registerUser;
     SaveAuth saveAuth;
 Intent intent ;
+    DatabaseHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +42,7 @@ intent = new Intent();
         tvRegister = (TextView) findViewById(R.id.tvRegister);
         tvForgetPass = (TextView) findViewById(R.id.tvForget);
         saveAuth = (SaveAuth) getApplicationContext();
+        databaseHelper = new DatabaseHelper(SignIn.this);
         tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,14 +106,14 @@ try {
         if (registerUser.getData().getID() != null) {
             new StoreData(SignIn.this).savLogin("login");
 
-            UserLogin user = registerUser.getData();
+            final UserLogin user = registerUser.getData();
             Utility.SaveData(SignIn.this,user.getUserName(),user.getAuthPassword(),user.getFullName(),user.getEmail()
                     ,user.getMobile(),user.getGada(),user.getWidget(),user.getZone(),user.getHouse(),user.getStreet());
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     SignIn.this);
 
             alertDialogBuilder
-                    .setMessage("success")
+                    .setMessage(getResources().getString(R.string.success_login))
                     .setCancelable(false)
                     .setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
@@ -127,7 +131,13 @@ try {
 //                                                                android.R.id.tabcontent,
 //                                                                fragment)
 //                                                        .commit();
+
                                     Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                    if(user.isCartHasItems()){
+                                        new StoreData(SignIn.this).saveCartAdded(1);
+                                        intent.putExtra("CartAuth", "CartAuth");
+                                    }
+
                                     startActivity(intent);
                                 }
                             });
@@ -188,6 +198,7 @@ try {
                             }else{
                                 Intent intent = new Intent(SignIn.this, MainActivity.class);
                                 startActivity(intent);
+                                finish();
                             }
 
                         }
@@ -203,11 +214,12 @@ try {
             }
         };
         CheckOutToSign callWS = new CheckOutToSign(SignIn.this, signListener);
-            if(intent.getExtras()!=null&&saveAuth.getJsonProduct()!=null) {
-
-            callWS.execute(userName, password,saveAuth.getJsonProduct());
+            if(getIntent().getExtras()!=null&&databaseHelper.getCart()!=null) {
+Log.d("ooo1", "ppp");
+            callWS.execute(userName, password, databaseHelper.getCart());
         }else{
             callWS.execute(userName, password,"");
+                Log.d("ooo2", "ppp");
 
         }
     }

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.api.CheckOutRegister;
 import droidahmed.com.jm3eia.api.Register;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
@@ -30,7 +31,7 @@ EditText edUserName,edName,edPass,edEmail,edPhone,edAddressOne,edAddressTwo,edAd
     private String picURL;
     SaveAuth saveAuth;
     ImageView imgClose;
-
+DatabaseHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ EditText edUserName,edName,edPass,edEmail,edPhone,edAddressOne,edAddressTwo,edAd
         edAddressNum = (EditText) findViewById(R.id.edUpdateNum);
         edGada = (EditText) findViewById(R.id.edGada);
         btnSave = (Button) findViewById(R.id.btnSave);
-
+        databaseHelper = new DatabaseHelper(SignUp.this);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +119,7 @@ try {
                         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SignUp.this);
 
                         alertDialogBuilder
-                                .setMessage("success")
+                                .setMessage(getResources().getString(R.string.success_register))
                                 .setCancelable(false)
                                 .setPositiveButton("OK",
                                         new DialogInterface.OnClickListener() {
@@ -136,6 +137,9 @@ try {
 //                                                                android.R.id.tabcontent,
 //                                                                fragment)
 //                                                        .commit();
+                                                if(registerUser.getData().isCartHasItems()){
+                                                    new StoreData(SignUp.this).saveCartAdded(1);
+                                                }
                                                 Intent intent = new Intent(SignUp.this, MainActivity.class);
                                                 startActivity(intent);
                                             }
@@ -210,10 +214,10 @@ try {
         picURL = "ddddd";
         CheckOutRegister callWS = new CheckOutRegister(SignUp.this, registerListener);
 
-        if(getIntent().getExtras()!=null&&saveAuth.getJsonProduct()!=null) {
+        if(getIntent().getExtras()!=null&&databaseHelper.getCart()!=null) {
 
 
-            callWS.execute(inputNewUser,saveAuth.getJsonProduct());
+            callWS.execute(inputNewUser,databaseHelper.getCart());
         }else{
             callWS.execute(inputNewUser,"");
 

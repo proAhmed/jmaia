@@ -20,10 +20,13 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.Utility;
+import droidahmed.com.jm3eia.model.CartQuantity;
 import droidahmed.com.jm3eia.model.InputNewUser;
 import droidahmed.com.jm3eia.model.UserResponse;
 
@@ -118,8 +121,17 @@ public class CheckOutRegister extends AsyncTask<Object, Void, Object> {
 		json.put("Street", ((InputNewUser) inputNewUser[0]).getStreet());
 		json.put("Gada", ((InputNewUser)inputNewUser[0]).getGada());
 		json.put("House", ((InputNewUser)inputNewUser[0]).getHouse());
-		if(!inputNewUser[10].equals("")){
-			json.put("CartItems",(JSONArray) inputNewUser[2]);
+		JSONArray jsonArray = new JSONArray();
+
+		if(!inputNewUser[1].equals("")){
+			for(int i=0;i< ((ArrayList<CartQuantity>)inputNewUser[1]).size();i++){
+				JSONObject jsonCart = new JSONObject();
+				jsonCart.put("ID", ((ArrayList<CartQuantity>) inputNewUser[1]).get(i).getID());
+				jsonCart.put("Quantity",((ArrayList<CartQuantity>)inputNewUser[1]).get(i).getcQuantity());
+				jsonCart.put("CreatedDate", Utility.getCurrentTimeStamp());
+				jsonArray.put(jsonCart);
+			}
+			json.put("CartItems",(JSONArray) inputNewUser[1]);
 
 		}
  		InputStream is = new ByteArrayInputStream(json.toString().getBytes(

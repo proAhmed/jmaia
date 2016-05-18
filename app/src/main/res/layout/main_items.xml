@@ -64,6 +64,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/proImage"
                      android:textSize="12sp"
+                    android:lines="2"
+                    android:maxLines="2"
                      android:layout_centerHorizontal="true"
                     android:id="@+id/tvName" />
 
@@ -82,6 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          android:layout_below="@+id/divider"
+        android:layout_marginBottom="2dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -90,7 +93,9 @@
              android:orientation="horizontal"
             android:layout_gravity="right"
             android:gravity="right"
+            android:layout_marginTop="3dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/market_icon"
             android:id="@+id/imgCart">
 
@@ -112,18 +117,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  android:layout_gravity="center_vertical"
-                android:layout_marginLeft="2dp"
-
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
                 android:src="@drawable/delete"/>
 
             <EditText
                 android:id="@+id/edNumber"
                 android:background="@drawable/white_edit_border"
                 android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_height="25dp"
+                android:inputType="numberSigned"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="2dp"
-
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:textSize="14sp"
                  />
 
             <ImageView
@@ -131,8 +138,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  android:layout_gravity="center_vertical"
-                android:layout_marginLeft="2dp"
-
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
                 android:src="@drawable/add"/>
 
         </LinearLayout>

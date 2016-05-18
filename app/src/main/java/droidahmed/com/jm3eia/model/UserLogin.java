@@ -27,6 +27,38 @@ public class UserLogin implements Serializable {
 	private String Street;
 	private String House;
 	private String Gada;
+	private boolean CartHasItems;
+
+	public boolean isCartHasItems() {
+		return CartHasItems;
+	}
+
+	public UserLogin(String result, String ID, String fullName, String userName, String email, String picture, String isActive, String createdDate, String lastLogIn, Object lastPassChanged, String logInCount, String state, String mobile, String authPassword, String zone, String widget, String street, String house, String gada, boolean cartHasItems) {
+		Result = result;
+		this.ID = ID;
+		FullName = fullName;
+		UserName = userName;
+		Email = email;
+		Picture = picture;
+		IsActive = isActive;
+		CreatedDate = createdDate;
+		LastLogIn = lastLogIn;
+		LastPassChanged = lastPassChanged;
+		LogInCount = logInCount;
+		State = state;
+		Mobile = mobile;
+		AuthPassword = authPassword;
+		Zone = zone;
+		Widget = widget;
+		Street = street;
+		House = house;
+		Gada = gada;
+		CartHasItems = cartHasItems;
+	}
+
+	public void setCartHasItems(boolean cartHasItems) {
+		CartHasItems = cartHasItems;
+	}
 
 	public String getZone() {
 		return Zone;

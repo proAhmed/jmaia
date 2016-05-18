@@ -82,7 +82,7 @@ public class MainActivity extends SlidingFragmentActivity {
         setBehindView();
 
 if(getIntent().getExtras()!=null){
-            if(getIntent().getExtras().getString("CartAuth").equals("CartAuth")){
+            if(getIntent().getStringExtra("CartAuth").equals("CartAuth")){
                 FragmentProductCart fragment = new FragmentProductCart();
                 Bundle bundles = new Bundle();
                 bundles.putString("CartAuth","CartAuth");
@@ -91,7 +91,7 @@ if(getIntent().getExtras()!=null){
                         .replace(R.id.mainFragment, fragment)
                         .commitAllowingStateLoss();
 
-            } else if (getIntent().getExtras().getString("CartAuth").equals("NonVisitor")) {
+            } else if (getIntent().getStringExtra("CartAuth").equals("NonVisitor")) {
                 FragmentProductCart fragment = new FragmentProductCart();
                 Bundle bundles = new Bundle();
                 bundles.putString("CartAuth", "NonVisitor");
@@ -101,7 +101,7 @@ if(getIntent().getExtras()!=null){
                         .replace(R.id.mainFragment, fragment)
                         .commitAllowingStateLoss();
             }
-}
+}else
         if (Utility.isNetworkConnected(MainActivity.this)) {
 
             ProductListener = new OnProcessCompleteListener() {

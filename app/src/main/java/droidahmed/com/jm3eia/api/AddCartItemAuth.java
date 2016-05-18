@@ -101,7 +101,7 @@ public class AddCartItemAuth extends AsyncTask<ItemJson, Void, ResponseChangeUse
 		StringBuilder total = new StringBuilder();
 		JSONObject json = new JSONObject();
    		json.put("Product",itemJson.getIdItem());
-		json.put("Quantity",itemJson.getIdItem());
+		json.put("Quantity",itemJson.getQuantityItem());
    		json.put("AuthUserName",new StoreData(context).getAuthName());
 		json.put("AuthPassword",new StoreData(context).getAuthPass());
 

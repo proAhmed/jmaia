@@ -55,6 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/proImage"
         android:textSize="12sp"
+        android:lines="2"
+        android:maxLines="2"
         android:layout_centerHorizontal="true"
         android:id="@+id/tvName" />
 
@@ -83,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:layout_gravity="center_vertical"
                  android:id="@+id/tvPrice" />
 

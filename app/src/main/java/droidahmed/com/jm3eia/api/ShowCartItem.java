@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -13,11 +14,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,10 +28,12 @@ import com.google.gson.GsonBuilder;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.CartItemResponse;
+import droidahmed.com.jm3eia.model.CartQuantity;
 
 
-public class ShowCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
+public class ShowCartItem extends AsyncTask<ArrayList<CartQuantity>, Void, CartItemResponse> {
 
 	private final static String URL = "http://jm3eia.com/API/ar/cart";
 	private ProgressDialog dialog;
@@ -49,8 +54,9 @@ public class ShowCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
 		this.dialog.show();
 	}
 
+	@SafeVarargs
 	@Override
-	protected CartItemResponse doInBackground(JSONArray... params) {
+	protected final CartItemResponse doInBackground(ArrayList<CartQuantity>... params) {
 		String responseJSON = null;
 		CartItemResponse obj = null;
 
@@ -91,13 +97,28 @@ public class ShowCartItem extends AsyncTask<JSONArray, Void, CartItemResponse> {
 		}
 	}
 
-	public static String makeRequest(JSONArray jsonArray) throws Exception {
+	public static String makeRequest(ArrayList<CartQuantity> cartQuantities) throws Exception {
 
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpost = new HttpPost(URL);
 		StringBuilder total = new StringBuilder();
  		JSONObject json = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		try {
+			if(cartQuantities!=null)
+		for(int i=0;i<cartQuantities.size();i++){
+		JSONObject jsonObject = new JSONObject();
 
+			jsonObject.put("ID", cartQuantities.get(i).getID());
+
+			jsonObject.put("Quantity", cartQuantities.get(i).getcQuantity());
+			jsonObject.put("CreatedDate", Utility.getCurrentTimeStamp());
+			jsonArray.put(jsonObject);
+
+	}} catch (JSONException e) {
+		e.printStackTrace();
+	}
+		Log.d("json",jsonArray.toString());
 		json.put("CartItems", jsonArray);
 
 

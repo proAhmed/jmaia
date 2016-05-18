@@ -112,5 +112,12 @@ public class StoreData {
         return sharedPreferences.getString("login", "");
     }
 
+    public void saveCartAdded(int cart) {
+        editor.putInt("cart", cart);
+        editor.apply();
+    }
+    public int getCartAdded() {
+        return sharedPreferences.getInt("cart", 0);
+    }
 
 }
