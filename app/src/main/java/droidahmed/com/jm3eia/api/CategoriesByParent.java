@@ -51,7 +51,7 @@ public class CategoriesByParent extends
 		MainCategory obj = null;
 
 		try {
-			responseJSON = invokeJSONWS();
+ 		responseJSON = invokeJSONWS();
  		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,6 +87,7 @@ public class CategoriesByParent extends
 	}
 
 	private String invokeJSONWS() throws IOException {
+		HttpURLConnection httpConn = null;
 
 		InputStream in = null;
 		int response = -1;
@@ -97,7 +98,7 @@ public class CategoriesByParent extends
 			throw new IOException("Not an HTTP connection");
 
 		try {
-			HttpURLConnection httpConn = (HttpURLConnection) conn;
+			  httpConn = (HttpURLConnection) conn;
 			httpConn.setRequestMethod("GET");
 			httpConn.setDoInput(true);
 			httpConn.setDoOutput(true);
@@ -122,6 +123,8 @@ public class CategoriesByParent extends
 
 		} catch (Exception e) {
 			throw new IOException("Error connecting");
+		}finally {
+			httpConn.disconnect();
 		}
 		return responseJSON;
 	}

@@ -13,7 +13,11 @@ public class ItemJson  {
         this.quantityItem = quantityItem;
         this.timeItem = timeItem;
     }
-
+    public ItemJson(int idItem, double quantityItem) {
+        this.idItem = idItem;
+        this.quantityItem = quantityItem;
+        this.timeItem = timeItem;
+    }
     public int getIdItem() {
         return idItem;
     }

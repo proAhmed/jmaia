@@ -53,8 +53,7 @@ public class ForgotPasswordApi extends AsyncTask<String, Void, ForgetPassModel> 
 
 		try {
 			responseJSON = makeRequest(params[0]);
-			Log.d("for",responseJSON);
-		} catch (Exception e) {
+ 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -79,9 +78,10 @@ public class ForgotPasswordApi extends AsyncTask<String, Void, ForgetPassModel> 
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
-		if (result != null) {
+		if (result != null&&result.isSuccess()) {
+
 			callback.onSuccess(result);
-		} else {
+		}else{
 			callback.onFailure();
 		}
 	}

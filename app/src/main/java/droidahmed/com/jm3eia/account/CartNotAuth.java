@@ -15,7 +15,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.api.AddCartItemNotAuth;
+import droidahmed.com.jm3eia.api.CheckOutForSignUser;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.controller.StoreData;
+import droidahmed.com.jm3eia.controller.Utility;
+import droidahmed.com.jm3eia.model.CheckOutData;
+import droidahmed.com.jm3eia.model.ResponseOfCheckOut;
 import droidahmed.com.jm3eia.start.MainActivity;
 import droidahmed.com.jm3eia.start.SaveAuth;
 
@@ -27,7 +34,7 @@ EditText edName,edMobile,edZone,edWidget,edStreet,edGada,edNum;
     SaveAuth saveAuth;
     JSONObject jsonObjectSend;
     private OnProcessCompleteListener ProductListener;
-
+        DatabaseHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +49,7 @@ EditText edName,edMobile,edZone,edWidget,edStreet,edGada,edNum;
         saveAuth = (SaveAuth) getApplicationContext();
         btn = (Button) findViewById(R.id.btnSave);
         jsonObject = new JSONObject();
+        databaseHelper = new DatabaseHelper(CartNotAuth.this);
         jsonObjectSend = new JSONObject();
              jsonArray = new JSONArray();
 
@@ -62,11 +70,9 @@ EditText edName,edMobile,edZone,edWidget,edStreet,edGada,edNum;
                         jsonObjectSend.put("VisitorData", jsonObject);
                        jsonObjectSend.put("CartItems", saveAuth.getJsonProduct());
 
-SaveAuth saveAuth = (SaveAuth) getApplicationContext();
-                       saveAuth.setJsonVisitor(jsonObject);
-                       Intent intent = new Intent(CartNotAuth.this, MainActivity.class);
-                       intent.putExtra("CartAuth","NonVisitor");
-                       startActivity(intent);
+
+                     //  saveAuth.setJsonVisitor(jsonObject);
+
 //                       FragmentProductCart fragment = new FragmentProductCart();
 //                       Bundle bundles = new Bundle();
 //                       bundles.putString("CartAuth","NonVisitor");
@@ -74,7 +80,7 @@ SaveAuth saveAuth = (SaveAuth) getApplicationContext();
 //                               .replace(R.id.mainFragment, fragment)
 //                               .commitAllowingStateLoss();
 
-
+                       sendNonVisitor(jsonObject);
 
 
 
@@ -110,13 +116,67 @@ SaveAuth saveAuth = (SaveAuth) getApplicationContext();
         return super.onOptionsItemSelected(item);
     }
     private boolean check(){
-        if(!edGada.getText().toString().equals("")&&!edMobile.getText().toString().equals("")
-        &&!edName.getText().toString().equals("")&&!edNum.getText().toString().equals("")
-        &&!edStreet.getText().toString().equals("")&&!edWidget.getText().toString().equals("")
-                &&!edZone.getText().toString().equals("")){
+        if(!edMobile.getText().toString().equals("")
+        &&!edName.getText().toString().equals("")){
             return true;
         }else {
             return false;
         }
+    }
+    private void sendNonVisitor(JSONObject jsonObjects){
+        saveAuth = (SaveAuth) getApplicationContext();
+        saveAuth.getJsonVisitor();
+        saveAuth.getJsonProduct();
+        JSONObject jsonObjectSend  = new JSONObject();
+
+        try {
+            jsonObjectSend.put("VisitorData", jsonObjects);
+            JSONArray jsonArray = new JSONArray();
+            if(databaseHelper.getCart()!=null)
+                if(databaseHelper.getCart().size()>0)
+                    for(int i=0;i<databaseHelper.getCart().size();i++){
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("ID",databaseHelper.getCart().get(i).getID());
+                        jsonObject.put("Quantity",databaseHelper.getCart().get(i).getcQuantity());
+                        jsonObject.put("CreatedDate",Utility.getCurrentTimeStamp());
+                        jsonArray.put(jsonObject);
+                    }
+            jsonObjectSend.put("CartItems",jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (Utility.isNetworkConnected(CartNotAuth.this)) {
+
+            ProductListener = new OnProcessCompleteListener() {
+
+                @Override
+                public void onSuccess(Object result) {
+                    ResponseOfCheckOut     checkResponse = (ResponseOfCheckOut) result;
+                    CheckOutData  checkOutDatas =   checkResponse.getData();
+                     Toast.makeText(CartNotAuth.this, checkOutDatas.getMessage(),Toast.LENGTH_LONG).show();
+                    databaseHelper.deleteCart();
+                    databaseHelper.deleteCartAdd();
+                    databaseHelper.removeCart();
+                    databaseHelper.removeCartAdd();
+                    databaseHelper.remove();
+                    Intent intent = new Intent(CartNotAuth.this, MainActivity.class);
+                     startActivity(intent);
+                 }
+
+                @Override
+                public void onFailure() {
+                    Utility.showFailureDialog(CartNotAuth.this, false);
+                }
+            };
+
+            AddCartItemNotAuth task = new AddCartItemNotAuth(CartNotAuth.this, ProductListener);
+            task.execute(jsonObjectSend);
+
+        } else {
+            Utility.showValidateDialog(
+                    ("no internet"),
+                    CartNotAuth.this);
+        }
+
     }
 }

@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingRight="8dp"
-    android:paddingBottom="3dp"
-    android:paddingLeft="8dp"
+    android:paddingRight="2dp"
+    android:paddingLeft="2dp"
     android:paddingTop="10dp"
+    android:layout_marginBottom="5dp"
     android:background="#EBEBEC">
 
-    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollViewParent"
+    android:background="#EBEBEC"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="#EBEBEC"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="2dp"
+    android:paddingLeft="2dp"
+    android:paddingTop="10dp"
+    android:layout_marginBottom="5dp"
+    android:background="#EBEBEC">
+
+    <LinearLayout
+        android:id="@+id/lin1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="3dp"
         android:paddingTop="3dp"
@@ -20,9 +43,11 @@
             android:id="@+id/edSearch"
             android:layout_width="180dp"
             android:layout_height="match_parent"
+            android:textStyle="bold"
             android:hint="@string/search"
             android:textColorHint="#fff"
-            android:gravity="right"
+
+            android:gravity="center"
             android:textSize="14sp"
             android:paddingRight="15dp"
             android:background="@null"/>
@@ -31,62 +56,93 @@
     android:layout_width="25dp"
     android:layout_height="25dp"
     android:layout_marginRight="5dp"
-    android:src="@drawable/search_icon"/>
+    android:src="@drawable/search_icon"
+            android:id="@+id/imgSearch" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/lin2"
+        android:layout_below="@+id/lin1"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:background="#fff"
-        android:orientation="horizontal">
-
+        android:orientation="vertical">
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="2.5"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imgPro"
+                android:layout_width="230dp"
+                android:layout_height="230dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="right"
-            android:gravity="right"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:layout_weight="2.6"
              android:orientation="vertical">
             <TextView
                 android:id="@+id/proName"
                 android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#097ECB"
+                android:layout_marginTop="2dp"
                 android:layout_height="wrap_content"
-                android:text="شكولاته"/>
+                android:text=""/>
             <TextView
                 android:id="@+id/proCode"
+                android:layout_marginTop="2dp"
+                android:textStyle="bold"
+                android:textColor="#000"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="55665"/>
+                android:text=""/>
             <TextView
                 android:id="@+id/proCategory"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
+                android:textColor="#000"
                 android:layout_height="wrap_content"
-                android:text="للللل"/>
+                android:layout_marginTop="2dp"
+                android:text=""/>
             <TextView
                 android:id="@+id/proBrand"
+                android:layout_marginTop="3dp"
+              android:textColor="#000"
                 android:layout_width="wrap_content"
+                android:textStyle="bold"
                 android:layout_height="wrap_content" />
 
 
             <LinearLayout
                 android:id="@+id/cart_add"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:layout_below="@+id/divider"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_gravity="right"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginRight="2dp"
                     android:layout_marginLeft="2dp"
-                    android:gravity="right"
+                    android:gravity="center_horizontal"
                      android:background="@drawable/market_icon"
                     android:id="@+id/imgCart">
 
@@ -94,9 +150,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:layout_marginLeft="3dp"
                         android:layout_marginRight="3dp"
-                        android:textSize="8sp"
+                        android:textSize="9sp"
+                        android:textColor="#fff"
                         android:layout_gravity="center_vertical"
                         android:text="@string/add_cart"
                         android:id="@+id/item_change" />
@@ -105,7 +163,8 @@
 
                 <ImageView
                     android:id="@+id/imgDelete"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="2dp"
@@ -115,17 +174,20 @@
                 <EditText
                     android:id="@+id/edNumber"
                     android:background="@drawable/white_edit_border"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textStyle="bold"
                     android:inputType="numberSigned"
-                    android:layout_gravity="center_vertical"
+                    android:textSize="14sp"
+                    android:gravity="center"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     />
 
                 <ImageView
                     android:id="@+id/imgAdd"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="2dp"
@@ -137,42 +199,64 @@
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_weight="2.5"
-            android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/imgPro"
-                android:layout_width="120dp"
-                android:layout_height="160dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-                />
-
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_weight="0.2"
             android:layout_height="match_parent"/>
+
     </LinearLayout>
 
-
-    <GridView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/grid"
-        android:numColumns="2"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_height="match_parent"
+        android:layout_below="@+id/lin2"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:padding="2dp"
-        android:horizontalSpacing="8dp"
-        android:verticalSpacing="10dp"
-        android:cacheColorHint="#00000000"/>
+        android:horizontalSpacing="1.5dp"
+        android:verticalSpacing="0.5dp"
+         />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:progressBackgroundTint="#FAAF52"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        />
+
+
+</RelativeLayout>
 </LinearLayout>
+ </ScrollView>
+    <RelativeLayout
+        android:id="@+id/reCart"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="15dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imgCarts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/cartss"/>
+        <TextView
+            android:id="@+id/tvNum"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"/>
+    </RelativeLayout>
+</RelativeLayout>

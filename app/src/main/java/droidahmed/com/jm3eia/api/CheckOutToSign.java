@@ -59,8 +59,7 @@ public class CheckOutToSign extends AsyncTask<Object, Void, UserLoginResponse> {
 
 		try {
 			responseJSON = makeRequest(params[0], params[1],params[2]);
-			Log.d("homess",responseJSON);
-		} catch (Exception e) {
+ 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -88,8 +87,6 @@ public class CheckOutToSign extends AsyncTask<Object, Void, UserLoginResponse> {
 		}
 		if (result != null&&((UserLoginResponse)result).isSuccess()) {
 			callback.onSuccess(result);
-		} else if(result != null&&!((UserLoginResponse)result).isSuccess()) {
-			callback.onSuccess(  result );
 		}else{
 			callback.onFailure();
 		}
@@ -113,9 +110,8 @@ JSONArray jsonArray = new JSONArray();
 				jsonCart.put("CreatedDate", Utility.getCurrentTimeStamp());
 				jsonArray.put(jsonCart);
 			}
-			Log.d("oooo",jsonArray.toString());
-			json.put("CartItems", jsonArray);
-		}
+ 			json.put("CartItems", jsonArray);
+ 		}
 		InputStream is = new ByteArrayInputStream(json.toString().getBytes(
 				"UTF-8"));
 

@@ -56,7 +56,7 @@ public class ForgetPass extends AppCompatActivity {
         String email = edForgetPass.getText().toString();
 
         if ( email.equals("")) {
-
+//
             Utility.showValidateDialog(
                     getResources().getString(
                             R.string.registeration_validate1), ForgetPass.this);
@@ -77,14 +77,14 @@ public class ForgetPass extends AppCompatActivity {
                 try {
                     forgetP = (ForgetPassModel) result;
                     if(forgetP.isSuccess()){
-                    Toast.makeText(ForgetPass.this,model.getResult(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(ForgetPass.this,model.getData(),Toast.LENGTH_LONG).show();
                     }
                     else {
                         Toast.makeText(ForgetPass.this,model.getError(),Toast.LENGTH_LONG).show();
 
                 }
                     if (forgetP != null) {
-                        if (forgetP.getResult() != null
+                        if (forgetP.getData() != null
                                 ) {
 
                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(

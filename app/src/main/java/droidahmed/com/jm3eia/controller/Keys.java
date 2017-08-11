@@ -2,16 +2,8 @@ package droidahmed.com.jm3eia.controller;
 
 public class Keys {
 
-	public static final String BASE_URL = "http://jm3eia.com/API/ar"   ;
-	public static final String IMAGE_URL = "http://ksa4sale.com/";
-	public static final String FACEBOOK = "https://www.facebook.com/aldihane.aldihane";
-	public static final String YOUTUBE = "http://www.youtube.com/channel/UCZ1aQ6pfxc8yt7ZmL91NIKA";
-	public static final String INSTAGRAM = "http://instagram.com/ksa.4sale/";
-	public static final String TWITTER = "https://twitter.com/ksa_4sale";
-	public static String REMEMBER_ME_KEY = "rememberMe";
-	public static String USER_KEY = "userKey";
-	public static String FAVORITES = "favorites";
-	public static final String OPEN_NOTIFICATION = "OPEN_NOTIFICATION";
+	public static String ADD_DATA = "";
+	public static final String BASE_URL = "https://jm3eia.com/API/ar"   ;
 	public static final String ACTION_MULTIPLE_PICK = "luminous.ACTION_MULTIPLE_PICK";
 	public static final String ACTION_PICK = "luminous.ACTION_PICK";
 	public static final int TIMEOUT = 10000;

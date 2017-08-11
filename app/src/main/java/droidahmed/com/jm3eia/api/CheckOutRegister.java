@@ -59,8 +59,7 @@ public class CheckOutRegister extends AsyncTask<Object, Void, Object> {
 		String responseJSON = null;
 
 		try {
-			responseJSON = makeRequest(URL, params[0]);
-			Log.d("ioiio", responseJSON);
+			responseJSON = makeRequest(URL, params[0],params[1]);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -94,9 +93,7 @@ public class CheckOutRegister extends AsyncTask<Object, Void, Object> {
 
 			if (result != null&&((UserResponse)result).isSuccess()) {
                 callback.onSuccess(result);
-            } else if(result != null&&!((UserResponse)result).isSuccess()) {
-				callback.onSuccess(  result );
-            }else{
+            } else{
 				callback.onFailure();
 			}
 
@@ -122,18 +119,21 @@ public class CheckOutRegister extends AsyncTask<Object, Void, Object> {
 		json.put("Gada", ((InputNewUser)inputNewUser[0]).getGada());
 		json.put("House", ((InputNewUser)inputNewUser[0]).getHouse());
 		JSONArray jsonArray = new JSONArray();
+try {
+ 	if (!inputNewUser[1].equals("")) {
+		for (int i = 0; i < ((ArrayList<CartQuantity>) inputNewUser[1]).size(); i++) {
+			JSONObject jsonCart = new JSONObject();
+			jsonCart.put("ID", ((ArrayList<CartQuantity>) inputNewUser[1]).get(i).getID());
+			jsonCart.put("Quantity", ((ArrayList<CartQuantity>) inputNewUser[1]).get(i).getcQuantity());
+			jsonCart.put("CreatedDate", Utility.getCurrentTimeStamp());
+			jsonArray.put(jsonCart);
+ 		}
+		json.put("CartItems", jsonArray);
 
-		if(!inputNewUser[1].equals("")){
-			for(int i=0;i< ((ArrayList<CartQuantity>)inputNewUser[1]).size();i++){
-				JSONObject jsonCart = new JSONObject();
-				jsonCart.put("ID", ((ArrayList<CartQuantity>) inputNewUser[1]).get(i).getID());
-				jsonCart.put("Quantity",((ArrayList<CartQuantity>)inputNewUser[1]).get(i).getcQuantity());
-				jsonCart.put("CreatedDate", Utility.getCurrentTimeStamp());
-				jsonArray.put(jsonCart);
-			}
-			json.put("CartItems",(JSONArray) inputNewUser[1]);
+	}
+}catch (Exception e){
 
-		}
+}
  		InputStream is = new ByteArrayInputStream(json.toString().getBytes(
 				"UTF-8"));
 

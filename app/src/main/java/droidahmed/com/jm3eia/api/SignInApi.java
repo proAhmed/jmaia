@@ -55,8 +55,7 @@ public class SignInApi extends AsyncTask<String, Void, UserLoginResponse> {
 
 		try {
 			responseJSON = makeRequest(params[0], params[1]);
-			Log.d("homess",responseJSON);
-		} catch (Exception e) {
+ 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -84,9 +83,7 @@ public class SignInApi extends AsyncTask<String, Void, UserLoginResponse> {
 		}
 		if (result != null&&((UserLoginResponse)result).isSuccess()) {
 			callback.onSuccess(result);
-		} else if(result != null&&!((UserLoginResponse)result).isSuccess()) {
-			callback.onSuccess(  result );
-		}else{
+		} else{
 			callback.onFailure();
 		}
 	}

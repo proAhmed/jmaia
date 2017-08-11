@@ -23,13 +23,16 @@ import com.google.gson.GsonBuilder;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.controller.Keys;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
+import droidahmed.com.jm3eia.model.MainChangeUserData;
 import droidahmed.com.jm3eia.model.ResponseChangeUserData;
 import droidahmed.com.jm3eia.model.UpdateUser;
 
 
-public class ChangeUserData extends AsyncTask<UpdateUser, Void, ResponseChangeUserData> {
+public class ChangeUserData extends AsyncTask<UpdateUser, Void, MainChangeUserData> {
 
-	private final static String URL =  "https://jm3eia.com/API/ar/profile/changeuserdata";
+	private final static String URL1 =  "https://jm3eia.com/API/ar/profile/changeuserdata";
+	private final static String URL =  "https://jm3eia.com/API/ar/profile/userdata";
+
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;
@@ -49,14 +52,14 @@ public class ChangeUserData extends AsyncTask<UpdateUser, Void, ResponseChangeUs
 	}
 
 	@Override
-	protected ResponseChangeUserData doInBackground(UpdateUser... params) {
+	protected MainChangeUserData doInBackground(UpdateUser... params) {
 		String responseJSON = null;
-		ResponseChangeUserData obj = null;
+		MainChangeUserData obj = null;
 
 		try {
 			responseJSON = makeRequest(params[0]);
-			Log.d("ooo",responseJSON);
-		} catch (Exception e) {
+			Log.d("ccccoooo",responseJSON);
+ 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -67,7 +70,7 @@ public class ChangeUserData extends AsyncTask<UpdateUser, Void, ResponseChangeUs
 			gb.serializeNulls();
 			gson = gb.create();
 			try {
-				obj = gson.fromJson(responseJSON, ResponseChangeUserData.class);
+				obj = gson.fromJson(responseJSON, MainChangeUserData.class);
 			} catch (com.google.gson.JsonSyntaxException ex) {
 				ex.printStackTrace();
 			}
@@ -77,7 +80,7 @@ public class ChangeUserData extends AsyncTask<UpdateUser, Void, ResponseChangeUs
 	}
 
 	@Override
-	protected void onPostExecute(ResponseChangeUserData result) {
+	protected void onPostExecute(MainChangeUserData result) {
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}

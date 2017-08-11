@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
 import droidahmed.com.jm3eia.start.MainActivity;
 
 /**
@@ -21,6 +23,9 @@ import droidahmed.com.jm3eia.start.MainActivity;
 public class WebFragment extends Fragment {
     private WebView webView;
     String link;
+    DatabaseHelper databaseHelper;
+    TextView tvNum;
+    RelativeLayout reCart;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,11 +33,14 @@ public class WebFragment extends Fragment {
         Bundle bundle = getArguments();
         link = bundle.getString("link");
         webView = (WebView) view.findViewById(R.id.webView);
+        reCart = (RelativeLayout) view.findViewById(R.id.reCart);
 
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(link);
         webView.getSettings().setJavaScriptEnabled(true);
-
+        tvNum = (TextView) view.findViewById(R.id.tvNum);
+        databaseHelper = new DatabaseHelper(getActivity());
+        addNum();
         return view;
 
     }
@@ -91,5 +99,22 @@ public class WebFragment extends Fragment {
                     mainActivity.toggle();
             }
         });
+    }
+    int value;
+    private void addNum(){
+        if(databaseHelper.getCart()!=null){
+            value = databaseHelper.getCart().size();
+        }
+        if(value!=0){
+            tvNum.setText(value+"");
+            reCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .add(R.id.mainFragment,new FragmentProductCart(),"").addToBackStack("").commit();
+                }
+            });
+
+        }
     }
 }

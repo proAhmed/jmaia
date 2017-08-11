@@ -28,7 +28,7 @@ import droidahmed.com.jm3eia.model.ChangePassOutPut;
 public class ChangePassword extends
 		AsyncTask<String, Void, ChangePassOutPut> {
 
-	private final static String URL = "http://jm3eia.com/API/ar/profile/changepassword\n";
+	private final static String URL = "http://jm3eia.com/API/ar/profile/changepassword";
 	private ProgressDialog dialog;
 	private OnProcessCompleteListener callback;
 	private Context context;

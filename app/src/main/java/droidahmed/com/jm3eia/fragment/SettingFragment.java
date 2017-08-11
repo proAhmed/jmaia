@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,10 +25,12 @@ import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.adapter.ProGridAdapter;
 import droidahmed.com.jm3eia.api.ChangeUserData;
 import droidahmed.com.jm3eia.api.GetHome;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.StoreData;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.MainApi;
+import droidahmed.com.jm3eia.model.MainChangeUserData;
 import droidahmed.com.jm3eia.model.ResponseChangeUserData;
 import droidahmed.com.jm3eia.model.UpdateUser;
 import droidahmed.com.jm3eia.start.MainActivity;
@@ -39,7 +42,10 @@ public class SettingFragment extends Fragment {
     EditText edUserName,edName,edEmail,edPhone,edZone,edWidget,edStreet,edGada,edNum,edUpdatePass;
     Button btnSave,btnCancel;
     private OnProcessCompleteListener ProductListener;
-    ResponseChangeUserData responseChange;
+    MainChangeUserData responseChange;
+    DatabaseHelper databaseHelper;
+    TextView tvNum;
+    RelativeLayout reCart;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,6 +65,11 @@ public class SettingFragment extends Fragment {
         edName.setText(""+new StoreData(getActivity()).getFullName());
         edUserName.setText(""+new StoreData(getActivity()).getAuthName());
         edEmail.setText(""+new StoreData(getActivity()).getEmail());
+        edWidget.setText(""+new StoreData(getActivity()).getWidget());
+        tvNum = (TextView) view.findViewById(R.id.tvNum);
+        reCart = (RelativeLayout) view.findViewById(R.id.reCart);
+        databaseHelper = new DatabaseHelper(getActivity());
+        addNum();
         edPhone.setText(""+new StoreData(getActivity()).getMobile());
         edZone.setText(""+new StoreData(getActivity()).getZone());
         edStreet.setText(""+new StoreData(getActivity()).getStreet());
@@ -82,10 +93,20 @@ public class SettingFragment extends Fragment {
 
                         @Override
                         public void onSuccess(Object result) {
-                            responseChange = (ResponseChangeUserData) result;
+                            responseChange = (MainChangeUserData) result;
                             responseChange.getData();
 
-                            Toast.makeText(getActivity(), responseChange.getData(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "تم تحديث البيانات بنجاح",Toast.LENGTH_LONG).show();
+                            new StoreData(getActivity()).saveAuthName(edUserName.getText().toString());
+                            new StoreData(getActivity()).saveEmail(edEmail.getText().toString());
+                            new StoreData(getActivity()).saveWidget(edWidget.getText().toString());
+                            new StoreData(getActivity()).saveMobile(edPhone.getText().toString());
+                            new StoreData(getActivity()).saveZone(edZone.getText().toString());
+                            new StoreData(getActivity()).saveStreet(edStreet.getText().toString());
+                            new StoreData(getActivity()).saveGada(edGada.getText().toString());
+                            new StoreData(getActivity()).saveHouse(edNum.getText().toString());
+                            new StoreData(getActivity()).saveAuthPass(edUpdatePass.getText().toString());
+
 
                         }
 
@@ -165,5 +186,22 @@ public class SettingFragment extends Fragment {
                     mainActivity.toggle();
             }
         });
+    }
+    int value;
+    private void addNum(){
+        if(databaseHelper.getCart()!=null){
+            value = databaseHelper.getCart().size();
+
+        if(value!=0){
+            tvNum.setText(value+"");
+            reCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .add(R.id.mainFragment,new FragmentProductCart(),"").addToBackStack("").commit();
+                }
+            });
+        }
+    }
     }
 }

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#fff"
+    android:id="@+id/gridClickable"
+    android:layout_height="match_parent">
+
+
+<LinearLayout
+    android:id="@+id/linPrice"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:visibility="gone"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+          android:layout_margin="3dp"
+          android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+
+                android:layout_width="65dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:textSize="12sp"
+                android:text="1400 dr"
+                  />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/price_old"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:orientation="vertical"
+        android:layout_margin="3dp"
+     android:visibility="invisible"  >
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+
+                android:layout_width="65dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/price_icon_old"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:text="1400 dr"
+                android:id="@+id/tvOldPrice" />
+        </FrameLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/proImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/linPrice"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal" >
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="190dp"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_horizontal"
+
+            android:id="@+id/imgProduct" />
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/proImage"
+        android:textColor="#000"
+        android:textSize="12sp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:text="1400 dr"
+        android:id="@+id/tvPrice" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvPrice"
+                     android:textSize="14sp"
+                    android:layout_margin="2dp"
+                    android:textColor="#097ECB"
+                    android:textStyle="bold"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:lines="2"
+                    android:maxLines="2"
+                     android:layout_centerHorizontal="true"
+                    android:id="@+id/tvName" />
+
+
+    <LinearLayout
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:background="#E17C24"
+        android:layout_below="@+id/tvName"
+        android:orientation="horizontal" />
+
+
+    <LinearLayout
+        android:id="@+id/cart_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:layout_below="@+id/divider"
+         android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/market_icon"
+            android:id="@+id/imgCart">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                  android:textSize="9sp"
+                 android:textStyle="bold"
+                android:textColor="#fff"
+                android:layout_gravity="center_vertical"
+                android:text="@string/add_cart"
+                android:id="@+id/item_change" />
+        </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/imgDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:src="@drawable/delete"/>
+
+            <EditText
+                android:id="@+id/edNumber"
+                android:background="@drawable/white_edit_border"
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:inputType="numberSigned"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:textSize="14sp"
+                 />
+
+            <ImageView
+                android:id="@+id/imgAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:src="@drawable/add"/>
+
+        </LinearLayout>
+
+</RelativeLayout>

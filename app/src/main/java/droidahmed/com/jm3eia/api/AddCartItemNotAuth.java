@@ -3,6 +3,7 @@ package droidahmed.com.jm3eia.api;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -56,10 +57,12 @@ public class AddCartItemNotAuth extends AsyncTask<JSONObject, Void, ResponseOfCh
 
 		try {
 			responseJSON = makeRequest(params[0]);
+			Log.d("ccccppp",responseJSON);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+            Log.d("cccppp",e.toString());
 		}
 
 		Gson gson = new Gson();

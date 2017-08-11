@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="5dp"
+    android:background="#EBEBEC"
+    android:orientation="vertical"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingTop="10dp">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        >
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context="droidahmed.com.jm3eia.account.SignUp">
+
+            <EditText
+                android:id="@+id/edUpdateFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/name"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/user_name"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdatePass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/pass"
+                android:inputType="textPassword"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/email_forget"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdatePhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/phone"
+                android:inputType="phone"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/light_red"
+                android:clickable="false"
+                android:inputType="phone"
+                android:paddingBottom="10dp"
+                android:paddingRight="25dp"
+                android:paddingTop="10dp"
+                android:text="@string/address"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateZone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/address_one"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateWidget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/area"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateStreet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/street"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edGada"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/gada"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/num"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.7" />
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="3.4"
+                    android:background="@drawable/button_red"
+                    android:text="@string/cancel"
+                    android:textColor="#fff"
+
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="3.4"
+                    android:background="@drawable/button_green"
+                    android:text="@string/save"
+                    android:textColor="#fff"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal" />
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/reCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp">
+
+        <ImageView
+            android:id="@+id/imgCarts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/cartss" />
+
+        <TextView
+            android:id="@+id/tvNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,24 +1,27 @@
 package droidahmed.com.jm3eia.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,165 +30,137 @@ import java.util.List;
 import java.util.Set;
 
 import droidahmed.com.jm3eia.R;
-import droidahmed.com.jm3eia.controller.ExpandableAdapter;
+import droidahmed.com.jm3eia.adapter.ExpandableListAdapter;
+import droidahmed.com.jm3eia.adapter.ExpandableListSubAdapters;
+import droidahmed.com.jm3eia.controller.OnChildClick;
 import droidahmed.com.jm3eia.controller.OnItemListener;
-import droidahmed.com.jm3eia.model.AllProducts;
 import droidahmed.com.jm3eia.model.CategoryParent;
 import droidahmed.com.jm3eia.model.CategoryParentList;
-import droidahmed.com.jm3eia.model.SlidingMenuItem;
-import droidahmed.com.jm3eia.start.MainActivity;
+ import droidahmed.com.jm3eia.start.MainActivity;
+import droidahmed.com.jm3eia.start.SaveAuth;
 
 
 /**
  * Created by Hong Thai.
  */
-public class MenuFragmentRight extends Fragment implements OnItemListener {
+public class MenuFragmentRight extends Fragment implements OnItemListener,OnChildClick {
 
     private View rootView;
- //   private ExpandableListView listView;
-    private ArrayList<CategoryParent> listMain;
-    static ArrayList<CategoryParent>allProducts;
-HashMap<CategoryParent, CategoryParent>hashChild;
-    ArrayList<CategoryParent>childArrayList;
+    //   private ExpandableListView listView;
+       ArrayList<CategoryParent>allProducts;
+     ArrayList<CategoryParent>childArrayList,childSubArrayList;
+    ArrayList<Object>childArrayObjects;
+    static boolean checkArrow;
     ArrayList<CategoryParent>mainArrayList;
- ArrayList<CategoryParentList>categoryParentLists;
-    private RecyclerView recyclerview;
-
-    public static Fragment newInstance(ArrayList<CategoryParent>allProductses) {
-        MenuFragmentRight fragment = new MenuFragmentRight();
-        allProducts = allProductses;
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //create menu items
-//        for (int i=0;i<allProducts.size();i++){
-//         if(allProducts.get(i).isParent()==false){
-//             hashChild.put(  allProducts.get(i).getPathName().get(0).getName(),allProducts.get(i));
-//          }
-//            String pathName =
-//            allProducts.get(i).getPathName().get(0).getName();
-//              listMain.add(pathName);
-//            listMain= removeDuplicates(listMain);
-//        }
-
-      //  setGroupParents();
+    ArrayList<CategoryParentList>categoryParentLists;
+    //  private RecyclerView recyclerview;
+    private ExpandableListView expandableListView;
+     HashMap<String,ArrayList<CategoryParent>>hashMap,hashChild;
+    SaveAuth saveAuth;
+    OnChildClick onChildClick;
+    ArrayList<CategoryParent>arrayHash;
+    Bundle bundle;
 
 
-       hashChild = new HashMap<>();
-
-
-
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_menu_right, container, false);
-     //   listView = (ExpandableListView) rootView.findViewById(R.id.list);
-        recyclerview = (RecyclerView)rootView. findViewById(R.id.recyclerview);
-        recyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        listMain = new ArrayList<>();
-        hashChild = new HashMap<>();
+         hashChild = new HashMap<>();
         mainArrayList = new ArrayList<>();
+        childSubArrayList = new ArrayList<>();
         childArrayList   = new ArrayList<>();
+        childArrayObjects = new ArrayList<>();
         final OnItemListener onItemListener= this;
-
-        //  View header = inflater.inflate(R.layout.view_head,  listView, false);
-//        TextView textRight =(TextView) header.findViewById(R.id.textRight);
-//        textRight.setText(getString(R.string.category));
-//        header.setMinimumHeight(40);
-     //   recyclerview.addHeaderView(header);
-        listMain = new ArrayList<>();
-        categoryParentLists = new ArrayList<>();
-
-         //create menu items
-
+         arrayHash = new ArrayList<>();
+         categoryParentLists = new ArrayList<>();
+        hashMap = new HashMap<>();
+        arrayHash = new ArrayList<>();
+        saveAuth = (SaveAuth) getActivity().getApplicationContext();
+        expandableListView = (ExpandableListView) rootView.findViewById(R.id.list);
+        saveAuth.setArrowCheck(false);
+        bundle = new Bundle();
+         onChildClick = this;
+        Bundle bundles = getArguments();
+        allProducts = (ArrayList<CategoryParent>) bundles.getSerializable("category");
+        //create menu items
+        for (int i=0;i<allProducts.size();i++) {
+        }
         for (int i=0;i<allProducts.size();i++){
-
+            allProducts.get(i).setKeywords("child");
             if(allProducts.get(i).getParentID()==0){
-                 CategoryParent    categoryParent = allProducts.get(i);
+                CategoryParent    categoryParent = allProducts.get(i);
+                categoryParent.setKeywords("parent");
+
                 mainArrayList.add(categoryParent);
-             ///    Log.d("main_pa",mainArrayList.get(i).getAlias());
+
                 categoryParentLists.add( new CategoryParentList(0,categoryParent));
-            }else{
-                 CategoryParent categoryParent = allProducts.get(i);
-                childArrayList.add(categoryParent);
-                  CategoryParentList category = new CategoryParentList(1);
-                CategoryParentList places = new CategoryParentList(1, categoryParent);
+            }else if(allProducts.get(i).getParentID()!=0&&allProducts.get(i).isParent()){
+                CategoryParent categoryChild = allProducts.get(i);
+                categoryChild.setKeywords("child0");
+                childSubArrayList.add(categoryChild);
+                childArrayList.add(categoryChild);
+                CategoryParentList category = new CategoryParentList(2);
+                Log.d("nnnpppp",childSubArrayList.size()+"");
 
                 category.lists = new ArrayList<>();
-                category.lists.add(new CategoryParentList(1, 1, categoryParent));
-                  categoryParentLists.add(category);
+                category.lists.add(new CategoryParentList(1, 2, categoryChild));
+                categoryParentLists.add(category);
 
-             }
-         }
+            }else{
+                CategoryParent categoryChild = allProducts.get(i);
+                categoryChild.setKeywords("child");
+                childArrayList.add(categoryChild);
+                CategoryParentList category = new CategoryParentList(1);
+
+                category.lists = new ArrayList<>();
+                category.lists.add(new CategoryParentList(1, 1, categoryChild));
+                categoryParentLists.add(category);
+            }
+        }
+
+        updateMap();
+        updateChildMap();
+    Log.d("nnnccc",hashMap.get(mainArrayList.get(2).getAlias()).get(0).getName()+ "  "+mainArrayList.size());
 
 
-        recyclerview.setAdapter(new ExpandableAdapter(mainArrayList,childArrayList,onItemListener));
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+         final ExpandableListAdapter expandableListAdapter =
+                new ExpandableListAdapter(getActivity(), mainArrayList, hashMap, onItemListener,onChildClick);
+        // expandableListView.setAdapter(expandableListAdapter);
+        expandableListView.setAdapter(new ParentLevel(getActivity(),onItemListener,onChildClick));
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
-      //  ExpandableListAdapter
- //for(int i =0;i<childArrayList.size();i++){
-//    for(int x =0;x<mainArrayList.size();x++){
-//        if(childArrayList.get(i).getParentID()==mainArrayList.get(x).getID()){
-//            hashChild.put(mainArrayList.get(x),childArrayList.get(i));
-//        }
-//    }
-////}
-//        HashMap<Integer,CategoryParent> hashMap = new HashMap();
-//        HashMap<Integer,ArrayList<CategoryParent>>category = new HashMap<>();
-//        ArrayList<CategoryParent>categoryParents = new ArrayList<>();
-//         for(int i =0;i<childArrayList.size();i++){
-//            hashMap.put(childArrayList.get(i).getParentID(), childArrayList.get(i));
-//            categoryParents.add(hashMap.get(childArrayList.get(i).getParentID())) ;
-//      category.put(categoryParents.get(0).getParentID(), categoryParents);
-//        }
-//     //   Log.d("iii",category.toString());
-//
-//       ExpandableListAdapter adapter = new ExpandableListAdapter(getActivity(),listMain, category);
-////          // adapter.setInflater((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE), getActivity());
-//         listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getActivity(),"iio",Toast.LENGTH_LONG).show();
-//
-//            }
-//        });
-//        listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//            @Override
-//            public void onGroupExpand(int groupPosition) {
-//                Toast.makeText(getActivity(),"iio22",Toast.LENGTH_LONG).show();
-//
-//            }
-//        });
-//        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//            @Override
-//            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-//
-//                Fragment fragmentProduct = new FragmentSubCategoryProduct();
-////                    FragmentManager fm = getSupportFragmentManager();
-////                    FragmentTransaction ft = fm.beginTransaction();
-//                //                    ft.replace(R.id.mainFragment, fragmentProduct);
-////                    ft.commit();h
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("id", hashChild.get(listMain.get(groupPosition)).get(childPosition).getCategoryID());
-//
-//
-//                fragmentProduct.setArguments(bundle);
-//                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.mainFragment, fragmentProduct).addToBackStack("")
-//                        .commitAllowingStateLoss();
-//                MainActivity mainActivity = (MainActivity) getActivity();
-//                if(mainActivity!=null)
-//                    mainActivity.toggle();
-//                return false;
-//            }
-//        });
+                ArrayList<CategoryParent> hashs = hashMap.get(mainArrayList.get(groupPosition).getAlias());
+             //   secondLevelELV.setAdapter(new SecondLevelAdapter(context,hashs));
+
+                return false;
+            }
+        });
+        if(android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
+             expandableListView.setIndicatorBounds(width - GetPixelFromDips(50), width - GetPixelFromDips(10));
+
+        } else {
+
+            expandableListView.setIndicatorBounds(width - GetPixelFromDips(50), width - GetPixelFromDips(10));
+
+        }
+
+        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousGroup = -1;
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (groupPosition != previousGroup)
+                    expandableListView.collapseGroup(previousGroup);
+                previousGroup = groupPosition;
+            }
+        });
 
         return rootView;
     }
@@ -199,32 +174,8 @@ HashMap<CategoryParent, CategoryParent>hashChild;
 //        setListViewAdapter();
     }
 
-//    private void setListViewAdapter() {
-//        MyExpandableAdapter adapter = new MyExpandableAdapter(listMain, listChild);
-//        listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(onItemClickListener());
-//     }
 
-    /**
-     * Go to fragment when menu item clicked!
-     *
-     * @return
-     */
 
-    private ArrayList<AllProducts> removeDuplicate(ArrayList<AllProducts> array){
-        Set<AllProducts> hs = new HashSet<>();
-        hs.addAll(array);
-        array.clear();
-       array.addAll(hs);
-        return array;
-    }
-    public ArrayList   removeDuplicates(ArrayList arlList)
-    {
-        HashSet h = new HashSet(arlList);
-        arlList.clear();
-        arlList.addAll(h);
-        return arlList;
-    }
     private AdapterView.OnItemClickListener onItemClickListener() {
         return new AdapterView.OnItemClickListener() {
             @Override
@@ -246,7 +197,7 @@ HashMap<CategoryParent, CategoryParent>hashChild;
         Bundle bundle = new Bundle();
         bundle.putInt("id", position);
 
-
+        checkArrow = isLongClick;
         fragmentProduct.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.mainFragment, fragmentProduct).addToBackStack("")
@@ -255,75 +206,121 @@ HashMap<CategoryParent, CategoryParent>hashChild;
         mainActivity.toggle();
     }
 
+    ///////////////////////////////////////
+    ArrayList<CategoryParent> tempList,tempChild;
 
-    /**
-     * private class to make a listview adapter based on ArrayAdapter
-     */
-    private class SlidingMenuAdapter extends ArrayAdapter<SlidingMenuItem> {
+    private ArrayList<CategoryParent> getListToAddToHashMap(CategoryParent object){
+        ArrayList<CategoryParent> tempList = new ArrayList<>();
+        for(CategoryParent childObject : childSubArrayList)
+        {
 
-        private FragmentActivity activity;
-        private ArrayList<SlidingMenuItem> items;
+            if(childObject.getID()==object.getParentID())
+            {
+                tempList.add(childObject);
 
-        public SlidingMenuAdapter(FragmentActivity activity, int resource, ArrayList<SlidingMenuItem> objects) {
-            super(activity, resource, objects);
-            this.activity = activity;
-            this.items = objects;
+            }
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = null;
-            LayoutInflater inflater = (LayoutInflater) activity
-                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            // If holder not exist then locate all view from UI file.
-        //    if (convertView == null) {
-                // inflate UI from XML file
-                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_menu_right, null);
-                            // get all UI view
-                holder = new ViewHolder(convertView);
-                // set tag for holder
-             //   convertView.setTag(holder);
-//            } else {
-//                // if holder created, get tag from view
-//                holder = (ViewHolder) convertView.getTag();
-//            }
-             holder.itemName.setText(getItem(position).getMenuItemName());
+         return tempList;
+    }
+    private ArrayList<CategoryParent> getListToAddToHashMaps(CategoryParent object){
+        ArrayList<CategoryParent> tempList = new ArrayList<>();
+        for(CategoryParent childObject : childArrayList)
+        {
 
-            return convertView;
+            if(childObject.getParentID()==object.getID())
+            {
+                tempList.add(childObject);
+
+            }
         }
 
-        private class ViewHolder {
-            private TextView itemName;
+        return tempList;
+    }
+    private void updateMap(){
+        tempList = new ArrayList<>(); // this is the list you will populate
+        for(CategoryParent object : mainArrayList)
+        {
+            tempList = getListToAddToHashMaps(object);
+            if(!tempList.isEmpty())
+            {
+                hashMap.put(object.getAlias(), tempList);
+            }
 
-            public ViewHolder(View v) {
-                itemName = (TextView) v.findViewById(R.id.name);
-             }
         }
+
+    }
+    private void updateChildMap(){
+        tempChild = new ArrayList<>(); // this is the list you will populate
+        for(CategoryParent object : childArrayList) {
+            for(int i =0;childSubArrayList.size()>i;i++){
+                 if (childSubArrayList.get(i).getID() == object.getParentID()) {
+                    tempChild = getListToAddToHashMap(object);
+                    if (!tempChild.isEmpty()) {
+                        hashChild.put(object.getAlias(), tempChild);
+                    }
+
+                }}
+
+        }
+        Log.d("nnnnbbb",tempChild.size()+"   "+hashChild.size());
+
     }
 
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
 
+    @Override
+    public void onClick(CategoryParent categoryParent) {
+        try {
+            Fragment fragmentProduct = new FragmentSubCategoryProduct();
+//                    FragmentManager fm = getSupportFragmentManager();
+//                    FragmentTransaction ft = fm.beginTransaction();
+//                                        ft.replace(R.id.mainFragment, fragmentProduct);
+//                    ft.commit();h
+               bundle.putInt("id", categoryParent.getID());
+
+            fragmentProduct.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.mainFragment, fragmentProduct).addToBackStack("")
+                    .commitAllowingStateLoss();
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.toggle();
+        }catch (Exception e){
+         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
 
     public class ExpandableListAdapters extends BaseExpandableListAdapter {
 
         private Context _context;
         private List<CategoryParent> _listDataHeader; // header titles
         // child data in format of header title, child title
-        private HashMap<Integer,  ArrayList<CategoryParent>> _listDataChild;
-
+        private HashMap<String, ArrayList<CategoryParent>> _listDataChild;
+        OnItemListener onItemListener;
+        OnChildClick onChildClick;
         public ExpandableListAdapters(Context context, List<CategoryParent> listDataHeader,
-                                     HashMap<Integer, ArrayList<CategoryParent>> listChildData) {
+                                      HashMap<String, ArrayList<CategoryParent>> listChildData,
+                                      OnItemListener onItemListener, OnChildClick onChildClick) {
             this._context = context;
             this._listDataHeader = listDataHeader;
             this._listDataChild = listChildData;
-            Log.d("iio",listChildData.toString());
+            this.onItemListener =onItemListener;
+            this.onChildClick =onChildClick;
         }
-
-
 
         @Override
         public Object getChild(int groupPosition, int childPosititon) {
-            Log.d("iii", _listDataChild.get(this._listDataHeader.get(groupPosition).getID()) + "");
-            return _listDataChild.get(_listDataHeader.get(groupPosition).getID());        }
+            Log.d("pppch",""+this._listDataChild.get(this._listDataHeader.get(groupPosition).getAlias())
+                    .get(childPosititon));
+            return this._listDataChild.get(this._listDataHeader.get(groupPosition).getAlias())
+                    .get(childPosititon);
+        }
 
         @Override
         public long getChildId(int groupPosition, int childPosition) {
@@ -331,33 +328,48 @@ HashMap<CategoryParent, CategoryParent>hashChild;
         }
 
         @Override
-        public View getChildView(int groupPosition, final int childPosition,
+        public View getChildView(final int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-            Log.d("iiioio",getChild(groupPosition, childPosition)+"");
-if( getChild(groupPosition, childPosition)!=null) {
-    final String childText = ((CategoryParent) getChild(groupPosition, childPosition)).getAlias();
 
-    if (convertView == null) {
-        LayoutInflater infalInflater = (LayoutInflater) this._context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = infalInflater.inflate(R.layout.item_menu_child, null);
-    }
+            final String childText = ((CategoryParent) getChild(groupPosition, childPosition)).getAlias();
 
-    TextView txtListChild = (TextView) convertView
-            .findViewById(R.id.child_item);
+//        if (convertView == null) {
+            LayoutInflater infalInflater = (LayoutInflater) this._context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.item_child_right, null);
+//        }
 
-    txtListChild.setText(childText);
-}
+            TextView txtListChild = (TextView) convertView
+                    .findViewById(R.id.name);
+            LinearLayout lin = (LinearLayout) convertView.findViewById(R.id.lin);
+
+            txtListChild.setText(childText);
+            ExpandableListSubAdapters SecondLevelexplv = new ExpandableListSubAdapters(getActivity(), mainArrayList, hashMap, onItemListener,onChildClick);
+//            SecondLevelexplv.se(new SecondLevelAdapter());
+//            return SecondLevelexplv;
+            lin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!((CategoryParent) getChild(groupPosition, childPosition)).isParent()){
+                        onChildClick.onClick(((CategoryParent) getChild(groupPosition, childPosition)));
+                    }else{
+
+                    }
+                }
+            });
             return convertView;
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            Log.d("iiioo", _listDataChild.get(70).size()+"") ;
-            return this._listDataChild.get( _listDataHeader.get(groupPosition).getID())
-                    .size();
-         //   return 1;
-         }
+            if(this._listDataChild.get(this._listDataHeader.get(groupPosition).getAlias())==null){
+                return 0;
+            }else{
+                return this._listDataChild.get(this._listDataHeader.get(groupPosition).getAlias())
+                        .size();
+            }
+
+        }
 
         @Override
         public Object getGroup(int groupPosition) {
@@ -375,19 +387,35 @@ if( getChild(groupPosition, childPosition)!=null) {
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded,
+        public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-             if (convertView == null) {
-                LayoutInflater infalInflater = (LayoutInflater) this._context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.item_menu_right, null);
-            }
+            String headerTitle = ((CategoryParent) getGroup(groupPosition)).getAlias();
+//        if (convertView == null) {
+            LayoutInflater infalInflater = (LayoutInflater) this._context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.item_menu_right_mod, null);
+//        }
 
             TextView lblListHeader = (TextView) convertView
                     .findViewById(R.id.name);
-            lblListHeader.setTypeface(null, Typeface.BOLD);
-            lblListHeader.setText(_listDataHeader.get(groupPosition).getName());
-
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.item_image);
+            Picasso.with(_context).load("http://jm3eia.com/" +((CategoryParent) getGroup(groupPosition)).getPicture()).into(imageView);
+            LinearLayout lin = (LinearLayout) convertView.findViewById(R.id.lin);
+            lblListHeader.setText(headerTitle);
+            ImageView arrow_image = (ImageView) convertView.findViewById(R.id.arrow_image);
+            if (isExpanded) {
+                arrow_image.setImageResource(R.drawable.arrow_down);
+            } else {
+                arrow_image.setImageResource(R.drawable.arrow);
+            }
+            if (!((CategoryParent) getGroup(groupPosition)).isParent()) {
+                lin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemListener.onClick(((CategoryParent) getGroup(groupPosition)).getID(), false);
+                    }
+                });
+            }
             return convertView;
         }
 
@@ -400,8 +428,239 @@ if( getChild(groupPosition, childPosition)!=null) {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
-
     }
 
+    //////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    private class ParentLevel extends BaseExpandableListAdapter {
+        private Context context;
+        OnChildClick onChildClick;
+        OnItemListener onItemListener;
+        ParentLevel(Context context, OnItemListener onItemListener, OnChildClick onChildClick) {
+            this.context = context;
+            this.onItemListener = onItemListener;
+            this.onChildClick = onChildClick;
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosititon) {
+            return hashMap.get(mainArrayList.get(groupPosition).getAlias())
+                    .get(childPosititon);
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+            final String childText = ((CategoryParent) getChild(groupPosition, childPosition)).getAlias();
+
+
+       ArrayList<CategoryParent> hashs = hashMap.get(mainArrayList.get(groupPosition).getAlias());
+
+            LayoutInflater inflater = (LayoutInflater) getActivity()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.item_child_right, null);
+             TextView txtListChild = (TextView) convertView
+                    .findViewById(R.id.name);
+            LinearLayout lin = (LinearLayout) convertView.findViewById(R.id.lin);
+
+            txtListChild.setText(childText);
+
+            if(hashChild.get(childText)!=null ) {
+                SecondLevelExpandableListView secondLevelELV = new SecondLevelExpandableListView(getActivity());
+                secondLevelELV.setAdapter(new SecondLevelAdapter(context,hashs));
+//            Log.d("pppp",hashs.size()+"");
+//                 elv.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT,  AbsListView.LayoutParams.WRAP_CONTENT));
+//                elv.setAdapter(new SecondLevelAdapter(context, hashs));
+                return secondLevelELV;
+            }else{
+                lin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        onChildClick.onClick(((CategoryParent) getChild(groupPosition, childPosition)));
+                    }
+                });
+            }
+
+            return convertView;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            if(hashMap.get(mainArrayList.get(groupPosition).getAlias())==null){
+                return 0;
+            }else{
+                return hashMap.get(mainArrayList.get(groupPosition).getAlias())
+                        .size();
+            }
+
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return mainArrayList.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return mainArrayList.size();
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            String headerTitle = ((CategoryParent) getGroup(groupPosition)).getAlias();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.item_menu_right_mod, null);
+            TextView lblListHeader = (TextView) convertView
+                    .findViewById(R.id.name);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.item_image);
+            Picasso.with(getActivity()).load("http://jm3eia.com/" +((CategoryParent) getGroup(groupPosition)).getPicture()).into(imageView);
+            LinearLayout lin = (LinearLayout) convertView.findViewById(R.id.lin);
+            lblListHeader.setText(headerTitle);
+            ImageView arrow_image = (ImageView) convertView.findViewById(R.id.arrow_image);
+            if (isExpanded) {
+                arrow_image.setImageResource(R.drawable.arrow_down);
+            } else {
+                arrow_image.setImageResource(R.drawable.arrow);
+            }
+            if (!((CategoryParent) getGroup(groupPosition)).isParent()) {
+                lin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemListener.onClick(((CategoryParent) getGroup(groupPosition)).getID(), false);
+                    }
+                });
+            }
+
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+    }
+
+    public class SecondLevelExpandableListView extends ExpandableListView {
+
+        public SecondLevelExpandableListView(Context context) {
+            super(context);
+        }
+
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            //999999 is a size in pixels. ExpandableListView requires a maximum height in order to do measurement calculations.
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(999999, MeasureSpec.AT_MOST);
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
+    }
+
+    public class SecondLevelAdapter extends BaseExpandableListAdapter {
+
+        private Context context;
+        ArrayList<CategoryParent>child;
+        public SecondLevelAdapter(Context context,ArrayList<CategoryParent>child) {
+            this.context = context;
+            this.child = child;
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public int getGroupCount() {
+            Log.d("pppp00",child.size()+"");
+
+            return child.size();
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.row_third, null);
+
+                TextView text = (TextView) convertView.findViewById(R.id.eventsListEventRowText);
+                text.setText(child.get(groupPosition).getAlias());
+            Log.d("pppp888",child.get(groupPosition).getAlias());
+
+            return convertView;
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            return hashChild.get(child.get(groupPosition).getAlias()).get(childPosition);
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.row_four, null);
+                TextView text = (TextView) convertView.findViewById(R.id.eventsListEventRowText);
+            final String childText = ((CategoryParent) getChild(groupPosition, childPosition)).getAlias();
+            text.setText(childText);
+            Log.d("pppp888",child.get(groupPosition).getAlias());
+            LinearLayout lin = (LinearLayout) convertView.findViewById(R.id.lin);
+            lin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    onChildClick.onClick(((CategoryParent) getChild(groupPosition, childPosition)));
+                }
+            });
+            return convertView;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            Log.d("ppp111",hashChild.get(child.get(groupPosition).getAlias()).size()+"");
+            if(hashChild.get(child.get(groupPosition).getAlias())==null){
+                return 0;
+            }else{
+                return hashChild.get(child.get(groupPosition).getAlias())
+                        .size();
+            }
+     }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+    }
 
 }

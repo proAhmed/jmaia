@@ -10,7 +10,8 @@ public class AllProducts implements Serializable{
     private double Code;
     private double CategoryID;
     private double BrandID;
-     private double Price;
+    private double OldPrice;
+    private double Price;
     private double Quantity;
     private String Picture;
     private String SliderPictures;
@@ -30,6 +31,40 @@ public class AllProducts implements Serializable{
     private String BrandName;
 
     public AllProducts() {
+    }
+
+    public double getOldPrice() {
+        return OldPrice;
+    }
+
+    public AllProducts(int ID, double code, double categoryID, double brandID, double oldPrice, double price, double quantity, String picture, String sliderPictures, String createdDate, String modifiedDate, int viewed, int featured, int state, int productID, int languageID, String name, String alias, String contents, String description, String keywords, String categoryName, String brandName) {
+        this.ID = ID;
+        Code = code;
+        CategoryID = categoryID;
+        BrandID = brandID;
+        OldPrice = oldPrice;
+        Price = price;
+        Quantity = quantity;
+        Picture = picture;
+        SliderPictures = sliderPictures;
+        CreatedDate = createdDate;
+        ModifiedDate = modifiedDate;
+        Viewed = viewed;
+        Featured = featured;
+        State = state;
+        ProductID = productID;
+        LanguageID = languageID;
+        Name = name;
+        Alias = alias;
+        Contents = contents;
+        Description = description;
+        Keywords = keywords;
+        CategoryName = categoryName;
+        BrandName = brandName;
+    }
+
+    public void setOldPrice(double oldPrice) {
+        OldPrice = oldPrice;
     }
 
     public String getCategoryName() {

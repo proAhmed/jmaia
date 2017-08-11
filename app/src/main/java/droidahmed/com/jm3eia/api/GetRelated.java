@@ -34,8 +34,8 @@ public class GetRelated extends AsyncTask<String, Void, MainApi> {
 		callback = cb;
 		this.context = context;
 		URL = URL+id;
-		Log.d("url",URL);
-	}
+		Log.d("oooo",URL);
+  	}
 
 	@Override
 	protected void onPreExecute() {
@@ -87,6 +87,7 @@ public class GetRelated extends AsyncTask<String, Void, MainApi> {
 	}
 
 	private String invokeJSONWS() throws IOException {
+		HttpURLConnection httpConn = null;
 
 		InputStream in = null;
 		int response = -1;
@@ -97,7 +98,7 @@ public class GetRelated extends AsyncTask<String, Void, MainApi> {
 			throw new IOException("Not an HTTP connection");
 
 		try {
-			HttpURLConnection httpConn = (HttpURLConnection) conn;
+			  httpConn = (HttpURLConnection) conn;
 			httpConn.setRequestMethod("GET");
 			httpConn.setDoInput(true);
 			httpConn.setDoOutput(true);
@@ -122,6 +123,8 @@ public class GetRelated extends AsyncTask<String, Void, MainApi> {
 
 		} catch (Exception e) {
 			throw new IOException("Error connecting");
+		}finally {
+			httpConn.disconnect();
 		}
 		return responseJSON;
 	}

@@ -10,10 +10,12 @@ public class CartQuantity implements Serializable{
     private double Code;
     private double CategoryID;
     private double BrandID;
+    private double OldPrice;
     private double Price;
+
     private double Quantity;
     private String Picture;
-    private String SliderPictures;
+    private Object SliderPictures;
     private String CreatedDate;
     private String ModifiedDate;
     private int Viewed;
@@ -29,8 +31,17 @@ public class CartQuantity implements Serializable{
     private String CategoryName;
     private String BrandName;
     private int cQuantity;
+    private int added;
+    private int seen;
+     public CartQuantity() {
+    }
 
-    public CartQuantity() {
+    public int getAdded() {
+        return added;
+    }
+
+    public void setAdded(int added) {
+        this.added = added;
     }
 
     public CartQuantity(int ID, int cQuantity, String Name,double price) {
@@ -40,6 +51,71 @@ public class CartQuantity implements Serializable{
         this.Price = price;
 
     }
+    public CartQuantity(int ID, double code, double categoryID, double brandID, double oldPrice,
+                        double price, double quantity, String picture, String sliderPictures, String createdDate,
+                        String modifiedDate, int viewed, int featured, int state, int productID, int languageID,
+                        String name, String alias, String contents, String description, String keywords, String categoryName,
+                        String brandName, int cQuantity, int added,int seen) {
+        this.ID = ID;
+        Code = code;
+        CategoryID = categoryID;
+        BrandID = brandID;
+        OldPrice = oldPrice;
+        Price = price;
+        Quantity = quantity;
+        Picture = picture;
+        SliderPictures = sliderPictures;
+        CreatedDate = createdDate;
+        ModifiedDate = modifiedDate;
+        Viewed = viewed;
+        Featured = featured;
+        State = state;
+        ProductID = productID;
+        LanguageID = languageID;
+        Name = name;
+        Alias = alias;
+        Contents = contents;
+        Description = description;
+        Keywords = keywords;
+        CategoryName = categoryName;
+        BrandName = brandName;
+        this.cQuantity = cQuantity;
+        this.added = added;
+        this.seen = seen;
+    }
+
+
+    public CartQuantity(int ID, double code, double categoryID, double brandID, double oldPrice,
+                        double price, double quantity, String picture, String sliderPictures, String createdDate,
+                        String modifiedDate, int viewed, int featured, int state, int productID, int languageID,
+                        String name, String alias, String contents, String description, String keywords, String categoryName,
+                        String brandName, int cQuantity, int added) {
+        this.ID = ID;
+        Code = code;
+        CategoryID = categoryID;
+        BrandID = brandID;
+        OldPrice = oldPrice;
+        Price = price;
+        Quantity = quantity;
+        Picture = picture;
+        SliderPictures = sliderPictures;
+        CreatedDate = createdDate;
+        ModifiedDate = modifiedDate;
+        Viewed = viewed;
+        Featured = featured;
+        State = state;
+        ProductID = productID;
+        LanguageID = languageID;
+        Name = name;
+        Alias = alias;
+        Contents = contents;
+        Description = description;
+        Keywords = keywords;
+        CategoryName = categoryName;
+        BrandName = brandName;
+        this.cQuantity = cQuantity;
+        this.added = added;
+     }
 
     public CartQuantity(int ID, double code, double categoryID,
                         double brandID, double price, double quantity,
@@ -70,6 +146,49 @@ public class CartQuantity implements Serializable{
         CategoryName = categoryName;
         BrandName = brandName;
         this.cQuantity = cQuantity;
+    }
+
+    public int getSeen() {
+        return seen;
+    }
+
+    public void setSeen(int seen) {
+        this.seen = seen;
+    }
+
+    public double getOldPrice() {
+        return OldPrice;
+    }
+
+    public CartQuantity(int ID, double code, double categoryID, double brandID, double oldPrice, double price, double quantity, String picture, String sliderPictures, String createdDate, String modifiedDate, int viewed, int featured, int state, int productID, int languageID, String name, String alias, String contents, String description, String keywords, String categoryName, String brandName, int cQuantity) {
+        this.ID = ID;
+        Code = code;
+        CategoryID = categoryID;
+        BrandID = brandID;
+        OldPrice = oldPrice;
+        Price = price;
+        Quantity = quantity;
+        Picture = picture;
+        SliderPictures = sliderPictures;
+        CreatedDate = createdDate;
+        ModifiedDate = modifiedDate;
+        Viewed = viewed;
+        Featured = featured;
+        State = state;
+        ProductID = productID;
+        LanguageID = languageID;
+        Name = name;
+        Alias = alias;
+        Contents = contents;
+        Description = description;
+        Keywords = keywords;
+        CategoryName = categoryName;
+        BrandName = brandName;
+        this.cQuantity = cQuantity;
+    }
+
+    public void setOldPrice(double oldPrice) {
+        OldPrice = oldPrice;
     }
 
     public int getID() {
@@ -128,7 +247,7 @@ public class CartQuantity implements Serializable{
         Picture = picture;
     }
 
-    public String getSliderPictures() {
+    public Object getSliderPictures() {
         return SliderPictures;
     }
 

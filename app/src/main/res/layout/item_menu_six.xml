@@ -15,6 +15,7 @@
         android:layout_gravity="center"
         android:textColor="#fff"
         android:textSize="24sp"
+        android:textStyle="bold"
         android:text="تسجيل الدخول"
          android:gravity="center"
         android:layout_marginTop="6dp"

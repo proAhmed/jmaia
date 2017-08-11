@@ -1,196 +1,262 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-android:layout_height="match_parent"
-android:layout_width="match_parent"
-xmlns:android="http://schemas.android.com/apk/res/android" >
->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="5dp"
+    android:background="#EBEBEC"
     android:orientation="vertical"
-      tools:context="droidahmed.com.jm3eia.account.SignUp">
-    <EditText
-        android:id="@+id/edUpdateFullName"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edUpdateUserName"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/user_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edUpdatePass"
-        android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textPassword"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/email_forget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edUpdateEmail"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textEmailAddress"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/email_forget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edUpdatePhone"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="phone"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingTop="10dp">
 
-    <EditText
-         android:paddingRight="25dp"
-        android:inputType="phone"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:clickable="false"
-        android:text="@string/address"
-        android:layout_marginTop="20dp"
-        android:background="@color/light_red"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        >
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context="droidahmed.com.jm3eia.account.SignUp">
+
+            <EditText
+                android:id="@+id/edUpdateFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/name"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/user_name"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdatePass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:gravity="right"
+                android:hint="@string/pass"
+                android:inputType="textPassword"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/email_forget"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdatePhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/phone"
+                android:inputType="phone"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/light_red"
+                android:clickable="false"
+                android:inputType="phone"
+                android:paddingBottom="10dp"
+                android:paddingRight="25dp"
+                android:paddingTop="10dp"
+                android:text="@string/address"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateZone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/address_one"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateWidget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/area"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateStreet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/street"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edGada"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/gada"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edUpdateNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_border"
+                android:hint="@string/num"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.7" />
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="3.4"
+                    android:background="@drawable/button_red"
+                    android:text="@string/cancel"
+                    android:textColor="#fff"
+
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="3.4"
+                    android:background="@drawable/button_green"
+                    android:text="@string/save"
+                    android:textColor="#fff"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal" />
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/reCart"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-         />
-    <EditText
-        android:id="@+id/edUpdateZone"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/address_one"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edUpdateWidget"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/area"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edUpdateStreet"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/street"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edGada"
-         android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/gada"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp">
 
-    <EditText
-        android:id="@+id/edUpdateNum"
-        android:paddingRight="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edit_border"
-        android:hint="@string/num"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/imgCarts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2.7"/>
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_weight="3.4"
-             android:layout_marginTop="10dp"
-            android:text="@string/cancel"
-            android:textColor="#fff"
-            android:layout_marginBottom="15dp"
+            android:src="@drawable/cartss" />
 
-            android:background="@drawable/button_red"
-            />
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"/>
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_weight="3.4"
-             android:layout_marginTop="10dp"
-            android:text="@string/save"
-            android:textColor="#fff"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/button_green"
-            />
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:orientation="horizontal"/>
-</LinearLayout>
-</ScrollView>
+        <TextView
+            android:id="@+id/tvNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</RelativeLayout>

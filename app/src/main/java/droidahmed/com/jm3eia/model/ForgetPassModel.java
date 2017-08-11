@@ -5,7 +5,7 @@ package droidahmed.com.jm3eia.model;
  */
 public class ForgetPassModel {
 
- private String Result;
+ private String data;
     private String error;
     private boolean success;
 
@@ -28,15 +28,15 @@ public class ForgetPassModel {
         this.success = success;
     }
 
-    public ForgetPassModel(String result) {
-        Result = result;
+    public ForgetPassModel(String data) {
+        this.data = data;
     }
 
-    public String getResult() {
-        return Result;
+    public String getData() {
+        return data;
     }
 
-    public void setResult(String result) {
-        Result = result;
+    public void setData(String data) {
+        this.data = data;
     }
 }

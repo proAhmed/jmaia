@@ -3,6 +3,7 @@ package droidahmed.com.jm3eia.api;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,7 +47,9 @@ public class AddCartItem extends AsyncTask<HashSet, Void, CartItemResponse> {
 	@Override
 	protected void onPreExecute() {
 		this.dialog.setMessage(context.getResources().getString(
-				R.string.add_cart_laoding));
+				R.string.add_cart_laoding)
+		);
+
 		this.dialog.setCancelable(false);
 		this.dialog.show();
 	}
@@ -105,7 +108,7 @@ public class AddCartItem extends AsyncTask<HashSet, Void, CartItemResponse> {
 		for (int i=0;i<arrayList.size();i++){
 			JSONObject itemJson = new JSONObject();
 			itemJson.put("Product",arrayList.get(i).getIdItem());
-			itemJson.put("Quantity",arrayList.get(i).getIdItem());
+			itemJson.put("Quantity",arrayList.get(i).getQuantityItem());
  			jsonArray.put(itemJson);
 		}
 		json.put("CartItems", jsonArray);

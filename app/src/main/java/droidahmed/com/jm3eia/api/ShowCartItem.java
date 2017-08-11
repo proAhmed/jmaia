@@ -118,8 +118,7 @@ public class ShowCartItem extends AsyncTask<ArrayList<CartQuantity>, Void, CartI
 	}} catch (JSONException e) {
 		e.printStackTrace();
 	}
-		Log.d("json",jsonArray.toString());
-		json.put("CartItems", jsonArray);
+ 		json.put("CartItems", jsonArray);
 
 
 		InputStreamEntity entity = null;

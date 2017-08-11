@@ -41,6 +41,7 @@
         android:layout_weight="2"
         android:hint="@string/user_name"
         android:gravity="right"
+        android:textStyle="bold"
         android:textColor="#fff"
         android:paddingTop="5dp"
         android:textColorHint="#fff"
@@ -56,6 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
+        android:textStyle="bold"
         android:hint="@string/pass"
         android:gravity="right"
         android:paddingTop="5dp"
@@ -74,6 +76,7 @@
         android:layout_width="140dp"
         android:layout_height="0dp"
         android:layout_weight="2"
+        android:textStyle="bold"
         android:text="@string/login"
         android:textColor="#fff"
         android:layout_gravity="center_horizontal"
@@ -91,6 +94,7 @@
     <TextView
         android:id="@+id/tvRegister"
         android:layout_width="0dp"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:text="@string/register"/>
@@ -98,6 +102,7 @@
         android:id="@+id/tvForget"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_weight="2"
         android:text="@string/forget_pass"/>
 </LinearLayout>

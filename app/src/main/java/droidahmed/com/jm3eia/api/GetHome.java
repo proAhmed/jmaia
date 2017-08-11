@@ -29,14 +29,16 @@ import droidahmed.com.jm3eia.model.ResponseHome;
  */
 public class GetHome extends AsyncTask<String,Void,MainApi > {
     private ProgressDialog dialog;
-    private final static String URL =  "http://jm3eia.com/API/ar/product";
+     String finalUrl;
     private OnProcessCompleteListener callback;
     private Context context;
-    public GetHome(Context context, OnProcessCompleteListener cb) {
+    String responseJSON;
+    public GetHome(Context context, OnProcessCompleteListener cb,String num) {
         dialog = new ProgressDialog(context);
         callback = cb;
         this.context = context;
-    }
+        finalUrl =   "https://jm3eia.com/API/ar/home/featured?page="+num;
+     }
 
     @Override
     protected void onPreExecute() {
@@ -48,13 +50,12 @@ public class GetHome extends AsyncTask<String,Void,MainApi > {
 
     @Override
     protected MainApi doInBackground(String... params) {
-        String responseJSON = null;
+
         MainApi obj = null;
 
         try {
             responseJSON = invokeJSONWS();
-            Log.d("home",responseJSON);
-        } catch (Exception e) {
+          } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -69,7 +70,6 @@ public class GetHome extends AsyncTask<String,Void,MainApi > {
                 obj = gson.fromJson(responseJSON, MainApi.class);
             } catch (com.google.gson.JsonSyntaxException ex) {
                 ex.printStackTrace();
-                Log.d("home", ex.toString());
 
             }
 
@@ -92,17 +92,17 @@ public class GetHome extends AsyncTask<String,Void,MainApi > {
     }
 
     private String invokeJSONWS() throws IOException {
-
+        HttpURLConnection httpConn = null;
         InputStream in = null;
         int response = -1;
         String responseJSON;
-        java.net.URL url = new URL(URL);
+        java.net.URL url = new URL(finalUrl);
         URLConnection conn = url.openConnection();
         if (!(conn instanceof HttpURLConnection))
             throw new IOException("Not an HTTP connection");
 
         try {
-            HttpURLConnection httpConn = (HttpURLConnection) conn;
+              httpConn = (HttpURLConnection) conn;
             httpConn.setRequestMethod("GET");
             httpConn.setConnectTimeout(Keys.TIMEOUT);
             httpConn.setDoInput(true);
@@ -128,6 +128,9 @@ public class GetHome extends AsyncTask<String,Void,MainApi > {
 
         } catch (Exception e) {
             throw new IOException("Error connecting");
+        }finally {
+
+            httpConn.disconnect();
         }
         return responseJSON;
     }

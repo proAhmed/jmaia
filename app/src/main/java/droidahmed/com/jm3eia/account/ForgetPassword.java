@@ -71,7 +71,7 @@ Context context;
                     forgetP = (ForgetPassModel) result;
 
                     if (forgetP != null) {
-                        if (forgetP.getResult() != null
+                        if (forgetP.getData() != null
                                 ) {
 
                             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(

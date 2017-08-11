@@ -51,8 +51,7 @@ public class StaticPagesRules extends AsyncTask<String,Void,RulesPage> {
 
         try {
             responseJSON = invokeJSONWS();
-            Log.d("home",responseJSON);
-        } catch (Exception e) {
+         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -67,7 +66,6 @@ public class StaticPagesRules extends AsyncTask<String,Void,RulesPage> {
                 obj = gson.fromJson(responseJSON, RulesPage.class);
             } catch (com.google.gson.JsonSyntaxException ex) {
                 ex.printStackTrace();
-                Log.d("home", ex.toString());
 
             }
 

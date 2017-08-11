@@ -21,8 +21,12 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 
+import org.apache.http.util.EncodingUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,8 +39,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import droidahmed.com.jm3eia.R;
+import droidahmed.com.jm3eia.api.GetAllowOrder;
 import droidahmed.com.jm3eia.model.CartQuantity;
 import droidahmed.com.jm3eia.model.ItemJson;
+import droidahmed.com.jm3eia.model.OrderAllowedResponse;
 
 /**
  * Created by ahmed on 3/1/2016.
@@ -96,6 +102,25 @@ public class Utility {
         return isValid;
     }
 
+    public static void showDialog(Context mContext) {
+
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                mContext);
+
+        alertDialogBuilder
+                .setMessage(
+                        mContext.getResources().getString(R.string.order_not_allowed))
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        alertDialogBuilder.setCancelable(true);
+
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     public static void showFailureDialog(Context mContext, final boolean back) {
 
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -116,7 +141,26 @@ public class Utility {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+    public static void showFailureDialogLogin(Context mContext, final boolean back) {
 
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                mContext);
+
+        alertDialogBuilder
+                .setMessage(
+                        mContext.getResources().getString(R.string.login_error))
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        alertDialogBuilder.setCancelable(true);
+                        if (back) {
+                            //      Utility.deleteFormBackStack();
+                        }
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -131,43 +175,50 @@ public class Utility {
     public static void call(Context context, int num) {
         try {
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (context.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for Activity#requestPermissions for more details.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (context.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for Activity#requestPermissions for more details.
 
 
-                return;
-            }else{
+                    return;
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+
+                    intent.setData(Uri.parse("tel:" + num));
+                    context.startActivity(intent);
+                }
+            } else {
                 Intent intent = new Intent(Intent.ACTION_CALL);
 
                 intent.setData(Uri.parse("tel:" + num));
                 context.startActivity(intent);
-            }
-            }else{
-                Intent intent = new Intent(Intent.ACTION_CALL);
-
-                intent.setData(Uri.parse("tel:" + num));
-                context.startActivity(intent);
 
             }
-    }catch (Exception e){
+        } catch (Exception e) {
 
+        }
     }
-}
+
     @SuppressLint("SimpleDateFormat")
     public static String getCurrentTimeStamp() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
     }
-    public static void SaveData(Context context,String authName,String authPass,String fullNAme,String email,
-                          String mobile,String gada,String widget,String zone,
-                          String house,String street){
-        StoreData storeData =  new StoreData(context);
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getCurrentTimeStampData() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    }
+
+    public static void SaveData(Context context, String authName, String authPass, String fullNAme, String email,
+                                String mobile, String gada, String widget, String zone,
+                                String house, String street) {
+        StoreData storeData = new StoreData(context);
         storeData.saveAuthName(authName);
         storeData.saveAuthPass(authPass);
         storeData.saveFullName(fullNAme);
@@ -179,15 +230,17 @@ public class Utility {
         storeData.saveHouse(house);
         storeData.saveStreet(street);
     }
-    private boolean check;
-    public JSONArray jsonArrayCheck(JSONArray jsonArray,JSONObject jsonObject){
 
-        for(int i=0;i<jsonArray.length();i++){
+    private boolean check;
+
+    public JSONArray jsonArrayCheck(JSONArray jsonArray, JSONObject jsonObject) {
+
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
-                if(jsonArray.getJSONObject(i).getInt("ID")==jsonObject.getInt("ID")){
+                if (jsonArray.getJSONObject(i).getInt("ID") == jsonObject.getInt("ID")) {
                     setCheck(false);
                     return jsonArray;
-                }else {
+                } else {
                     setCheck(true);
 
                     return jsonArray.put(jsonObject);
@@ -208,27 +261,112 @@ public class Utility {
         this.check = check;
     }
 
-  public ArrayList<ItemJson> itemArrays(ArrayList<ItemJson> arrayList,ItemJson itemJson){
-      for( int i=0;arrayList.size()>i;i++){
-          if(arrayList.get(i).getIdItem()==itemJson.getIdItem()){
-              return arrayList;
-          }else {
+    public ArrayList<ItemJson> itemArrays(ArrayList<ItemJson> arrayList, ItemJson itemJson) {
+        for (int i = 0; arrayList.size() > i; i++) {
+            if (arrayList.get(i).getIdItem() == itemJson.getIdItem()) {
+                return arrayList;
+            } else {
                 arrayList.add(itemJson);
-              return arrayList;
-          }
-      }
+                return arrayList;
+            }
+        }
 
-      return arrayList;
-  }
+        return arrayList;
+    }
 
-public static int widthScreen(Context context){
-    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    public static int widthScreen(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
-    Display display = wm.getDefaultDisplay();
-    Point size = new Point();
-    display.getSize(size);
-    int width = size.x;
-    int height = size.y;
-    return width;
-}
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        return width;
+    }
+
+    public String arabicNumaricCode(String value) {
+
+        String value3 = value.replaceAll("0", "٠").replaceAll("1", "١").replaceAll("2", "٢").replaceAll("3", "٣").replaceAll("4", "٤").replaceAll("5", "٥")
+                .replaceAll("6", "٦").replaceAll("7", "٧").replaceAll("8", "٨").replaceAll("9", "٩");
+
+        return value3;
+
+    }
+
+    public StringBuilder arabicNumaricCodeM(String value) {
+        StringBuilder sb = new StringBuilder();
+
+        String value3 = value.replaceAll("0", "٠").replaceAll("1", "١").replaceAll("2", "٢").replaceAll("3", "٣").replaceAll("4", "٤").replaceAll("5", "٥")
+                .replaceAll("6", "٦").replaceAll("7", "٧").replaceAll("8", "٨").replaceAll("9", "٩");
+        sb.append(value3);
+        return sb;
+    }
+
+    public void openWeb(Activity activity) {
+        WebView webView = new WebView(activity);
+        activity.setContentView(webView);
+        String url = "https://jm3eia.com/ar/checkout?nostyle";
+        String postData = "UserName=" + new StoreData(activity).getAuthName() +
+                "&Password=" + new StoreData(activity).getAuthPass();
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.addJavascriptInterface(new WebAppInterface(activity), "btnCheckout");
+        webView.setWebViewClient(new WebViewClient());
+
+//        webView.setWebViewClient(new WebViewClient()
+//        {
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url)
+//            {
+//                //view.loadUrl(url);
+//                System.out.println("hello");
+//                return true;
+//            }
+//        });
+         webView.postUrl(url, EncodingUtils.getBytes(postData, "base64"));
+        webView.addJavascriptInterface(new Object() {
+            @JavascriptInterface
+            public void performClick() {
+                Log.d("LOGIN::", "Clicked");
+
+            }
+        }, "btnCheckout");
+        Log.d("bbb", new StoreData(activity).getAuthName());
+    }
+
+    public void openWebLogin(Activity activity) {
+        WebView webView = new WebView(activity);
+        activity.setContentView(webView);
+        String url = "https://jm3eia.com/ar/checkout?nostyle";
+//        String postData = "Payment_Method="+2;
+//        webView.postUrl(url, EncodingUtils.getBytes(postData, "base64"));
+
+    }
+
+    public class WebAppInterface {
+
+        Activity mContext;
+
+        /**
+         * Instantiate the interface and set the context
+         */
+        WebAppInterface(Activity c) {
+            mContext = c;
+        }
+
+        /**
+         * Show a toast from the web page
+         */
+        @JavascriptInterface
+        public void nextScreen(String pro_cat_id) {
+
+            WebView webView = new WebView(mContext);
+            mContext.setContentView(webView);
+            String url = "https://jm3eia.com/ar/checkout?nostyle";
+            webView.loadUrl(url);
+
+        }
+    }
+
 }

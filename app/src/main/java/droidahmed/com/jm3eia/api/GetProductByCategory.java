@@ -3,7 +3,6 @@ package droidahmed.com.jm3eia.api;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,12 +28,12 @@ public class GetProductByCategory extends AsyncTask<String,Void,MainApi > {
     private  String URL =  "http://jm3eia.com/API/ar/product/c/";
     private OnProcessCompleteListener callback;
     private Context context;
-    public GetProductByCategory(Context context,int id ,OnProcessCompleteListener cb) {
+    public GetProductByCategory(Context context,int id ,OnProcessCompleteListener cb, int num) {
         dialog = new ProgressDialog(context);
         callback = cb;
         this.context = context;
-        URL = URL+id;
-    }
+        URL = URL+id+"?page="+num;
+     }
 
     @Override
     protected void onPreExecute() {
@@ -51,8 +50,7 @@ public class GetProductByCategory extends AsyncTask<String,Void,MainApi > {
 
         try {
             responseJSON = invokeJSONWS();
-            Log.d("home",responseJSON);
-        } catch (Exception e) {
+         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -67,7 +65,6 @@ public class GetProductByCategory extends AsyncTask<String,Void,MainApi > {
                 obj = gson.fromJson(responseJSON, MainApi.class);
             } catch (com.google.gson.JsonSyntaxException ex) {
                 ex.printStackTrace();
-                Log.d("home", ex.toString());
 
             }
 
@@ -90,6 +87,7 @@ public class GetProductByCategory extends AsyncTask<String,Void,MainApi > {
     }
 
     private String invokeJSONWS() throws IOException {
+        HttpURLConnection httpConn = null;
 
         InputStream in = null;
         int response = -1;
@@ -100,7 +98,7 @@ public class GetProductByCategory extends AsyncTask<String,Void,MainApi > {
             throw new IOException("Not an HTTP connection");
 
         try {
-            HttpURLConnection httpConn = (HttpURLConnection) conn;
+              httpConn = (HttpURLConnection) conn;
             httpConn.setRequestMethod("GET");
             httpConn.setConnectTimeout(Keys.TIMEOUT);
             httpConn.setDoInput(true);
@@ -126,6 +124,8 @@ public class GetProductByCategory extends AsyncTask<String,Void,MainApi > {
 
         } catch (Exception e) {
             throw new IOException("Error connecting");
+        }finally {
+            httpConn.disconnect();
         }
         return responseJSON;
     }

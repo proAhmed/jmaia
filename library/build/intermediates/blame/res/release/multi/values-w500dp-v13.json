@@ -1,0 +1,26 @@
+[
+    {
+        "outputFile": "F:\\Android\\essam\\jm3eia\\Jm3eia\\library\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-w500dp-v13\\values-w500dp-v13.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 54,
+                    "endOffset": 105
+                },
+                "from": {
+                    "file": "C:\\Users\\ahmed radwan\\.android\\build-cache\\6c91251827208fb1b399866b1bd9282cb5ae139b\\output\\res\\values-w500dp\\values-w500dp.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 283,
+                        "endColumn": 54,
+                        "endOffset": 333
+                    }
+                }
+            }
+        ]
+    }
+]

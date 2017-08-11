@@ -23,12 +23,71 @@ public class User implements Serializable {
 	private String Mobile;
 	private String Password;
 	private boolean  CartHasItems;
+	private String Zone;
+	private String Widget;
+	private String Street;
+	private String House;
+	private String Gada;
+	private String AuthPassword;
+
+	public String getAuthPassword() {
+		return AuthPassword;
+	}
+
+	public void setAuthPassword(String authPassword) {
+		AuthPassword = authPassword;
+	}
+
 	/**
 	 * 
 	 * @return The ID
 	 */
 	public String getID() {
 		return ID;
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getZone() {
+		return Zone;
+	}
+
+	public void setZone(String zone) {
+		Zone = zone;
+	}
+
+	public String getWidget() {
+		return Widget;
+	}
+
+	public void setWidget(String widget) {
+		Widget = widget;
+	}
+
+	public String getStreet() {
+		return Street;
+	}
+
+	public void setStreet(String street) {
+		Street = street;
+	}
+
+	public String getHouse() {
+		return House;
+	}
+
+	public void setHouse(String house) {
+		House = house;
+	}
+
+	public String getGada() {
+		return Gada;
+	}
+
+	public void setGada(String gada) {
+		Gada = gada;
 	}
 
 	/**

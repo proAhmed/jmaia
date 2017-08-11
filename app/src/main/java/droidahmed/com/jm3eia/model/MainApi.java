@@ -8,9 +8,10 @@ import java.util.ArrayList;
     public class MainApi {
     private boolean success;
    //  private ArrayList<String> error;
-    private  AllProducts[] data;
+    private  ArrayList<AllProducts> data;
+    private  Pagination[] pages;
 
-    public MainApi(boolean success , AllProducts[]  data) {
+    public MainApi(boolean success ,ArrayList<AllProducts>  data) {
         this.success = success;
       //  this.error = error;
         this.data = data;
@@ -32,11 +33,11 @@ import java.util.ArrayList;
 //        this.error = error;
 //    }
 
-    public AllProducts[]  getData() {
+    public ArrayList<AllProducts>  getData() {
         return data;
     }
 
-    public void setData(AllProducts[]  data) {
+    public void setData(ArrayList<AllProducts>  data) {
         this.data = data;
     }
 
@@ -46,5 +47,13 @@ import java.util.ArrayList;
                 "success=" + success +
                  ", data=" + data +
                 '}';
+    }
+
+    public Pagination[] getPages() {
+        return pages;
+    }
+
+    public void setPages(Pagination[] pages) {
+        this.pages = pages;
     }
 }

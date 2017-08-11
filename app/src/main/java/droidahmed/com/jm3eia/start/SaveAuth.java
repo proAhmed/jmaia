@@ -11,6 +11,7 @@ import java.util.HashSet;
 import droidahmed.com.jm3eia.model.CartQuantity;
 import droidahmed.com.jm3eia.model.ItemAddedAlready;
 import droidahmed.com.jm3eia.model.ItemJson;
+import droidahmed.com.jm3eia.model.PosCheck;
 
 /**
  * Created by ahmed on 5/6/2016.
@@ -25,7 +26,8 @@ public class SaveAuth extends Application {
     private ArrayList<Integer> cartQuanPos;
     private ArrayList<CartQuantity> cartQuanDelete;
     ArrayList<CartQuantity> cartForAdd;
-
+    ArrayList<PosCheck> posChecks;
+boolean arrowCheck;
     public JSONArray getJsonProduct() {
         return jsonProduct;
     }
@@ -74,13 +76,8 @@ public class SaveAuth extends Application {
         this.cancelPosition = cancelPosition;
     }
 
-    public ArrayList<Integer> getCartQuanPos() {
-        return cartQuanPos;
-    }
 
-    public void setCartQuanPos(ArrayList<Integer> cartQuanPos) {
-        this.cartQuanPos = cartQuanPos;
-    }
+
 
     public ArrayList<CartQuantity> getCartQuanDelete() {
         return cartQuanDelete;
@@ -96,5 +93,21 @@ public class SaveAuth extends Application {
 
     public void setCartForAdd(ArrayList<CartQuantity> cartForAdd) {
         this.cartForAdd = cartForAdd;
+    }
+
+    public ArrayList<PosCheck> getPosChecks() {
+        return posChecks;
+    }
+
+    public void setPosChecks(ArrayList<PosCheck> posChecks) {
+        this.posChecks = posChecks;
+    }
+
+    public boolean isArrowCheck() {
+        return arrowCheck;
+    }
+
+    public void setArrowCheck(boolean arrowCheck) {
+        this.arrowCheck = arrowCheck;
     }
 }

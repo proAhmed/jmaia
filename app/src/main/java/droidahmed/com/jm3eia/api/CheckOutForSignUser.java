@@ -3,6 +3,7 @@ package droidahmed.com.jm3eia.api;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -56,7 +57,6 @@ public class CheckOutForSignUser extends AsyncTask<String, Void, ResponseOfCheck
 
 		try {
 			responseJSON = makeRequest(params[0],params[1]);
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,11 +84,11 @@ public class CheckOutForSignUser extends AsyncTask<String, Void, ResponseOfCheck
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
-		if (result != null) {
+//		if (result != null) {
 			callback.onSuccess(result);
-		} else {
-			callback.onFailure();
-		}
+//		} else {
+//			callback.onFailure();
+//		}
 	}
 
 	public static String makeRequest(String authName,String authPass) throws Exception {

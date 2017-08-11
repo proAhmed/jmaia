@@ -144,9 +144,13 @@ public class SlidingFragmentActivity extends FragmentActivity implements Sliding
 	 */
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		boolean b = mHelper.onKeyUp(keyCode, event);
-		if (b) return b;
-		return super.onKeyUp(keyCode, event);
+		try {
+			boolean b = mHelper.onKeyUp(keyCode, event);
+			if (b) return b;
+			return super.onKeyUp(keyCode, event);
+		}catch (Exception e){
+			return false;
+		}
 	}
 
 }

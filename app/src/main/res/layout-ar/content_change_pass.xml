@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_forget_password"
+    tools:context="droidahmed.com.jm3eia.account.ForgetPassword">
+
+    <EditText
+        android:id="@+id/edOldPass"
+        android:paddingLeft="20dp"
+        android:hint="@string/old_pass"
+        android:textStyle="bold"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/edit_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/edNewPass"
+        android:paddingLeft="20dp"
+        android:hint="@string/new_pass"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="10dp"
+        android:textStyle="bold"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/edOldPass"
+        android:layout_marginTop="20dp"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/edit_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/edRePass"
+        android:paddingLeft="20dp"
+        android:hint="@string/re_new_pass"
+        android:layout_marginLeft="15dp"
+        android:textStyle="bold"
+        android:layout_marginRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/edNewPass"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/edit_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnChangePass"
+        android:layout_width="140dp"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:text="@string/send_new_pass"
+        android:layout_below="@+id/edRePass"
+        android:layout_marginTop="20dp"
+        android:textColor="#fff"
+        android:background="@drawable/button_green"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import droidahmed.com.jm3eia.R;
 import droidahmed.com.jm3eia.api.StaticPagesAbout;
 import droidahmed.com.jm3eia.api.StaticPagesRules;
+import droidahmed.com.jm3eia.controller.DatabaseHelper;
 import droidahmed.com.jm3eia.controller.OnProcessCompleteListener;
 import droidahmed.com.jm3eia.controller.Utility;
 import droidahmed.com.jm3eia.model.AboutPage;
@@ -32,45 +34,53 @@ public class RulesFragment extends Fragment {
     private OnProcessCompleteListener ProductListener;
     private RulesPage rulesPage;
     private ArrayList<StaticPageData> staticPageData;
-    TextView   tvRules2;
-      @Nullable
+    TextView tvRules2;
+    DatabaseHelper databaseHelper;
+    TextView tvNum;
+    RelativeLayout reCart;
+
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rule, container, false);
+        reCart = (RelativeLayout) view.findViewById(R.id.reCart);
 
-           tvRules2 = (TextView) view.findViewById(R.id.tvRules2);
+        tvRules2 = (TextView) view.findViewById(R.id.tvRules2);
+        tvNum = (TextView) view.findViewById(R.id.tvNum);
+        databaseHelper = new DatabaseHelper(getActivity());
+        addNum();
+        if (Utility.isNetworkConnected(getActivity())) {
 
-          if (Utility.isNetworkConnected(getActivity())) {
+            ProductListener = new OnProcessCompleteListener() {
 
-              ProductListener = new OnProcessCompleteListener() {
+                @Override
+                public void onSuccess(Object result) {
+                    rulesPage = (RulesPage) result;
+                    staticPageData = rulesPage.getData();
+                    tvRules2.setText(Html.fromHtml(staticPageData.get(1).getContents()).toString());
 
-                  @Override
-                  public void onSuccess(Object result) {
-                      rulesPage = (RulesPage) result;
-                      staticPageData=   rulesPage.getData();
-                       tvRules2.setText(Html.fromHtml(staticPageData.get(1).getContents()).toString());
+                }
 
-                  }
+                @Override
+                public void onFailure() {
+                    Utility.showFailureDialog(getActivity(), false);
+                }
+            };
 
-                  @Override
-                  public void onFailure() {
-                      Utility.showFailureDialog(getActivity(), false);
-                  }
-              };
+            StaticPagesRules task = new StaticPagesRules(getActivity(), ProductListener);
+            task.execute();
 
-              StaticPagesRules task = new StaticPagesRules(getActivity(), ProductListener);
-              task.execute();
-
-          } else {
-              Utility.showValidateDialog(
-                      getResources().getString(R.string.failure_ws),
-                      getActivity());
-          }
+        } else {
+            Utility.showValidateDialog(
+                    getResources().getString(R.string.failure_ws),
+                    getActivity());
+        }
 
 
-          return view;
+        return view;
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -99,6 +109,7 @@ public class RulesFragment extends Fragment {
             }
         });
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -126,5 +137,24 @@ public class RulesFragment extends Fragment {
                     mainActivity.toggle();
             }
         });
+    }
+
+    int value;
+
+    private void addNum() {
+        if (databaseHelper.getCart() != null) {
+            value = databaseHelper.getCart().size();
+
+            if (value != 0) {
+                tvNum.setText(value + "");
+                reCart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .add(R.id.mainFragment, new FragmentProductCart(), "").addToBackStack("").commit();
+                    }
+                });
+            }
+        }
     }
 }

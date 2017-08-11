@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:id="@+id/btnNotAuth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:text="@string/cart_without_auth_request"
+        android:textStyle="bold"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:background="@drawable/button_orange_cart"
+        android:layout_marginTop="25dp"
+        />
+    <Button
+        android:id="@+id/btnAuthCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cart_auth_request"
+        android:textStyle="bold"
+        android:textColor="#fff"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_green"
+        />
+</LinearLayout>

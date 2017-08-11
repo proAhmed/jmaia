@@ -193,21 +193,25 @@ public class CategoryParent implements Serializable {
         return "CategoryParent{" +
                 "ID=" + ID +
                 ", ParentID=" + ParentID +
-                ", Picture='" + Picture + '\'' +
-                ", CreatedDate='" + CreatedDate + '\'' +
-                ", ModifiedDate='" + ModifiedDate + '\'' +
-                ", SortingOrder=" + SortingOrder +
-                ", Featured=" + Featured +
-                ", State=" + State +
-                ", CategoryID=" + CategoryID +
-                ", LanguageID=" + LanguageID +
-                ", Name='" + Name + '\'' +
-                ", Alias='" + Alias + '\'' +
-                ", Description='" + Description + '\'' +
-                ", Keywords='" + Keywords + '\'' +
-                ", ItemsCount=" + ItemsCount +
-                ", IsParent=" + IsParent +
-                ", PathName=" +  PathName.toString() +
-                '}';
+                      ", CategoryID=" + CategoryID +
+                 ", Name='" + Name + '\'' +
+                 ", IsParent=" + IsParent +
+                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CategoryParent that = (CategoryParent) o;
+
+        return ParentID == that.ID;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return ID;
     }
 }

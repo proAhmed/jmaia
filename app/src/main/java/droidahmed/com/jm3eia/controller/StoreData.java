@@ -119,5 +119,46 @@ public class StoreData {
     public int getCartAdded() {
         return sharedPreferences.getInt("cart", 0);
     }
+    public void setDialogType(String type_dialog) {
+        editor.putString("type_dialog", type_dialog);
+        editor.apply();
+    }
+    public String getDialogType() {
+        return sharedPreferences.getString("type_dialog", "value");
+    }
 
+    public void savePage(String category) {
+        editor.putString("page", category);
+        editor.apply();
+    }
+    public String getPage() {
+        return sharedPreferences.getString("page", "");
+    }
+    public String getToken(){
+        return sharedPreferences.getString("token","");
+
+    }
+    public void setToken(String token)
+    {
+        editor.putString("token", token);
+        editor.commit();
+    }
+    public String getAdd(){
+        return sharedPreferences.getString("add","");
+
+    }
+    public void setAdd(String add)
+    {
+        editor.putString("add", add);
+        editor.commit();
+    }
+    public String getAdded(){
+        return sharedPreferences.getString("added","");
+
+    }
+    public void setAdded(String add)
+    {
+        editor.putString("added", add);
+        editor.commit();
+    }
 }

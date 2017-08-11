@@ -2,9 +2,14 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#D05627</color>
     <color name="black_background">#0A0301</color>
     <color name="light_grey_background">#EBEBEC</color>
     <color name="gray_background">#5C5C5F</color>
     <color name="light_red">#F8AD90</color>
- </resources>
+    <color name="orange">#D05627</color>
+    <color name="progress">#FAAF52</color>
+    <color name="green">#47A547</color>
+
+
+</resources>
